@@ -1,8 +1,5 @@
 .page{
-    display: flex;
-}
-.nav-bar{
-    display: flex;
+    margin: -8px;
 }
 .header{
     color: red;
@@ -10,10 +7,4 @@
 .img{
     width: 80px;
     height: 80px;
-}
-.input{
-    width: 25%;
-    height: 30px;
-    margin-top: 25px;
-
 }

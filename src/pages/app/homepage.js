@@ -13,13 +13,12 @@ import NavigateBar from "../../components/app/NavigateBar";
 //Styles
 import "../styles/WatchPageStyles.css";
 
-const WatchPage = (props)=>{
+const homepage = (props)=>{
     return(
         <div className="page">
             <NavigateBar/>
-            <p>hihih</p>
         </div>
 
     );
 }
-export default WatchPage;
+export default homepage;
