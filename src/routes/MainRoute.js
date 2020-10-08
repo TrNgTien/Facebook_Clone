@@ -11,6 +11,7 @@ const MainRoute = () => {
     return (
       <Router>
         <Switch>
+          <Route path ="/addFriend" component={AddFriendPage}/>
           <Route path="/watchpage" component={WatchPage} />
           <Route path="/" component={homepage} />
         </Switch>
