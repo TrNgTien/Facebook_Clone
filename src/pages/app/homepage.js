@@ -17,6 +17,7 @@ const homepage = (props)=>{
     return(
         <div className="page">
             <NavigateBar/>
+            hi
         </div>
 
     );

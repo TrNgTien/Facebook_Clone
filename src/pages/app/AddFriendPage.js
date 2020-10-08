@@ -9,7 +9,7 @@ import React from "react";
 
 
 //Styles
-import "../styles/AddFriendStyles.css";
+// import "../styles/AddFriendStyles.css";
 
 const AddFriendPage = ()=>{
     return(
@@ -18,7 +18,7 @@ const AddFriendPage = ()=>{
                 <img
                     className="Fb"
                     alt=""
-                    src={require("../../assets/images/Facebook logo.png")}
+                    src={require("../../assets/images/fb-icon.png")}
                 />
                 
                 <input
@@ -29,12 +29,12 @@ const AddFriendPage = ()=>{
                 <img
                     className="Home"
                     alt=""
-                    src={require("../../assets/images/Home icon.png")}
+                    src={require("../../assets/images/home.png")}
                 />
                 <img
                     className="Friend"
                     alt=""
-                    src={require("../../assets/images/Friends icon.png")}
+                    src={require("../../assets/images/friends.png")}
                 />
 
             </div>
