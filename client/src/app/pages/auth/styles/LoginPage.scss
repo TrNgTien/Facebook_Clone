@@ -12,17 +12,6 @@
   margin-top: 4rem;
   user-select: none;
 }
-.wrapper-btn {
-  margin-top: 2rem;
-  justify-content: center;
-  display: flex;
-}
-.btn-google {
-  width: 15rem;
-  height: 3.5rem;
-  border-radius: 5px;
-  user-select: none;
-}
 .button-login {
   @include btn();
   display: block;

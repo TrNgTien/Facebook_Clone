@@ -64,7 +64,6 @@ export default function RegisterPage(props: any) {
         cookiePolicy={"single_host_origin"}
         authenType={"register"}
       />
-
       <div className="register-page__wrapper-input">
         <div className="register-page__wrapper__user-name">
           <label htmlFor="userName">User Name</label>

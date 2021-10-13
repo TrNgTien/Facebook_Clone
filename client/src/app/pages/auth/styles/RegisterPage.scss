@@ -12,17 +12,6 @@
   margin-top: 1rem;
   user-select: none;
 }
-.register-page__wrapper-btn {
-  margin-top: 2rem;
-  justify-content: center;
-  display: flex;
-}
-.btn-google {
-  width: 15rem;
-  height: 3.5rem;
-  border-radius: 5px;
-  user-select: none;
-}
 .button-login {
   @include btn();
   display: block;
@@ -33,7 +22,7 @@
   user-select: none;
 }
 .register-page__wrapper-input {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   align-items: center;
   display: flex;
   flex-direction: column;
