@@ -13,7 +13,7 @@
   user-select: none;
 }
 .button-login {
-  @include btn();
+  @include btnAuth();
   display: block;
   margin-left: auto;
   margin-right: auto;
