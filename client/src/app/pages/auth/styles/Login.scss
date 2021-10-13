@@ -1,10 +1,42 @@
+@import "../../../styles/mixin.scss";
+
+.login-page {
+  align-items: center;
+}
 .login-page > h1 {
   color: var(--primary-color);
-  margin-top: 10%;
   text-align: center;
+  padding-top: 10%;
 }
-.login-page > button {
-  margin-left: 43.5%;
+.wrapper-btn {
+  margin-top: 2rem;
+  justify-content: center;
+  display: flex;
+}
+.btn-google{
+  width: 15rem; 
+  height: 3.5rem;
+  border-radius: 5px;
+}
+.button-login {
+  @include btn();
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 15rem;
+  height: 3.5rem;
+}
+.wrapper-input {
+  margin-top: 2rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.input__user-name {
+  @include inputField();
+}
+.input__password {
+  margin-bottom: 1rem;
   margin-top: 1rem;
-  border-radius: 5px !important;
+  @include inputField();
 }

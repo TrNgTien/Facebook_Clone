@@ -9,20 +9,26 @@ interface GoogleLoginProps {
   responseType: string;
   onSuccess: (response: any) => void;
   onFailure: (response: any) => void;
-  cookiePolicy: any;
+  cookiePolicy: string;
 }
 const GoogleLoginButton = (props: GoogleLoginProps) => {
   return (
-    <GoogleLogin
-      clientId={props.clientId}
-      buttonText={props.buttonText}
-      onSuccess={props.onSuccess}
-      onFailure={props.onFailure}
-      cookiePolicy={props.cookiePolicy}
-    />
+    <div className="wrapper-btn">
+      <GoogleLogin
+      className="btn-google"
+        clientId={props.clientId}
+        buttonText={props.buttonText}
+        onSuccess={props.onSuccess}
+        onFailure={props.onFailure}
+        cookiePolicy={props.cookiePolicy}
+      />
+    </div>
   );
 };
-function Login() {
+const loginNavigate = ({ history }: any): void => {
+  history.push("/login");
+};
+function Login(props: any) {
   const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
   const successResponse = (response: any): void => {
     const { profileObj } = response;
@@ -44,8 +50,22 @@ function Login() {
         cookiePolicy: "single_host_origin",
       })}
 
-      <input type="text" className="input-field" />
-      <input type="password" className="input-field" />
+      <div className="wrapper-input">
+        <input
+          type="text"
+          placeholder="Your user name..."
+          className="input__user-name"
+        />
+        <input
+          type="password"
+          placeholder="Your password..."
+          className="input__password"
+        />
+      </div>
+
+      <button className="button-login" onClick={() => loginNavigate(props)}>
+        Login
+      </button>
     </div>
   );
 }

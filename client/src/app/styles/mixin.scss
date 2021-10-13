@@ -1,5 +1,20 @@
-@mixin inputField {
-  padding: 1rem;
+@mixin inputField() {
+  padding: 0.5rem;
   border-radius: 5px;
-  
+  width: 15rem;
+  height: 3.5rem;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+@mixin btn() {
+  width: 10rem;
+  height: 50px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
 }
