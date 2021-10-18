@@ -9,29 +9,29 @@ export default function LoginPage(props: any) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const onChangeUserName = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
+  const [profileInfo, setProfileInfo] = useState<any>({});
+  const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   };
-  const onChangePassword = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
+  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
   const loginNavigate = ({ history }: any): void => {
-    if (true) {
-      // history.push("/generalChat");
+    if (password === "tien" && userName === "tien") {
+      setTimeout(() => {
+        history.push("/profile");
+      }, 2000);
+    } else {
+      alert("Wrong username or password");
     }
   };
   const successResponse = (response: any): void => {
     const { profileObj } = response;
-    console.log("sucess", response);
+    setProfileInfo(profileObj);
+    setTimeout(() => {
+      props.history.push("/profile", profileObj);
+    }, 2000);
   };
   const errorResponse = (response: any): void => {
     console.log("error", response);

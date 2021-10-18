@@ -1,9 +1,10 @@
-import React from 'react'
+import React from "react";
 
-export default function ChatCard() {
-    return (
-        <div className="chat-card">
-            <p></p>
-        </div>
-    )
-}
+const ChatCard = () => {
+  return (
+    <div className="chat-card">
+      <p>asss</p>
+    </div>
+  );
+};
+export default ChatCard;

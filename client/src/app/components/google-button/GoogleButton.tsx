@@ -10,7 +10,9 @@ interface GoogleLoginProps {
   cookiePolicy: string;
   authenType: string;
 }
-export default function GoogleButton(props: GoogleLoginProps) {
+const GoogleButton: React.FunctionComponent<GoogleLoginProps> = (
+  props: GoogleLoginProps
+) => {
   return (
     <div className="wrapper-btn">
       <GoogleLogin
@@ -27,4 +29,5 @@ export default function GoogleButton(props: GoogleLoginProps) {
       />
     </div>
   );
-}
+};
+export default GoogleButton;
