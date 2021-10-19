@@ -1,5 +1,26 @@
-@mixin inputField {
-  padding: 1rem;
+@mixin inputField() {
+  padding:1rem;
   border-radius: 5px;
-  
+  width: 15rem;
+  height: 3.5rem;
+  line-height: 1.6;
+  user-select: none;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  white-space: nowrap;
+  margin-top: 1rem;
+}
+@mixin btnAuth() {
+  width: 10rem;
+  height: 50px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
 }

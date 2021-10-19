@@ -1,12 +1,16 @@
 import React from "react";
 import "./styles/MessageBox.scss";
-function MessageBox() {
+const MessageBox = () => {
   return (
     <div className="mess-box">
-      <input type="text" className="input-mess" placeholder="Type your message here..." />
+      <input
+        type="text"
+        className="input-mess"
+        placeholder="Type your message here..."
+      />
       <button className="send-mess">Send</button>
     </div>
   );
-}
+};
 
 export default MessageBox;

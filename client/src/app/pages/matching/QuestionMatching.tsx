@@ -1,11 +1,9 @@
 import React from 'react'
 
-function Register() {
+export default function QuestionMatching() {
     return (
         <div>
-            <h1>Register</h1>
+            QuestionMatching
         </div>
     )
 }
-
-export default Register

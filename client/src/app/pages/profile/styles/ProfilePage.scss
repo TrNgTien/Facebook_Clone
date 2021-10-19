@@ -1,0 +1,86 @@
+@import "../../../styles/mixin.scss";
+.profile-page {
+    display: flex;
+}
+.img-profile {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+}
+.profile-zone {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+}
+.confirm-edit__btn {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--confirm-color);
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+.confirm-edit__btn:active {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--active-confirm-color);
+    font-size: 1rem;
+    border: 1px solid black;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+
+.edit-profile__btn {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--primary-color);
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+.edit-profile__btn:active {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--primary-color);
+    font-size: 1rem;
+    border: 1px solid black;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+.listing-information {
+    margin-bottom: 2rem;
+}
+.header-info {
+    font-weight: bold;
+    text-align: start;
+    margin-bottom: 1rem;
+}
+.input-profile {
+    @include inputField();
+    outline: none;
+    border-color: var(--primary-color);
+}
+.input-profile--disabled {
+    @include inputField();
+    outline: none;
+    background-color: #c6d5d6;
+    font-size: 1rem;
+    border: none;
+}
+.title-page {
+    margin-bottom: 5rem;
+}
