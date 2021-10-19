@@ -6,6 +6,7 @@
     width: 10rem;
     height: 10rem;
     border-radius: 50%;
+    box-shadow: var(--box-shadow);
 }
 .profile-zone {
     width: 100%;
@@ -78,7 +79,6 @@
     @include inputField();
     outline: none;
     background-color: #c6d5d6;
-    font-size: 1rem;
     border: none;
 }
 .title-page {
