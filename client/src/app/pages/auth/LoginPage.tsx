@@ -9,7 +9,6 @@ export default function LoginPage(props: any) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [profileInfo, setProfileInfo] = useState<any>({});
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   };
@@ -28,7 +27,6 @@ export default function LoginPage(props: any) {
   };
   const successResponse = (response: any): void => {
     const { profileObj } = response;
-    setProfileInfo(profileObj);
     setTimeout(() => {
       props.history.push("/profile", profileObj);
     }, 2000);
@@ -55,37 +53,41 @@ export default function LoginPage(props: any) {
       />
 
       <div className="wrapper-input">
-        <div className="wrapper__user-name">
-          <label htmlFor="userName">User Name</label>
-          <input
-            type="text"
-            id="userName"
-            value={userName}
-            onChange={onChangeUserName}
-            placeholder="Your user name..."
-            className="input__user-name"
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <div className="wrapper-password">
+        <form>
+          <div className="wrapper__user-name">
+            <label htmlFor="userName">User Name</label>
             <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={onChangePassword}
-              placeholder="Your password..."
-              className="input__password"
-              size={8}
+              type="text"
+              id="userName"
+              autoComplete="on"
+              value={userName}
+              onChange={onChangeUserName}
+              placeholder="Your user name..."
+              className="input__user-name"
             />
-            <i
-              className="icon-password"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {renderIcon(showPassword)}
-            </i>
           </div>
-        </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <div className="wrapper-password">
+              <input
+                autoComplete="off"
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={onChangePassword}
+                placeholder="Your password..."
+                className="input__password"
+                size={8}
+              />
+              <i
+                className="icon-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {renderIcon(showPassword)}
+              </i>
+            </div>
+          </div>
+        </form>
       </div>
 
       <button className="button-login" onClick={() => loginNavigate(props)}>
@@ -97,13 +99,4 @@ export default function LoginPage(props: any) {
       </Link>
     </div>
   );
-}
-interface GoogleLoginProps {
-  clientId: any;
-  buttonText: string;
-  accessType: string;
-  responseType: string;
-  onSuccess: (response: any) => void;
-  onFailure: (response: any) => void;
-  cookiePolicy: string;
 }

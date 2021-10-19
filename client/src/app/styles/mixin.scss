@@ -1,12 +1,15 @@
 @mixin inputField() {
-  padding: 0.5rem;
+  padding:1rem;
   border-radius: 5px;
   width: 15rem;
   height: 3.5rem;
   line-height: 1.6;
   user-select: none;
-  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  font-size: 1.2rem;
   margin-bottom: 1rem;
+  white-space: nowrap;
   margin-top: 1rem;
 }
 @mixin btnAuth() {

@@ -1,18 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { MouseEvent } from "react";
 import "./styles/NavigationBar.scss";
+import { FiLogOut } from "react-icons/fi";
 const NavigationBar = (props: any) => {
   const { imageUrl, name, history } = props;
   const listNavigation = ["Profile", "General Chat", "Question Matching"];
   const navigateClick = (event: any) => {
     const tabdNavigate = event.target.id;
-    if (tabdNavigate === "General Chat") {
-      history.push("/chatting");
-    } else if (tabdNavigate === "Question Matching") {
-      history.push("/chatting");
-    } else {
-      // history.push("/profile");
-    }
+    return tabdNavigate === "General Chat"
+      ? history.push("/chatting")
+      : tabdNavigate === "Question Matching"
+      ? history.push("/chatting")
+      : null;
+  };
+  const logOut = () => {
+    history.push("/");
   };
   const listingOption = () => {
     return (
@@ -23,9 +24,7 @@ const NavigationBar = (props: any) => {
               className="navigation-content__item"
               key={index}
               id={item}
-              onClick={(event: React.MouseEvent<HTMLElement>) =>
-                navigateClick(event)
-              }
+              onClick={(event: MouseEvent<HTMLElement>) => navigateClick(event)}
             >
               {item}
             </div>
@@ -35,12 +34,25 @@ const NavigationBar = (props: any) => {
     );
   };
   return (
-    <div className="wrapper__nav-bar row">
-      <div className="profile-header row">
-        <img src={imageUrl} alt="avatar image" className="user-avatar" />
-        <p className="user-name">{name}</p>
+    <div className="wrapper__nav-bar">
+      <div className="grid">
+        <div className="profile-header row">
+          <img src={imageUrl} alt="" className="user-avatar col l-3" />
+          <p className="user-name col l-6">{name}</p>
+        </div>
       </div>
+
       {listingOption()}
+      <div className="log-out" onClick={logOut}>
+        <div className="grid">
+          <div className="row" style={{ justifyContent: "center" }}>
+            <h2 className="log-out_text col">Log out</h2>
+            <i className="col">
+              <FiLogOut className="log-out__icon" />
+            </i>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

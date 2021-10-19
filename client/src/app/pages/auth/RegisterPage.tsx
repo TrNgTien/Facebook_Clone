@@ -6,7 +6,8 @@ import GoogleButton from "../../components/google-button/GoogleButton";
 export default function RegisterPage(props: any) {
   const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] =
+    useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -37,8 +38,10 @@ export default function RegisterPage(props: any) {
     }
   };
   const successResponse = (response: any): void => {
-    const { profileObj } = response;
-    console.log("sucess", response);
+    // const { profileObj } = response;
+    setTimeout(() => {
+      props.history.push("/");
+    }, 2000);
   };
   const errorResponse = (response: any): void => {
     console.log("error", response);
@@ -65,57 +68,62 @@ export default function RegisterPage(props: any) {
         authenType={"register"}
       />
       <div className="register-page__wrapper-input">
-        <div className="register-page__wrapper__user-name">
-          <label htmlFor="userName">User Name</label>
-          <input
-            type="text"
-            id="userName"
-            value={userName}
-            onChange={onChangeUserName}
-            placeholder="Your user name..."
-            className="input__user-name"
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <div className="register-page__wrapper-password">
+        <form>
+          <div className="register-page__wrapper__user-name">
+            <label htmlFor="userName">User Name</label>
             <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={onChangePassword}
-              placeholder="Your password..."
-              className="input__password"
-              size={8}
+              type="text"
+              id="userName"
+              autoComplete="on"
+              value={userName}
+              onChange={onChangeUserName}
+              placeholder="Your user name..."
+              className="input__user-name"
             />
-            <i
-              className="register-page__icon-password"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {renderIcon(showPassword)}
-            </i>
           </div>
-        </div>
-        <div>
-          <label htmlFor="password">Confirm Password</label>
-          <div className="register-page__wrapper-password">
-            <input
-              id="password"
-              type={showPasswordConfirm ? "text" : "password"}
-              value={confirmPassword}
-              onChange={onChangeConfirmPassword}
-              placeholder="Your confirm password..."
-              className="input__password"
-              size={8}
-            />
-            <i
-              className="register-page__icon-password"
-              onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-            >
-              {renderIconConfirm(showPasswordConfirm)}
-            </i>
+          <div>
+            <label htmlFor="password">Password</label>
+            <div className="register-page__wrapper-password">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                autoComplete="off"
+                onChange={onChangePassword}
+                placeholder="Your password..."
+                className="input__password"
+                size={8}
+              />
+              <i
+                className="register-page__icon-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {renderIcon(showPassword)}
+              </i>
+            </div>
           </div>
-        </div>
+          <div>
+            <label htmlFor="confirm-password">Confirm Password</label>
+            <div className="register-page__wrapper-password">
+              <input
+                id="confirm-password"
+                autoComplete="off"
+                type={showPasswordConfirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={onChangeConfirmPassword}
+                placeholder="Your confirm password..."
+                className="input__password"
+                size={8}
+              />
+              <i
+                className="register-page__icon-password"
+                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+              >
+                {renderIconConfirm(showPasswordConfirm)}
+              </i>
+            </div>
+          </div>
+        </form>
       </div>
 
       <button className="button-login" onClick={() => loginNavigate(props)}>

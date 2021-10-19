@@ -1,7 +1,7 @@
 .wrapper__nav-bar {
     display: flex;
     flex-direction: column;
-    width: 25%;
+    width: 30%;
     padding: 0 32px;
     background-color: gray;
     height: 100vh;
@@ -20,7 +20,7 @@
     padding: 16px 0;
     margin-top: 3rem;
     font-size: 1.5rem;
-    border-radius: 5px;
+    border-radius: 1rem;
     background-color: var(--primary-color);
 }
 .profile-header {
@@ -28,11 +28,24 @@
 }
 .user-avatar {
     border-radius: 50%;
-    width: 4rem;
 }
 .user-name {
-    margin-left: 2rem;
     margin-top: 1.5rem;
     font-weight: bold;
     font-size: 1.1rem;
+}
+.log-out {
+    padding: 1.5rem 1.5rem;
+    margin-top: 5rem;
+}
+.log-out:hover {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--log-out-color);
+}
+.log-out__icon {
+    font-size: 2rem;
 }

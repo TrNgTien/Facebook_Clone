@@ -18,7 +18,7 @@
     border-radius: 5px;
     font-weight: bold;
     color: white;
-    background-color: rgb(77, 185, 77);
+    background-color: var(--confirm-color);
     font-size: 1rem;
     border: none;
     cursor: pointer;
@@ -30,7 +30,7 @@
     border-radius: 5px;
     font-weight: bold;
     color: white;
-    background-color: rgb(113, 216, 113);
+    background-color: var(--active-confirm-color);
     font-size: 1rem;
     border: 1px solid black;
     cursor: pointer;
@@ -61,8 +61,13 @@
     cursor: pointer;
     box-shadow: var(--box-shadow);
 }
+.listing-information {
+    margin-bottom: 2rem;
+}
 .header-info {
     font-weight: bold;
+    text-align: start;
+    margin-bottom: 1rem;
 }
 .input-profile {
     @include inputField();
