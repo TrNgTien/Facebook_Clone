@@ -18,7 +18,7 @@ export default function LoginPage(props: any) {
     setPassword(e.target.value);
   };
 
-  const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): any => {
+  const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       if (password === "tien" && userName === "tien") {
         setIsLoadingLogin(true);
@@ -31,7 +31,7 @@ export default function LoginPage(props: any) {
       }
     }
   };
-  const onPressLogin = (props: any) => {
+  const onPressLogin = (props: any): void => {
     if (password === "tien" && userName === "tien") {
       setIsLoadingLogin(true);
       setTimeout(() => {
@@ -42,7 +42,7 @@ export default function LoginPage(props: any) {
       alert("Wrong username or password");
     }
   };
-  const successResponse = (response: any) => {
+  const successResponse = (response: any): void => {
     const { profileObj } = response;
     setIsLoadingLogin(true);
     setTimeout(() => {
