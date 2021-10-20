@@ -126,11 +126,11 @@ export default function RegisterPage(props: any) {
         </form>
       </div>
 
-      <button className="button-login" onClick={() => loginNavigate(props)}>
+      <button className="button-register" onClick={() => loginNavigate(props)}>
         Sign Up
       </button>
 
-      <Link className="register-link" to="/">
+      <Link className="register-link__register" to="/">
         I've already have an account!
       </Link>
     </div>

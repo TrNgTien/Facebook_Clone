@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import GoogleButton from "../../components/google-button/GoogleButton";
+import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 
 export default function LoginPage(props: any) {
@@ -9,6 +10,7 @@ export default function LoginPage(props: any) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   };
@@ -16,18 +18,35 @@ export default function LoginPage(props: any) {
     setPassword(e.target.value);
   };
 
-  const loginNavigate = ({ history }: any): void => {
+  const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): any => {
+    if (e.key === "Enter") {
+      if (password === "tien" && userName === "tien") {
+        setIsLoadingLogin(true);
+        setTimeout(() => {
+          setIsLoadingLogin(false);
+          props.history.push("/profile");
+        }, 2000);
+      } else {
+        alert("Wrong username or password");
+      }
+    }
+  };
+  const onPressLogin = (props: any) => {
     if (password === "tien" && userName === "tien") {
+      setIsLoadingLogin(true);
       setTimeout(() => {
-        history.push("/profile");
+        setIsLoadingLogin(false);
+        props.history.push("/profile");
       }, 2000);
     } else {
       alert("Wrong username or password");
     }
   };
-  const successResponse = (response: any): void => {
+  const successResponse = (response: any) => {
     const { profileObj } = response;
+    setIsLoadingLogin(true);
     setTimeout(() => {
+      setIsLoadingLogin(false);
       props.history.push("/profile", profileObj);
     }, 2000);
   };
@@ -40,6 +59,7 @@ export default function LoginPage(props: any) {
   };
   return (
     <div className="login-page">
+      {isLoadingLogin ? <CircleLoading /> : null}
       <h1>Matching</h1>
       <h2 className="authen-type">Login</h2>
       <GoogleButton
@@ -74,6 +94,7 @@ export default function LoginPage(props: any) {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
+                onKeyDown={(e) => loginEnterAccept(e)}
                 onChange={onChangePassword}
                 placeholder="Your password..."
                 className="input__password"
@@ -90,11 +111,11 @@ export default function LoginPage(props: any) {
         </form>
       </div>
 
-      <button className="button-login" onClick={() => loginNavigate(props)}>
+      <button className="button-login" onClick={() => onPressLogin(props)}>
         Login
       </button>
 
-      <Link className="register-link" to="/register">
+      <Link className="register-link__login" to="/register">
         Don't have account? Sign up!
       </Link>
     </div>
