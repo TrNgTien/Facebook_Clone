@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import GoogleButton from "../../components/google-button/GoogleButton";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
+import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
-  const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+  const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY as string);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -47,6 +48,8 @@ export default function LoginPage(props: any) {
     setIsLoadingLogin(true);
     setTimeout(() => {
       setIsLoadingLogin(false);
+      setCookie("imageUrl", profileObj.imageUrl);
+      setCookie("userName", profileObj.name);
       props.history.push("/profile", profileObj);
     }, 2000);
   };
