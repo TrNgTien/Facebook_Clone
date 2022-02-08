@@ -1,6 +1,8 @@
 import React, { MouseEvent } from "react";
 import "./styles/NavigationBar.scss";
+import { removeCookie } from "../../utils/CookieUtil";
 import { FiLogOut } from "react-icons/fi";
+import { Link } from "react-router-dom";
 const NavigationBar = (props: any) => {
   const { imageUrl, name, history } = props;
   const listNavigation = ["Profile", "General Chat", "Question Matching"];
@@ -13,7 +15,10 @@ const NavigationBar = (props: any) => {
       : null;
   };
   const logOut = () => {
-    history.push("/");
+    removeCookie("userName")
+    removeCookie("imageUrl")
+    // history.push("/");
+
   };
   const listingOption = () => {
     return (
@@ -46,7 +51,7 @@ const NavigationBar = (props: any) => {
       <div className="log-out" onClick={logOut}>
         <div className="grid">
           <div className="row" style={{ justifyContent: "center" }}>
-            <h2 className="log-out_text col">Log out</h2>
+            <Link to={"/"} className="log-out_text col">Log out</Link>
             <i className="col">
               <FiLogOut className="log-out__icon" />
             </i>
