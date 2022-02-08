@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import NavigationBar from "../../components/sidebar-navigation/NavigationBar";
 import "./styles/GeneralChat.scss";
 const GeneralChat = () => {
