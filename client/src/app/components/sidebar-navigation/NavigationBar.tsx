@@ -1,4 +1,4 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, FC } from "react";
 import "./styles/NavigationBar.scss";
 import { removeCookie } from "../../utils/CookieUtil";
 import { FiLogOut } from "react-icons/fi";
@@ -15,12 +15,11 @@ const NavigationBar = (props: any) => {
       : null;
   };
   const logOut = () => {
-    removeCookie("userName")
-    removeCookie("imageUrl")
+    removeCookie("userName");
+    removeCookie("imageUrl");
     // history.push("/");
-
   };
-  const listingOption = () => {
+  const ListingOption: FC = () => {
     return (
       <div className="navigation-content">
         {listNavigation.map((item, index) => {
@@ -47,11 +46,13 @@ const NavigationBar = (props: any) => {
         </div>
       </div>
 
-      {listingOption()}
+      <ListingOption />
       <div className="log-out" onClick={logOut}>
         <div className="grid">
           <div className="row" style={{ justifyContent: "center" }}>
-            <Link to={"/"} className="log-out_text col">Log out</Link>
+            <Link to={"/"} className="log-out_text col">
+              Log out
+            </Link>
             <i className="col">
               <FiLogOut className="log-out__icon" />
             </i>

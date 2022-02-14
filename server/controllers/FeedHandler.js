@@ -1,4 +1,4 @@
-const db = require("../database/FirebaseConnection.js");
+
 module.exports = {
   addNewsFeed: async (req, res) => {
     try {
