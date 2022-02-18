@@ -1,11 +1,12 @@
 import React, { ChangeEvent, useState } from "react";
-import img from "../../assets/img.jpg";
 import NavigationBar from "../../components/sidebar-navigation/NavigationBar";
+import { getCookie } from "../../utils/CookieUtil";
 import "./styles/ProfilePage.scss";
 
 export default function ProfilePage(props: any) {
-  const { imageUrl, name } = props.location.state;
-  const [displayName, setDisplayName] = useState<string>(name);
+  const userNameCookie = getCookie("userName");
+  const imageUrlCookie = getCookie("imageUrl");
+  const [displayName, setDisplayName] = useState<string>(userNameCookie);
   const [displayAge, setDisplayAge] = useState<string>("18");
   const [displayHobbies, setDisplayHobbies] = useState<string>("");
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -24,14 +25,14 @@ export default function ProfilePage(props: any) {
   };
   return (
     <div className="profile-page">
-      <NavigationBar imageUrl={imageUrl} name={name} history={props.history} />
+      <NavigationBar imageUrl={imageUrlCookie} name={userNameCookie} history={props.history} />
       <div className="profile-zone">
         <h2 className="title-page">Your Profile</h2>
         <div className="grid profile-zone">
           <div className="row">
             <div className="col l-6">
               <div className="col l-4">
-                <img src={imageUrl} alt="img" className="img-profile" />
+                <img src={imageUrlCookie} alt="img" className="img-profile" />
                 {isEdit ? (
                   <div className="row">
                     <div className="col l-6">

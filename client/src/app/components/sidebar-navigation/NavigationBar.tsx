@@ -11,13 +11,13 @@ const NavigationBar = (props: any) => {
     return tabdNavigate === "General Chat"
       ? history.push("/chatting")
       : tabdNavigate === "Question Matching"
-      ? history.push("/chatting")
-      : null;
+      ? history.push("/matching")
+      : history.push("/profile");
   };
   const logOut = () => {
     removeCookie("userName");
     removeCookie("imageUrl");
-    // history.push("/");
+    history.push("/");
   };
   const ListingOption: FC = () => {
     return (
@@ -47,7 +47,7 @@ const NavigationBar = (props: any) => {
       </div>
 
       <ListingOption />
-      <div className="log-out" onClick={logOut}>
+      <div className="log-out" onClick={() => logOut()}>
         <div className="grid">
           <div className="row" style={{ justifyContent: "center" }}>
             <Link to={"/"} className="log-out_text col">
