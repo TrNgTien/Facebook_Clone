@@ -48,7 +48,11 @@ const NavigationBar = (props: any) => {
     <div className="wrapper__nav-bar">
       <div className="grid">
         <div className="profile-header row">
-          <img src={imageUrl} alt="" className="user-avatar col l-3" />
+          <img
+            src={imageUrl}
+            alt="Your Avatar"
+            className="user-avatar col l-3"
+          />
           <p className="user-name col l-6">{name}</p>
         </div>
       </div>
