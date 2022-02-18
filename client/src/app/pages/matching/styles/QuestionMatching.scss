@@ -1,10 +1,9 @@
 @import "../../../styles/mixin.scss";
-.general-chat__wapper {
+.question-matching__wrapper {
     display: flex;
-    .general-zone {
+    .question-zone {
         text-align: center;
         width: 100%;
-        text-align: center;
         padding: 2rem;
     }
 }
