@@ -4,16 +4,21 @@ import { removeCookie } from "../../utils/CookieUtil";
 import { FiLogOut } from "react-icons/fi";
 import { Link } from "react-router-dom";
 const NavigationBar = (props: any) => {
+  const listNavigation = [
+    { id: 1, tab: "Profile" },
+    { id: 2, tab: "General Chat" },
+    { id: 3, tab: "Question Matching" },
+  ];
   const { imageUrl, name, history } = props;
-  const listNavigation = ["Profile", "General Chat", "Question Matching"];
   const navigateClick = (event: any) => {
-    const tabdNavigate = event.target.id;
-    return tabdNavigate === "General Chat"
+    const tabNavigate = event.target.id;
+    return tabNavigate === "General Chat"
       ? history.push("/chatting")
-      : tabdNavigate === "Question Matching"
+      : tabNavigate === "Question Matching"
       ? history.push("/matching")
       : history.push("/profile");
   };
+
   const logOut = () => {
     removeCookie("userName");
     removeCookie("imageUrl");
@@ -21,16 +26,18 @@ const NavigationBar = (props: any) => {
   };
   const ListingOption: FC = () => {
     return (
-      <div className="navigation-content">
-        {listNavigation.map((item, index) => {
+      <div>
+        {listNavigation.map((item) => {
           return (
             <div
               className="navigation-content__item"
-              key={index}
-              id={item}
-              onClick={(event: MouseEvent<HTMLElement>) => navigateClick(event)}
+              key={item.id}
+              id={item.tab}
+              onClick={(event: MouseEvent<HTMLElement>) => {
+                navigateClick(event);
+              }}
             >
-              {item}
+              {item.tab}
             </div>
           );
         })}
