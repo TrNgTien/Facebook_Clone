@@ -17,11 +17,13 @@ export default function QuestionMatching(props: any) {
     });
   };
   useEffect(() => {
-    counterTime >= 0
-      ? setTimeout(() => setCounterTime(counterTime - 1), 1000)
-      : setCounterTime(59);
+    const timerCountDown = setTimeout(
+      () => setCounterTime(counterTime - 1),
+      1000
+    );
+    counterTime < 0 && setCounterTime(59);
     return () => {
-      clearTimeout(counterTime);
+      clearTimeout(timerCountDown);
     };
   }, [counterTime]);
   return (
@@ -38,7 +40,7 @@ export default function QuestionMatching(props: any) {
             <p className="question-box__counter">
               Next question in: &nbsp;
               {counterTime >= 0 && counterTime < 10
-                ? `0:0 ${counterTime}`
+                ? `0: 0${counterTime}`
                 : `0: ${counterTime}`}
             </p>
             <h2 className="question-box__title">
