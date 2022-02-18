@@ -1,11 +1,12 @@
 @import "../../../styles/mixin.scss";
 .profile-page {
     display: flex;
+    height: 100vh;
     .profile-zone {
         width: 100%;
-        text-align: center;
         padding: 2rem;
         .title-page {
+            text-align: center;
             margin-bottom: 5rem;
         }
         .img-profile {
@@ -16,6 +17,7 @@
         }
         .confirm-edit__btn {
             margin-top: 2rem;
+            margin-left: 2rem;
             padding: 1rem;
             border-radius: 5px;
             font-weight: bold;
@@ -39,6 +41,7 @@
             }
         }
         .edit-profile__btn {
+            margin-left: 1.3rem;
             margin-top: 2rem;
             padding: 1rem;
             border-radius: 5px;
@@ -69,8 +72,9 @@
     margin-bottom: 2rem;
     .header-info {
         font-weight: bold;
-        text-align: start;
+        text-align: left;
         margin-bottom: 1rem;
+        cursor: pointer;
     }
     .input-profile {
         @include inputField();
