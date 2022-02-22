@@ -1,32 +1,43 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, FC } from "react";
 import "./styles/NavigationBar.scss";
+import { removeCookie } from "../../utils/CookieUtil";
 import { FiLogOut } from "react-icons/fi";
+import { Link } from "react-router-dom";
 const NavigationBar = (props: any) => {
+  const listNavigation = [
+    { id: 1, tab: "Profile" },
+    { id: 2, tab: "General Chat" },
+    { id: 3, tab: "Question Matching" },
+  ];
   const { imageUrl, name, history } = props;
-  const listNavigation = ["Profile", "General Chat", "Question Matching"];
   const navigateClick = (event: any) => {
-    const tabdNavigate = event.target.id;
-    return tabdNavigate === "General Chat"
+    const tabNavigate = event.target.id;
+    return tabNavigate === "General Chat"
       ? history.push("/chatting")
-      : tabdNavigate === "Question Matching"
-      ? history.push("/chatting")
-      : null;
+      : tabNavigate === "Question Matching"
+      ? history.push("/matching")
+      : history.push("/profile");
   };
+
   const logOut = () => {
+    removeCookie("userName");
+    removeCookie("imageUrl");
     history.push("/");
   };
-  const listingOption = () => {
+  const ListingOption: FC = () => {
     return (
-      <div className="navigation-content">
-        {listNavigation.map((item, index) => {
+      <div>
+        {listNavigation.map((item) => {
           return (
             <div
               className="navigation-content__item"
-              key={index}
-              id={item}
-              onClick={(event: MouseEvent<HTMLElement>) => navigateClick(event)}
+              key={item.id}
+              id={item.tab}
+              onClick={(event: MouseEvent<HTMLElement>) => {
+                navigateClick(event);
+              }}
             >
-              {item}
+              {item.tab}
             </div>
           );
         })}
@@ -37,16 +48,22 @@ const NavigationBar = (props: any) => {
     <div className="wrapper__nav-bar">
       <div className="grid">
         <div className="profile-header row">
-          <img src={imageUrl} alt="" className="user-avatar col l-3" />
+          <img
+            src={imageUrl}
+            alt="Your Avatar"
+            className="user-avatar col l-3"
+          />
           <p className="user-name col l-6">{name}</p>
         </div>
       </div>
 
-      {listingOption()}
-      <div className="log-out" onClick={logOut}>
+      <ListingOption />
+      <div className="log-out" onClick={() => logOut()}>
         <div className="grid">
           <div className="row" style={{ justifyContent: "center" }}>
-            <h2 className="log-out_text col">Log out</h2>
+            <Link to={"/"} className="log-out_text col">
+              Log out
+            </Link>
             <i className="col">
               <FiLogOut className="log-out__icon" />
             </i>
