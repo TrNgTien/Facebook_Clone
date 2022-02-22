@@ -5,6 +5,7 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import GeneralChat from "../pages/chatting/GeneralChat";
 import QuestionMatching from "../pages/matching/QuestionMatching";
 import ProfilePage from "../pages/profile/ProfilePage";
+import Feeds from "../pages/main-feeds/Feeds";
 function MainRoutes() {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ function MainRoutes() {
         <Route exact path="/profile" component={ProfilePage} />
         <Route exact path="/chatting" component={GeneralChat} />
         <Route exact path="/matching" component={QuestionMatching} />
+        <Route exact path="/feeds" component={Feeds} />
         <Route exact path="/" component={LoginPage} />
       </Switch>
     </BrowserRouter>
