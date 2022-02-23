@@ -1,0 +1,24 @@
+{
+    "development": {
+      "name": "Project Name - Dev Mode",
+      "port": 8080,
+      "mode": "development",
+      "protocol": "http",
+      "serverUrl": "localhost",
+      "serverUrlWebUrlLink": "localhost:8080/",
+      "database": {
+        "multipleStatements": true,
+        "host": "",
+        "user": "",
+        "password": "",
+        "database": ""
+      },
+      "email": {
+        "host": "",
+        "port": "",
+        "username": "",
+        "password": ""
+      }
+    }
+  }
+  

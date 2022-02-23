@@ -1,0 +1,9 @@
+@import "../../../styles/mixin.scss";
+.general-chat__wapper {
+    display: flex;
+    .general-zone {
+        text-align: center;
+        width: 100%;
+        padding: 2rem;
+    }
+}

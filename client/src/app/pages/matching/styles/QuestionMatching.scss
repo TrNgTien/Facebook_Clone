@@ -1,0 +1,51 @@
+@import "../../../styles/mixin.scss";
+.question-matching__wrapper {
+    display: flex;
+    .question-zone {
+        width: 100%;
+        padding: 2rem;
+    }
+    height: 100vh;
+    .title-question__page {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .question-box {
+        background-color: #c4c4c4;
+        width: 65%;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        border-radius: 2.5rem;
+        position: relative;
+        .question-box__container {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            padding: 0.5rem;
+            .question-box__counter {
+                position: absolute;
+                right: 2rem;
+                top: 1rem;
+            }
+            .question-box__title {
+                background-color: white;
+                border-radius: 10px;
+                padding: 1.2rem;
+                margin-top: 3rem;
+                font-size: 1.2rem;
+            }
+            .question-box__answer-text {
+                font-size: 1.2rem;
+                font-weight: bold;
+                border-radius: 10px;
+                padding: 1rem;
+                margin-top: 1.2rem;
+                margin-bottom: 1rem;
+                background-color: white;
+            }
+        }
+    }
+}
