@@ -7,9 +7,8 @@ import "./styles/LoginPage.scss";
 import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
-  // const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY_API as string);
-  const GOOGLE_API_KEY :  string | undefined  = "38460059011-8685466jfcsth166corp5asa9l2lunfk.apps.googleusercontent.com";
-  // console.log(process.env.REACT_APP_GOOGLE_KEY_API);
+  const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY_API as string);
+  
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,7 +26,7 @@ export default function LoginPage(props: any) {
         setIsLoadingLogin(true);
         setTimeout(() => {
           setIsLoadingLogin(false);
-          props.history.push("/profile");
+          props.history.push("/feeds");
         }, 2000);
       } else {
         alert("Wrong username or password");
@@ -39,7 +38,7 @@ export default function LoginPage(props: any) {
       setIsLoadingLogin(true);
       setTimeout(() => {
         setIsLoadingLogin(false);
-        props.history.push("/profile");
+        props.history.push("/feeds");
       }, 2000);
     } else {
       alert("Wrong username or password");
@@ -52,7 +51,7 @@ export default function LoginPage(props: any) {
       setIsLoadingLogin(false);
       setCookie("imageUrl", profileObj.imageUrl);
       setCookie("userName", profileObj.name);
-      props.history.push("/profile", profileObj);
+      props.history.push("/feeds", profileObj);
     }, 2000);
   };
   const errorResponse = (response: any): void => {

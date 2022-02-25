@@ -1,0 +1,14 @@
+.feeds {
+	background-color: #e0e0e0;
+	margin-top: 55px;
+	.body {
+		display: flex;
+
+		.body__feeds {
+			margin: 15px 0px;
+			width: 45%;
+			position: absolute;
+			left: 28%;
+		}
+	}
+}
