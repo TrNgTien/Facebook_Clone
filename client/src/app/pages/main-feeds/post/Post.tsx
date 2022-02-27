@@ -10,7 +10,7 @@ function Post(props: any ) {
   return (
     <div className="container" id='container-post'>
         <div className="container__top">
-            <img src={avatarURL} alt="avatar" />
+            <img className='img-avatar' src={avatarURL} alt="avatar" />
             <div className="container__top-info">
                 <h4>{username}</h4>
                 <p>{timestamp}</p>
@@ -20,13 +20,13 @@ function Post(props: any ) {
             <p>{content}</p>
         </div>
         <div className="container__img" id='content-img'>
-            <img src={imgURL} alt="img" />
+            <img className='img-content' src={imgURL} alt="img" />
         </div>
         <div className="container__status">
             <p>1000 likes</p>
             <p>200 comments</p>
         </div>
-        <hr />
+        <hr className='hr-tag'/>
         <div className="container__features">
             <button className="container__feature container__feature--like">
                 <AiOutlineHeart/>

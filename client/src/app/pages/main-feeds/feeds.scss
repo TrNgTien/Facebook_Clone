@@ -1,12 +1,12 @@
-.feeds {
+.feeds-container {
 	background-color: #e0e0e0;
 	margin-top: 55px;
-	.body {
+	.body-container {
 		display: flex;
 
-		.body__feeds {
+		.body-feeds {
 			margin: 15px 0px;
-			width: 45%;
+			width: 650px;
 			position: absolute;
 			left: 28%;
 		}

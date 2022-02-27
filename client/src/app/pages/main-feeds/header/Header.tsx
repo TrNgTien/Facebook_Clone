@@ -15,27 +15,27 @@ const Header = (props: any ) => {
             <img src="http://www.clipartbest.com/cliparts/9Tp/bnA/9TpbnA7bc.png" alt="logo" />
             <div className="header__search">
                 <input type="text" placeholder='Search...' />
-                <AiOutlineSearch />
+                <i><AiOutlineSearch /></i>
             </div>
         </div>
         <div className="header__right">
             <div className="header__user">
-                <img className='avatar' src={avatarURL} alt="avatar" />
+                <img className='img-avatar' src={avatarURL} alt="avatar" />
                 <h4>{username}</h4>
             </div>
             <div className="header__option header__option--add">
-                <GrAdd />
+                <i><GrAdd /></i>
             </div>
             <div className="header__option header__option--message">
-                <SiMessenger />
-                <div className="counter">100</div>
+                <i><SiMessenger /></i>
+                <div className="notify-counter">100</div>
             </div>
             <div className="header__option header__option--notification">
-                <AiTwotoneBell />
-                <div className="counter">10</div>
+                <i><AiTwotoneBell /></i>
+                <div className="notify-counter">10</div>
             </div>
             <div className="header__option--menu header__option ">
-                <TiArrowSortedDown />
+                <i><TiArrowSortedDown /></i>
             </div>
         </div>
     </div>

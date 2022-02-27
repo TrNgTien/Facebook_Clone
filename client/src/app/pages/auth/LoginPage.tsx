@@ -7,8 +7,8 @@ import "./styles/LoginPage.scss";
 import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
-  const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY_API as string);
-  
+  // const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY_API as string);
+  const GOOGLE_API_KEY = '38460059011-8685466jfcsth166corp5asa9l2lunfk.apps.googleusercontent.com';
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
