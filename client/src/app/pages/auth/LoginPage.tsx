@@ -1,14 +1,11 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import GoogleButton from "../../components/google-button/GoogleButton";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
-  // const GOOGLE_API_KEY :  string | undefined  = (process.env.REACT_APP_GOOGLE_KEY_API as string);
-  const GOOGLE_API_KEY = '38460059011-8685466jfcsth166corp5asa9l2lunfk.apps.googleusercontent.com';
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -54,9 +51,6 @@ export default function LoginPage(props: any) {
       props.history.push("/feeds", profileObj);
     }, 2000);
   };
-  const errorResponse = (response: any): void => {
-    console.log("error", response);
-  };
   const renderIcon = (showPassword: boolean) => {
     if (showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
@@ -66,16 +60,7 @@ export default function LoginPage(props: any) {
       {isLoadingLogin ? <CircleLoading /> : null}
       <h1>Matching</h1>
       <h2 className="authen-type">Login</h2>
-      <GoogleButton
-        clientId={GOOGLE_API_KEY}
-        accessType={"offline"}
-        responseType={"code"}
-        onSuccess={successResponse}
-        onFailure={errorResponse}
-        cookiePolicy={"single_host_origin"}
-        authenType={"login"}
-      />
-
+      
       <div className="wrapper-input">
         <form>
           <div className="wrapper__user-name">
