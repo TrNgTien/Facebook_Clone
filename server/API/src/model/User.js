@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
+const BLANK_AVATAR = require('../constant/ConstantPicture');
+const BLANK_COVER = require('../constant/ConstantPicture');
 
 const userSchema = new mongoose.Schema({
     userType: {
         type: Number,
+        require: true,
     },
     userAvatar: {
         type: String,
-        default: "",
+        default: BLANK_AVATAR,
     },
     userCover: {
         type: String,
-        default: "",
+        default: BLANK_COVER,
     },
     biography: {
         type: String,
@@ -28,7 +31,8 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        minLength: 5
+        minLength: 5,
+        require: true,
     },
     firstName: {
         type: String,
@@ -48,7 +52,13 @@ const userSchema = new mongoose.Schema({
     },
     intro: {
         type: Object,
-        default: {},
+        default: {
+            job: [],
+            education: [],
+            currentCity: "",
+            hometown: "",
+            relationship: ""
+        },
     }
 });
 

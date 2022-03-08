@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const feedSchema = new mongoose.Schema({
     description: {
         type: String,
+        require: true,
     },
     feedAttachments: {
         type: String,
