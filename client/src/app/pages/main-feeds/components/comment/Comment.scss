@@ -1,0 +1,47 @@
+.comment__container {
+	display: flex;
+	margin: 10px 10px 10px 0px;
+	.comment__avatar-img {
+		flex: 1;
+		height: 32px;
+		border-radius: 50%;
+	}
+	.comment__container__right {
+		flex: 10;
+		margin-left: 5px;
+		.comment__content {
+			border-radius: 15px;
+			padding: 8px 13px;
+			background-color: rgb(245, 245, 245);
+			font-size: 15px;
+			.comment__username {
+				font-weight: 600;
+				font-size: 14px;
+			}
+			.comment__para {
+			}
+		}
+		.comment-features {
+			display: flex;
+			margin: 2px;
+			.like-comment {
+				margin: 0px 10px;
+				font-weight: bold;
+				border: none;
+				background-color: transparent;
+				color: rgb(104, 104, 104);
+			}
+			.reply-comment {
+				margin: 0px 10px;
+				font-weight: bold;
+				border: none;
+				background-color: transparent;
+				color: rgb(104, 104, 104);
+			}
+			.timestamp-text {
+				margin: 0px 10px;
+				font-size: 12px;
+			}
+		}
+	}
+}

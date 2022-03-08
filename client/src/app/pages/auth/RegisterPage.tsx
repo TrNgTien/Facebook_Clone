@@ -2,11 +2,9 @@ import React, { ChangeEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import CircleLoading from "../../components/loading-component/CircleLoading";
-import GoogleButton from "../../components/google-button/GoogleButton";
 import "./styles/RegisterPage.scss";
 
 export default function RegisterPage(props: any) {
-  const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPasswordConfirm, setShowPasswordConfirm] =
     useState<boolean>(false);
@@ -64,15 +62,7 @@ export default function RegisterPage(props: any) {
       {isRegistering ? <CircleLoading /> : null}
       <h1>Matching</h1>
       <h2 className="register-page__authen-type">Sign Up</h2>
-      <GoogleButton
-        clientId={GOOGLE_API_KEY}
-        accessType={"offline"}
-        responseType={"code"}
-        onSuccess={successResponse}
-        onFailure={errorResponse}
-        cookiePolicy={"single_host_origin"}
-        authenType={"register"}
-      />
+
       <div className="register-page__wrapper-input">
         <form>
           <div className="register-page__wrapper__user-name">

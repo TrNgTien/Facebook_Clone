@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
 import NavigationBar from "../../components/sidebar-navigation/NavigationBar";
 import { getCookie } from "../../utils/CookieUtil";
+import BlankAvatar from "../../assets/avatar.png"
 import "./styles/ProfilePage.scss";
 export default function ProfilePage(props: any) {
   const userNameCookie = getCookie("userName");
-  const imageUrlCookie = getCookie("imageUrl");
+  const imageUrlCookie = BlankAvatar;
   const [displayName, setDisplayName] = useState<string>(userNameCookie);
   const [displayBirthday, setDisplayBirthday] = useState<string>("");
   const [displayHobbies, setDisplayHobbies] = useState<string>("");
