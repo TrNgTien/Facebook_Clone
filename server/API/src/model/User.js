@@ -53,8 +53,8 @@ const userSchema = new mongoose.Schema({
     intro: {
         type: Object,
         default: {
-            job: [],
-            education: [],
+            currentJob: "",
+            currentEducation: "",
             currentCity: "",
             hometown: "",
             relationship: ""
