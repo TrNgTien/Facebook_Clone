@@ -4,7 +4,7 @@ const datingProfileSchema = new mongoose.Schema({
     age: {
         type: Number,
         require: true,
-        default: 0,
+        default: 18,
     },
     gender: {
         type: String,
