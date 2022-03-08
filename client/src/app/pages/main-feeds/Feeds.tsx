@@ -20,6 +20,7 @@ export default function Feeds() {
 
   const posts = [
     {
+      id: 0,
       avatarURL: imageUrlCookie,
       username: userNameCookie,
       timestamp: current_date,
@@ -27,6 +28,7 @@ export default function Feeds() {
       imgURL: IMG_URL1,
     },
     {
+      id: 1,
       avatarURL: imageUrlCookie,
       username: userNameCookie,
       timestamp: current_date,
@@ -34,6 +36,7 @@ export default function Feeds() {
       imgURL: IMG_URL2,
     },
     {
+      id: 2,
       avatarURL: imageUrlCookie,
       username: userNameCookie,
       timestamp: current_date,

@@ -1,0 +1,120 @@
+.container__background {
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.8);
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 20;
+
+	.modal-wrapper {
+		width: 100vw;
+		height: 100vh;
+		box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
+		background: white;
+		display: flex;
+		position: relative;
+
+		.modal-wrapper__left {
+			width: 74%;
+			height: 100vh;
+			border-radius: 10px 0 0 10px;
+			background: black;
+			z-index: 30;
+			.img-content {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+			.close-button {
+				position: absolute;
+				width: 40px;
+				height: 40px;
+				color: white;
+				padding: 6px;
+				top: 10px;
+				left: 30px;
+				background-color: rgba(0, 0, 0, 0.3);
+				border-radius: 50%;
+				cursor: pointer;
+				&:hover {
+					background-color: rgba(48, 48, 48, 0.8);
+				}
+			}
+		}
+		.modal-wrapper__right {
+			width: 26%;
+			display: flex;
+			flex-direction: column;
+			line-height: 1.1;
+			color: #141414;
+			padding: 15px;
+			.container__content {
+				.container__info {
+					display: flex;
+					margin-bottom: 5px;
+					.avatar-img {
+						height: 39px;
+						border-radius: 50%;
+						margin-right: 10px;
+					}
+					.content__info {
+						.content__info__username {
+							padding-bottom: 3px;
+							font-weight: bold;
+						}
+						.content__info__timestamp {
+							font-size: small;
+							color: gray;
+						}
+					}
+				}
+				.content__para {
+					margin-bottom: 10px;
+				}
+			}
+			.container__interaction {
+				display: flex;
+				justify-content: space-between;
+				padding: 10px 0px;
+				font-size: 15px;
+				color: rgb(105, 105, 105);
+			}
+			.container__features {
+				display: flex;
+				justify-content: space-evenly;
+				align-items: center;
+				height: 40px;
+				margin: 5px 0px;
+
+				.container__feature {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 1% 8%;
+					border: none;
+					background-color: transparent;
+					font-size: 16px;
+					color: gray;
+					border-radius: 3px;
+
+					p {
+						margin-left: 5px;
+						font-weight: bold;
+					}
+
+					&:hover {
+						opacity: 0.8;
+						background-color: rgb(201, 201, 201);
+						cursor: pointer;
+					}
+				}
+			}
+			.container__comments {
+				margin-top: 20px;
+				height: 100%;
+				overflow: scroll;
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@ const Upload = (props: any) => {
     <div className='upload-container'>
         <div className="upload__header">
             <img className='img-avatar' src={avatarURL} alt="avatar" />
-            <input type="text" name="upload" id="status" placeholder='What is on your mind?' />
+            <input className='upload-input' type="text" name="upload" id="status" placeholder='What is on your mind?' />
         </div>
         <hr className='hr-tag'/>
         <div className="upload__footer">
