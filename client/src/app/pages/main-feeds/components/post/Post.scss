@@ -4,7 +4,7 @@
 	border-radius: 10px;
 	padding-top: 13px;
 	margin-top: 15px;
-	box-shadow: 0px 5px 8px -1px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 5px 8px -1px rgba(0, 0, 0, 0.3);
 	.hr-tag {
 		border: 0;
 		height: 1px;
@@ -43,6 +43,7 @@
 		padding: 10px 15px;
 	}
 	.container__img {
+		cursor: pointer;
 		.img-content {
 			width: 100%;
 		}
@@ -52,7 +53,7 @@
 		justify-content: space-between;
 		padding: 5px 10px;
 		font-size: medium;
-		color: rgb(68, 68, 68);
+		color: rgb(105, 105, 105);
 	}
 
 	.container__features {

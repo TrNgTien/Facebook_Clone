@@ -48,8 +48,9 @@ function Post(props: any ) {
                     <p>Share</p>
                 </button>
             </div>
+            <hr className='hr-tag'/>
         </div>
-        <Modal showModal={showModal} setShowModal={setShowModal} />
+        <Modal showModal={showModal} setShowModal={setShowModal} props={props}/>
     </>
   )
 }

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
 import { GrAdd } from "react-icons/gr";
-import { SiMessenger } from "react-icons/si";
 import { TiArrowSortedDown } from "react-icons/ti";
 
 import "./Header.scss";

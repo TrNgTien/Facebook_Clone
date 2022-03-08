@@ -11,8 +11,8 @@ const Sidebar = (props: any) => {
     const { avatarURL, username} = props;
   return (
     <div className='sidebar'>
-        <div className="sidebar-row sidebar-row--user">
-            <img src={avatarURL} alt="avatar" />
+        <div className="sidebar-row">
+            <img className='sidebar-row-user-img' src={avatarURL} alt="avatar" />
             <h4>{username}</h4>
         </div>
         <div className="sidebar-row">
