@@ -51,10 +51,6 @@ export const Modal = ({ showModal, setShowModal, props } : {showModal:boolean, s
                             </div>
                         </div>
                         <p className="content__para">{content}</p>
-                        <p className="content__para">{content}</p>
-                        <p className="content__para">{content}</p>
-                        <p className="content__para">{content}</p>
-                        <p className="content__para">{content}</p>
                     </div>
                     <div className="container__interaction">
                         <p>100 likes</p>
