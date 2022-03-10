@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import GeneralChat from "../pages/chatting/GeneralChat";
@@ -8,16 +8,14 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import Feeds from "../pages/main-feeds/Feeds";
 function MainRoutes() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/register" component={RegisterPage} />
-        <Route exact path="/profile" component={ProfilePage} />
-        <Route exact path="/chatting" component={GeneralChat} />
-        <Route exact path="/matching" component={QuestionMatching} />
-        <Route exact path="/feeds" component={Feeds} />
-        <Route exact path="/" component={LoginPage} />
-      </Switch>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/chatting" element={<GeneralChat />} />
+      <Route path="/matching" element={<QuestionMatching />} />
+      <Route path="/feeds" element={<Feeds />} />
+      <Route path="/" element={<LoginPage />} />
+    </Routes>
   );
 }
 

@@ -41,16 +41,6 @@ export default function LoginPage(props: any) {
       alert("Wrong username or password");
     }
   };
-  const successResponse = (response: any): void => {
-    const { profileObj } = response;
-    setIsLoadingLogin(true);
-    setTimeout(() => {
-      setIsLoadingLogin(false);
-      setCookie("imageUrl", profileObj.imageUrl);
-      setCookie("userName", profileObj.name);
-      props.history.push("/feeds", profileObj);
-    }, 2000);
-  };
   const renderIcon = (showPassword: boolean) => {
     if (showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
@@ -60,7 +50,7 @@ export default function LoginPage(props: any) {
       {isLoadingLogin ? <CircleLoading /> : null}
       <h1>Matching</h1>
       <h2 className="authen-type">Login</h2>
-      
+
       <div className="wrapper-input">
         <form>
           <div className="wrapper__user-name">
