@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
 import { GrAdd } from "react-icons/gr";
 import { TiArrowSortedDown } from "react-icons/ti";
-
+import logo from "../../../../assets/icons8-facebook.svg";
 import "./Header.scss";
 
 const Header = (props: any) => {
@@ -12,7 +12,7 @@ const Header = (props: any) => {
     <div className="header">
       <div className="header__left">
         <img
-          src="http://www.clipartbest.com/cliparts/9Tp/bnA/9TpbnA7bc.png"
+          src={logo}
           alt="logo"
         />
         <div className="header__search">
