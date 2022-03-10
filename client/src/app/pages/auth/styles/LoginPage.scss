@@ -35,23 +35,31 @@
 			align-items: center;
 			border-radius: 10px;
 			box-shadow: 0px 5px 8px -4px rgba(0, 0, 0, 0.9);
-			.input__user-name {
+			.input-form {
 				width: 100%;
-				border: 1px solid #dddfe2;
-				margin: 17px 0px 15px 0px;
-				&::placeholder {
-					font-size: medium;
-					color: #92969e;
+				padding: 15px 15px;
+				.login-input__user-name {
+					width: 370px;
+					padding: 18px 16px;
+					border: 1px solid #dddfe2;
+					margin: 6px 0px;
+					border-radius: 6px;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+					}
 				}
-			}
 
-			.input__password {
-				width: 100%;
-				border: 1px solid #dddfe2;
-				margin: 0px 0px 15px 0px;
-				&::placeholder {
-					font-size: medium;
-					color: #92969e;
+				.login-input__password {
+					width: 370px;
+					padding: 18px 16px;
+					border: 1px solid #dddfe2;
+					margin: 6px 0px;
+					border-radius: 6px;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+					}
 				}
 			}
 
@@ -64,7 +72,7 @@
 				font-size: 20px;
 				line-height: 48px;
 				padding: 0 16px;
-				width: 91%;
+				width: 370px;
 				cursor: pointer;
 			}
 			p {
@@ -83,8 +91,9 @@
 				border: none;
 				border-radius: 6px;
 				font-size: 17px;
+				font-weight: 600;
 				line-height: 48px;
-				padding: 0px 5px;
+				padding: 0px 15px;
 				cursor: pointer;
 				.register-link__login {
 					text-decoration: none;
