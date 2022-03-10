@@ -17,19 +17,19 @@ export default function LoginPage(props: any) {
     setPassword(e.target.value);
   };
 
-  const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === "Enter") {
-      if (password === "tien" && userName === "tien") {
-        setIsLoadingLogin(true);
-        setTimeout(() => {
-          setIsLoadingLogin(false);
-          props.history.push("/feeds");
-        }, 2000);
-      } else {
-        alert("Wrong username or password");
-      }
-    }
-  };
+  // const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): void => {
+  //   if (e.key === "Enter") {
+  //     if (password === "tien" && userName === "tien") {
+  //       setIsLoadingLogin(true);
+  //       setTimeout(() => {
+  //         setIsLoadingLogin(false);
+  //         props.history.push("/feeds");
+  //       }, 2000);
+  //     } else {
+  //       alert("Wrong username or password");
+  //     }
+  //   }
+  // };
   const onPressLogin = (props: any): void => {
     if (password === "tien" && userName === "tien") {
       setIsLoadingLogin(true);
@@ -73,7 +73,7 @@ export default function LoginPage(props: any) {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onKeyDown={(e) => loginEnterAccept(e)}
+                // onKeyDown={(e) => loginEnterAccept(e)}
                 onChange={onChangePassword}
                 placeholder="Your password..."
                 className="input__password"

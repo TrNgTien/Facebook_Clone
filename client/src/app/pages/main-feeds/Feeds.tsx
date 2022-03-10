@@ -5,13 +5,13 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
 import { getCookie } from "../../utils/CookieUtil";
 import "./styles/Feeds.scss";
-import BlankAvatar from "../../assets/avatar.png"
+import BlankAvatar from "../../assets/avatar.png";
+import PostImg from "../../assets/post_img.jpg";
 
 export default function Feeds() {
   const userNameCookie = "User Name";
-  const imageUrlCookie = BlankAvatar
-  const IMG_URL1 =
-    "https://picjumbo.com/wp-content/uploads/woman-holding-an-american-flag-in-a-field-free-photo-1080x1620.jpg";
+  const imageUrlCookie = BlankAvatar;
+  const IMG_URL1 = PostImg;
   const IMG_URL2 =
     "https://media.istockphoto.com/photos/freedom-chains-that-transform-into-birds-charge-concept-picture-id1322104312?b=1&k=20&m=1322104312&s=170667a&w=0&h=VQyPkFkMKmo0e4ixjhiOLjiRs_ZiyKR_4SAsagQQdkk=";
   const content =
