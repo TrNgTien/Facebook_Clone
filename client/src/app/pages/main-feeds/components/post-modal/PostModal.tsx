@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { BiComment, BiShare } from 'react-icons/bi';
@@ -74,7 +73,6 @@ export const Modal = ({ showModal, setShowModal, props } : {showModal:boolean, s
                     <hr className='hr-tag'/>
                     <div className="container__comments">
                       <Comment/>
-                      
                     </div>
                 </div>
             </div>
