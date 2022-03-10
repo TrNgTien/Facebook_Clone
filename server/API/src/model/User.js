@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
+const picture = require('../constant/ConstantPicture');
 
 const userSchema = new mongoose.Schema({
     userType: {
         type: Number,
+        default: 1,
+        required: true,
     },
     userAvatar: {
         type: String,
-        default: "",
+        default: picture.BLANK_AVATAR,
     },
     userCover: {
         type: String,
-        default: "",
+        default: picture.BLANK_COVER,
     },
     biography: {
         type: String,
@@ -22,13 +25,14 @@ const userSchema = new mongoose.Schema({
     }, 
     userName: {
         type: String,
-        require: true,
+        required: true,
         maxLength: 225,
         unique: true,
     },
     password: {
         type: String,
-        minLength: 5
+        minLength: 5,
+        required: true,
     },
     firstName: {
         type: String,
@@ -48,8 +52,14 @@ const userSchema = new mongoose.Schema({
     },
     intro: {
         type: Object,
-        default: {},
+        default: {
+            currentJob: "",
+            currentEducation: "",
+            currentCity: "",
+            hometown: "",
+            relationship: ""
+        },
     }
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = User = mongoose.model("User", userSchema);

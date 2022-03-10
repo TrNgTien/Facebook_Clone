@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const datingProfileSchema = new mongoose.Schema({
     age: {
         type: Number,
+        required: true,
+        default: 18,
     },
     gender: {
         type: String,
@@ -10,6 +12,7 @@ const datingProfileSchema = new mongoose.Schema({
     },
     name: {
         type: String,
+        required: true,
         maxLength: 255,
     },
     location: {
@@ -34,6 +37,7 @@ const datingProfileSchema = new mongoose.Schema({
     },
     userID: {
         type: String,
+        require: true,
     }
 });
 

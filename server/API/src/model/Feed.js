@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const feedSchema = new mongoose.Schema({
     description: {
         type: String,
+        required: true,
     },
     feedAttachments: {
         type: String,
@@ -19,6 +20,10 @@ const feedSchema = new mongoose.Schema({
     numberOfCommnet: {
         type: Number,
         default: 0,
+    },
+    userID: {
+        type: String,
+        required: true,
     }
 });
 
