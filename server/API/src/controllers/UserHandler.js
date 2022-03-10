@@ -15,6 +15,7 @@ module.exports = {
                 gender, 
                 userName, 
                 password, 
+                confirmPassword,
                 firstName, 
                 lastName, 
                 DOB, 
@@ -31,9 +32,14 @@ module.exports = {
                     message: "Invalid UserName"
                 })
             }
-            if(password.length < 5){
+            if(password.length < 6){
                 return res.status(400).json({
                     message: "Password is too short, please try again"
+                })
+            }
+            if(confirmPassword !== password){
+                return res.status(400).json({
+                    message: "Password does not match"
                 })
             }
             let hashedPassword = await bcrypt.hashSync(password, saltRounds);
@@ -75,14 +81,9 @@ module.exports = {
             let correctPassword = bcrypt.compareSync(password, user.password.toString());
             let userID = user._id.toString();
 
-            if (!user){
+           if (!user || !correctPassword){
                 return res.status(400).json({
-                    message: "Incorrect UserName"
-                })
-            }
-            else if (!correctPassword){
-                return res.status(400).json({
-                    message: "Incorrect password"
+                    message: "Incorrect UserName or Password"
                 })
             }
             else{
