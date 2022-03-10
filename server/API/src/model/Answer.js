@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const answerSchema = new mongoose.Schema({
     answerContent: {
         type: String,
-        require: true,
+        required: true,
     },
     questionID: {
         type: String,
-        require: true,
+        required: true,
     }
 });
 

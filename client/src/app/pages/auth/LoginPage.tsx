@@ -1,112 +1,104 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
-  const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-  };
-  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+	const [userName, setUserName] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+	const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
+		setUserName(e.target.value);
+	};
+	const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
+		setPassword(e.target.value);
+	};
 
-  const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === "Enter") {
-      if (password === "tien" && userName === "tien") {
-        setIsLoadingLogin(true);
-        setTimeout(() => {
-          setIsLoadingLogin(false);
-          props.history.push("/feeds");
-        }, 2000);
-      } else {
-        alert("Wrong username or password");
-      }
-    }
-  };
-  const onPressLogin = (props: any): void => {
-    if (password === "tien" && userName === "tien") {
-      setIsLoadingLogin(true);
-      setTimeout(() => {
-        setIsLoadingLogin(false);
-        props.history.push("/feeds");
-      }, 2000);
-    } else {
-      alert("Wrong username or password");
-    }
-  };
-  const successResponse = (response: any): void => {
-    const { profileObj } = response;
-    setIsLoadingLogin(true);
-    setTimeout(() => {
-      setIsLoadingLogin(false);
-      setCookie("imageUrl", profileObj.imageUrl);
-      setCookie("userName", profileObj.name);
-      props.history.push("/feeds", profileObj);
-    }, 2000);
-  };
-  const renderIcon = (showPassword: boolean) => {
-    if (showPassword) return <AiFillEyeInvisible />;
-    else return <AiFillEye />;
-  };
-  return (
-    <div className="login-page">
-      {isLoadingLogin ? <CircleLoading /> : null}
-      <h1>Matching</h1>
-      <h2 className="authen-type">Login</h2>
-      
-      <div className="wrapper-input">
-        <form>
-          <div className="wrapper__user-name">
-            <label htmlFor="userName">User Name</label>
-            <input
-              type="text"
-              id="userName"
-              autoComplete="on"
-              value={userName}
-              onChange={onChangeUserName}
-              placeholder="Your user name..."
-              className="input__user-name"
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <div className="wrapper-password">
-              <input
-                autoComplete="off"
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onKeyDown={(e) => loginEnterAccept(e)}
-                onChange={onChangePassword}
-                placeholder="Your password..."
-                className="input__password"
-                size={8}
-              />
-              <i
-                className="icon-password"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {renderIcon(showPassword)}
-              </i>
-            </div>
-          </div>
-        </form>
-      </div>
+	// const loginEnterAccept = (e: KeyboardEvent<HTMLInputElement>): void => {
+	//   if (e.key === "Enter") {
+	//     if (password === "tien" && userName === "tien") {
+	//       setIsLoadingLogin(true);
+	//       setTimeout(() => {
+	//         setIsLoadingLogin(false);
+	//         props.history.push("/feeds");
+	//       }, 2000);
+	//     } else {
+	//       alert("Wrong username or password");
+	//     }
+	//   }
+	// };
+	const onPressLogin = (props: any): void => {
+		if (password === "tien" && userName === "tien") {
+			setIsLoadingLogin(true);
+			setTimeout(() => {
+				setIsLoadingLogin(false);
+				props.history.push("/feeds");
+			}, 2000);
+		} else {
+			alert("Wrong username or password");
+		}
+	};
+	const successResponse = (response: any): void => {
+		const { profileObj } = response;
+		setIsLoadingLogin(true);
+		setTimeout(() => {
+			setIsLoadingLogin(false);
+			setCookie("imageUrl", profileObj.imageUrl);
+			setCookie("userName", profileObj.name);
+			props.history.push("/feeds", profileObj);
+		}, 2000);
+	};
 
-      <button className="button-login" onClick={() => onPressLogin(props)}>
-        Login
-      </button>
-
-      <Link className="register-link__login" to="/register">
-        Don't have account? Sign up!
-      </Link>
-    </div>
-  );
+	return (
+		<div className="login-page">
+			{isLoadingLogin ? <CircleLoading /> : null}
+			<div className="login-container">
+				<div className="container-slogan">
+					<p className="logo-title">facebook</p>
+					<p className="slogan-content">
+						Facebook helps you to connect and share with the people in your
+						life.
+						<em style={{ color: "dodgerblue" }}>
+							But Clone Team helps you improve your skills
+						</em>
+					</p>
+				</div>
+				<div className="wrapper-input">
+					<form className="input-form">
+						<input
+							type="text"
+							id="userName"
+							autoComplete="on"
+							value={userName}
+							onChange={onChangeUserName}
+							placeholder="Email address or phone number"
+							className="login-input__user-name"
+						/>
+						<input
+							autoComplete="off"
+							id="password"
+							type="password"
+							value={password}
+							// onKeyDown={(e) => loginEnterAccept(e)}
+							onChange={onChangePassword}
+							placeholder="Password"
+							className="login-input__password"
+							size={8}
+						/>
+					</form>
+					<button className="button-login" onClick={() => onPressLogin(props)}>
+						Log In
+					</button>
+					<p>Forgotten password?</p>
+					<hr className="hr-login" />
+					<button className="button-register">
+						<Link className="register-link__login" to="/register">
+							Create New Account
+						</Link>
+					</button>
+				</div>
+			</div>
+		</div>
+	);
 }

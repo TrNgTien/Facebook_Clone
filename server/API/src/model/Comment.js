@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema({ 
     commentContent: {
         type: String,
-        require: true,
+        required: true,
     },
     commentAttachments: {
         type: String,
@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
     },
     userID: {
         type: String,
-        require: true, 
+        required: true, 
     }
 });
 

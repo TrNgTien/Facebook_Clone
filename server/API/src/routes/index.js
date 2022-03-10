@@ -1,6 +1,8 @@
 const socialFeedRoute = require("./SocialFeedRoute.js");
-const FEED = require("../constant/ConstantRoutes");
+const userRoute = require("./UserRoute");
+const route = require("../constant/ConstantRoutes");
 function routes(app) {
-  app.use("/feed", socialFeedRoute);
+  app.use(route.FEED, socialFeedRoute);
+  app.use(route.AUTH, userRoute);
 }
 module.exports = routes;

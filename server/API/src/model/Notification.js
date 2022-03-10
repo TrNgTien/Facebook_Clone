@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const notiSchema = new mongoose.Schema({
     notiContent: {
         type: String,
-        require: true,
+        required: true,
     },
     userID: {
         type: String,
-        require: true,
+        required: true,
     }
 });
 
