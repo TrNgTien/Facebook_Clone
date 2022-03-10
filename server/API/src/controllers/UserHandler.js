@@ -75,14 +75,9 @@ module.exports = {
             let correctPassword = bcrypt.compareSync(password, user.password.toString());
             let userID = user._id.toString();
 
-            if (!user){
+           if (!user || !correctPassword){
                 return res.status(400).json({
                     message: "Incorrect UserName"
-                })
-            }
-            else if (!correctPassword){
-                return res.status(400).json({
-                    message: "Incorrect password"
                 })
             }
             else{
