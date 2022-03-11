@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "config": "^3.3.7",
     "dotenv": "^16.0.0",
     "socket.io": "^4.4.1"
   },

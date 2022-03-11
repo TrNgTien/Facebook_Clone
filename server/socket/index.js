@@ -1,9 +1,15 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const PORT = process.env.PORT_ENV || 5000;
+
+
+//Detect mode 
+const mode = process.env.NODE_ENV || "development";
+const config = require("config").get(mode);
+
+const PORT = process.env.PORT || config.port;
 const io = require("socket.io")(PORT, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `http://localhost:${config.port}`,
   },
 });
 
