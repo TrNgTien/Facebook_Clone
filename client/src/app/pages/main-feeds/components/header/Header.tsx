@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
 import { GrAdd } from "react-icons/gr";
 import { TiArrowSortedDown } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 import logo from "../../../../assets/icons8-facebook.svg";
 import "./Header.scss";
 
 const Header = (props: any) => {
   const { avatarURL, username } = props;
+  const navigate = useNavigate();
   const [counterNoti, setCounterNoti] = useState<Number>(12);
   return (
     <div className="header">
@@ -14,6 +16,9 @@ const Header = (props: any) => {
         <img
           src={logo}
           alt="logo"
+          onClick={() => {
+            navigate("/feeds");
+          }}
         />
         <div className="header__search">
           <input type="text" placeholder="Search..." />
@@ -36,7 +41,9 @@ const Header = (props: any) => {
           <i>
             <AiTwotoneBell />
           </i>
-          <div className="notify-counter">{counterNoti > 9 ? "9+" : counterNoti}</div>
+          <div className="notify-counter">
+            {counterNoti > 9 ? "9+" : counterNoti}
+          </div>
         </div>
         <div className="header__option--menu header__option ">
           <i>
