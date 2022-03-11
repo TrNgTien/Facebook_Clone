@@ -1,6 +1,5 @@
 const User = require("../model/User");
 const authentication = require("../middleware/Authentication");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 

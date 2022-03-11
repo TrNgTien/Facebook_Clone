@@ -4,7 +4,7 @@ const userHandler = require("../controllers/UserHandler");
 
 
 router.post("/register", userHandler.register);
-router.post("/login", userHandler.login);
+router.get("/login", userHandler.login);
 
 module.exports = router;
 

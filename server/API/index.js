@@ -13,7 +13,7 @@ const config = require("config").get(mode);
 
 
 const PORT = process.env.PORT || config.port;
-// connectDb();
+connectDb();
 app.use(express.json());
 app.use(cors());
 routes(app);
