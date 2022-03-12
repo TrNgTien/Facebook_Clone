@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import GeneralChat from "../pages/chatting/GeneralChat";
@@ -8,17 +8,27 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import Feeds from "../pages/main-feeds/Feeds";
 import NotFound from "../pages/not-found/NotFound";
 function MainRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/chatting" element={<GeneralChat />} />
-      <Route path="/matching" element={<QuestionMatching />} />
-      <Route path="/feeds" element={<Feeds />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
+	let location = useLocation();
+	let state = location.state as { backgroundLocation?: Location };
+
+	return (
+		<>
+			<Routes location={state?.backgroundLocation || location}>
+				<Route path="/" element={<LoginPage />} />
+				<Route path="/register" element={<RegisterPage />} />
+				<Route path="/profile" element={<ProfilePage />} />
+				<Route path="/chatting" element={<GeneralChat />} />
+				<Route path="/matching" element={<QuestionMatching />} />
+				<Route path="/feeds" element={<Feeds />} />
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+			{state?.backgroundLocation && (
+				<Routes>
+					<Route path="/register" element={<RegisterPage />} />
+				</Routes>
+			)}
+		</>
+	);
 }
 
 export default MainRoutes;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const feedSchema = new mongoose.Schema({
     description: {
@@ -22,7 +23,7 @@ const feedSchema = new mongoose.Schema({
         default: 0,
     },
     userID: {
-        type: String,
+        type: ObjectId,
         required: true,
     }
 });

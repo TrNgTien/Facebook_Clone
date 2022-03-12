@@ -1,64 +1,191 @@
 .register-page {
 	height: 100vh;
 	width: 100vw;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	.container-form {
-		width: 435px;
-		height: 510px;
-		display: flex;
-		flex-direction: column;
+	background-color: rgba(255, 255, 255, 0.15);
+	backdrop-filter: blur(5px);
+	position: fixed;
+	top: 0;
 
+	.container-form {
+		background-color: white;
+		width: 435px;
+		height: 450px;
+		position: relative;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		box-shadow: 0px 5px 8px -4px rgba(0, 0, 0, 0.9);
 		border-radius: 10px;
-		// background-color: gray;
 		.register-form__header {
 			margin: 10px 15px;
+			.title-signup {
+				margin-bottom: 5px;
+			}
 			.register-page__authen-slogan {
 				line-height: 10px;
-				font-size: small;
-				font-weight: 600;
-				color: #83888d;
+				font-size: 16px;
+				color: #68696b;
 			}
 		}
-		hr {
-			height: 1px;
-			background: rgb(85, 85, 85);
-			opacity: 0.5;
+		.close-btn-img {
+			height: 24px;
+			width: 24px;
+			position: absolute;
+			right: 10px;
+			top: 12px;
+			z-index: 2;
+			cursor: pointer;
+		}
+		.register-hr {
+			border-bottom: 2px solid #dadde1;
+			margin: 20px 16px;
 		}
 		.register-page__wrapper-input {
 			.register-page__wrapper__name {
+				display: flex;
+				justify-content: space-around;
+				align-content: space-around;
+				margin: 10px 15px;
 				.input__firstname {
 					background-color: #f5f6f7;
-					// border: 5px;
+					width: 170px;
+					padding: 11px;
+					border: 1px solid #c0c0c0;
+					margin-right: 10px;
+					border-radius: 6px;
+					outline: none;
+					flex: 1;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+						font-size: 15px;
+					}
 				}
 				.input__surname {
 					background-color: #f5f6f7;
+					width: 170px;
+					flex: 1;
+					padding: 11px;
+					border: 1px solid #c0c0c0;
+					border-radius: 6px;
+					outline: none;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+						font-size: 15px;
+					}
 				}
 			}
 			.register-page__wrapper__username {
-				.input__user-name {
+				margin: 10px 15px;
+				.register-input__username {
+					background-color: #f5f6f7;
+					width: 100%;
+					flex: 1;
+					padding: 11px;
+					border: 1px solid #c0c0c0;
+					border-radius: 6px;
+					outline: none;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+						font-size: 15px;
+					}
 				}
 			}
 			.register-page__wrapper-password {
-				.input__password {
+				margin: 10px 15px 10px 15px;
+				.register-input__password {
+					background-color: #f5f6f7;
+					width: 100%;
+					flex: 1;
+					padding: 11px;
+					border: 1px solid #c0c0c0;
+					border-radius: 6px;
+					outline: none;
+					&::placeholder {
+						font-size: medium;
+						color: #92969e;
+						font-size: 15px;
+					}
 				}
 			}
 			.register-page__wrapper-date-of-birth {
+				margin: 0px 15px;
 				.label-container {
+					// margin-bottom: 15px;
+
+					font-size: 12px;
+					color: #494949;
 				}
+
 				.date-selections {
+					display: flex;
+					.date-selection--months {
+						margin: 0px 15px;
+					}
+					.date-selection {
+						outline: none;
+						flex: 1;
+						padding: 8px;
+						font-size: 15px;
+						background-position: right 5px center;
+						border: 1px solid #c0c0c0;
+						border-radius: 4px;
+					}
 				}
 			}
 			.register-page__wrapper-gender {
+				margin: 0px 15px;
 				.label-container {
+					font-size: 12px;
+					color: #494949;
 				}
 				.gender-selections {
+					cursor: pointer;
+					display: flex;
+
+					.gender-label {
+						cursor: pointer;
+					}
+					.gender-selection--male {
+						margin: 0px 15px;
+					}
+					.gender-selection {
+						outline: none;
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						flex: 1;
+						padding: 6px;
+						font-size: 15px;
+						border: 1px solid #c0c0c0;
+						border-radius: 4px;
+					}
 				}
 			}
 		}
-		.button-register {
+		.bottom-register-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin: 0em 1em;
+			.button-register {
+				background: none;
+				width: 200px;
+				margin-top: 2em;
+				padding: 6px 50px;
+				font-size: 18px;
+				font-weight: bold;
+				color: white;
+				background-color: #00a400;
+				border-radius: 6px;
+				border: none;
+				cursor: pointer;
+				&:hover {
+					background-color: #6ca05f;
+				}
+			}
 		}
 	}
 }

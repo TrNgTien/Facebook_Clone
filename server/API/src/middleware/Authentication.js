@@ -1,25 +1,34 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const user = require("../model/User");
 dotenv.config();
 
 const Authentication = (req, res, next) => {
-  const token = req.get("authorization");
-  if (token) {
-    authtoken = token.slice(7);
-    jwt.verify(authtoken, process.env.JWT_KEY, (err) => {
-      if (err) {
-        return res.json({ err: err });
-      } else {
-        next();
-      }
-    });
-  } else {
-    return res.status(403).send("UnAuthorized!");
+  try {
+    let token = req.get("Authorization");
+    if (!token) {
+      return res.status(401).json("UnAuthorized");
+    } else {
+      const authtoken = token.slice(7);
+      const validatedUser = jwt.verify(authtoken, process.env.JWT_KEY);
+      console.log(validatedUser.id);
+      req.user = validatedUser;
+      next();
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({ error: "Unauthorized" });
   }
-  next();
 };
-const generateAccessToken = (user) => {
-  return jwt.sign({ user }, process.env.JWT_KEY);
+const generateAccessToken = (user, role) => {
+  return jwt.sign({ id: user, role: role }, process.env.JWT_KEY);
 };
+const adminVerify = (req, res, next) => {
+  if(req.user.role === 0)   next();
+    else
+    res.status(401).json({
+        message: "You are not allowed",
+    })
+}
 
-module.exports = { Authentication, generateAccessToken };
+module.exports = { Authentication, generateAccessToken, adminVerify };

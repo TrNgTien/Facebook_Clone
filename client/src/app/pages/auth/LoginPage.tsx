@@ -1,18 +1,19 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { setCookie } from "../../utils/CookieUtil";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 
 export default function LoginPage(props: any) {
-  const navigate = useNavigate();
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isFocusPass, setIsFocusPass] = useState<boolean>(false);
-  const [isFocusUser, setIsFocusUser] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+	const location = useLocation();
+	const navigate = useNavigate();
+	const [userName, setUserName] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [isFocusPass, setIsFocusPass] = useState<boolean>(false);
+	const [isFocusUser, setIsFocusUser] = useState<boolean>(false);
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   };
@@ -119,8 +120,12 @@ export default function LoginPage(props: any) {
             </button>
             <div className="hr-login"></div>
             <button className="button-register">
-              <Link className="register-link__login" to="/register">
-                Create New Account
+              <Link
+                className="register-link__login"
+                to="/register"
+                state={{ backgroundLocation: location }}
+              >
+                <button className="button-register">Create New Account</button>
               </Link>
             </button>
           </div>

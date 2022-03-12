@@ -1,11 +1,12 @@
-import axios from "axios";
-
-const loginReq = async (username: string, password: string) => {
-  const response = await axios.post("http://localhost:5000/api/auth/login", {
-    username,
-    password,
+import * as httpClient from "./BaseService";
+import Path from "../constants/PathURL";
+interface IAuthService {
+  userName: string;
+  password: string;
+}
+const LoginReq = (reqBody: IAuthService) => {
+  return httpClient.post(Path.LOGIN, {
+    ...reqBody,
   });
-  return response.data;
 };
-
-export { loginReq };
+export { LoginReq };
