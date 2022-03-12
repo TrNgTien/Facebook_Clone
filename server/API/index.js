@@ -15,7 +15,9 @@ const config = require("config").get(mode);
 const PORT = process.env.PORT || config.port;
 connectDb();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [`http://localhost:${config.port}`, process.env.CLIENT_HOST]
+}));
 routes(app);
 app.get("/", (req, res) => {
   res.send("RESTful called successfully!");
