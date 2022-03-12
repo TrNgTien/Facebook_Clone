@@ -202,11 +202,11 @@ export default function RegisterPage(props: any) {
 					</form>
 				</div>
 				<div className="bottom-register-container">
-					<p className="license-paragraph">
+					{/* <p className="license-paragraph">
 						Bằng cách nhấp vào Đăng ký, bạn đồng ý với Điều khoản, Chính sách dữ
 						liệu và Chính sách cookie của chúng tôi. Bạn có thể nhận được thông
 						báo của chúng tôi qua SMS và hủy nhận bất kỳ lúc nào.
-					</p>
+					</p> */}
 					<button
 						className="button-register"
 						onClick={() => loginNavigate(props)}

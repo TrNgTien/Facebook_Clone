@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
     userType: {
         type: Number,
         default: 1,
-        required: true,
     },
     userAvatar: {
         type: String,

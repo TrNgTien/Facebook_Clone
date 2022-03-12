@@ -1,11 +1,11 @@
 {
-    "production": {
-      "name": "Project Name - Production Mode",
-      "port": "",
-      "mode": "production",
+    "development": {
+      "name": "Project Name - Dev Mode",
+      "port": 5000,
+      "mode": "development",
       "protocol": "http",
-      "serverUrl": "",
-      "serverUrlWebUrlLink": "",
+      "serverUrl": "localhost",
+      "serverUrlWebUrlLink": "localhost:8080/",
       "database": {
         "multipleStatements": true,
         "host": "",

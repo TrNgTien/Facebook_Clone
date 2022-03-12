@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const URI = process.env.DB_ACCESS
-console.log("URI", URI)
             
 
 const connectDb = async() =>{
