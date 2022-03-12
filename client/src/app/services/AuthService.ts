@@ -9,5 +9,4 @@ const LoginReq = (reqBody: IAuthService) => {
     ...reqBody,
   });
 };
-
 export { LoginReq };

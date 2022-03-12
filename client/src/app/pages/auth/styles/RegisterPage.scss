@@ -37,10 +37,8 @@
 			cursor: pointer;
 		}
 		.register-hr {
-			margin: 15px 0px;
-			height: 1px;
-			background: rgb(85, 85, 85);
-			opacity: 0.5;
+			border-bottom: 2px solid #dadde1;
+			margin: 20px 16px;
 		}
 		.register-page__wrapper-input {
 			.register-page__wrapper__name {
@@ -144,7 +142,12 @@
 					color: #494949;
 				}
 				.gender-selections {
+					cursor: pointer;
 					display: flex;
+
+					.gender-label {
+						cursor: pointer;
+					}
 					.gender-selection--male {
 						margin: 0px 15px;
 					}
@@ -167,16 +170,6 @@
 			flex-direction: column;
 			align-items: center;
 			margin: 0em 1em;
-			.license-paragraph {
-				color: #777;
-				font-size: 12px;
-				display: block;
-				text-align: left;
-				display: block;
-				line-height: 15px;
-				margin-block-start: 1em;
-				margin-block-end: 1em;
-			}
 			.button-register {
 				background: none;
 				width: 200px;

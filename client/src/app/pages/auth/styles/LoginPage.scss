@@ -118,68 +118,42 @@
 				}
 			}
 
-			.register-link__login {
-				text-decoration: none;
-
+			.wrapper-button {
+				display: flex;
+				flex-direction: column;
+				.button-login {
+					color: white;
+					font-weight: bold;
+					background-color: #1877f2;
+					border: none;
+					border-radius: 6px;
+					font-size: 20px;
+					line-height: 48px;
+					padding: 0 16px;
+					margin-bottom: 1rem;
+					align-self: center;
+					width: 92%;
+					cursor: pointer;
+				}
+				.hr-login {
+					border-bottom: 2px solid #dadde1;
+					margin: 20px 16px;
+				}
 				.button-register {
 					background-color: #42b72a;
-					color: white;
 					border: none;
 					border-radius: 6px;
 					font-size: 17px;
+					align-self: center;
 					font-weight: 600;
 					line-height: 48px;
 					padding: 0px 15px;
 					cursor: pointer;
+					color: white;
 					.register-link__login {
 						text-decoration: none;
 						color: white;
 					}
-				}
-			}
-		}
-		.wrapper-button {
-			display: flex;
-			flex-direction: column;
-			.button-login {
-				outline: none;
-				border: none;
-				border-radius: 5px;
-				width: 93%;
-				padding: 10px 16px;
-				margin: 0px 15px;
-				font-size: 20px;
-				font-weight: bold;
-				color: white;
-				background-color: #1877f2;
-				cursor: pointer;
-			}
-			.forgotten-password {
-				font-size: 14px;
-				color: #0e6eec;
-				font-weight: bold;
-				margin: 1rem auto;
-			}
-			.hr-login {
-				height: 1px;
-				background: rgb(85, 85, 85);
-				opacity: 0.5;
-			}
-			.register-link__login {
-				text-decoration: none;
-				color: white;
-				align-self: center;
-
-				.button-register {
-					background-color: #42b72a;
-					border: none;
-					border-radius: 6px;
-					font-size: 17px;
-					font-weight: 600;
-					line-height: 48px;
-					padding: 0px 15px;
-					margin-top: 1rem;
-					cursor: pointer;
 				}
 			}
 		}

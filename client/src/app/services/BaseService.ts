@@ -17,6 +17,7 @@ const axios = require("axios").create({
       RequestHeaders.ACESS_CONTROLL_ALLOW_METHODS.join(","),
   },
 });
+
 axios.interceptors.response.use(resHandler, errResHandler);
 
 const get = (path = "", paramsObj = {}) => {
