@@ -1,15 +1,14 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-
-//Detect mode 
+//Detect mode
 const mode = process.env.NODE_ENV || "development";
 const config = require("config").get(mode);
 
 const PORT = process.env.PORT || config.port;
 const io = require("socket.io")(PORT, {
   cors: {
-    origin: `http://localhost:${config.port}`,
+    origin: [`http://localhost:${config.port}`, process.env.CLIENT_HOST],
   },
 });
 
