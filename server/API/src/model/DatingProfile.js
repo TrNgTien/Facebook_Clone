@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const datingProfileSchema = new mongoose.Schema({
     age: {
         type: Number,
-        required: true,
         default: 18,
     },
     gender: {
