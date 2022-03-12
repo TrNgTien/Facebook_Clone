@@ -1,10 +1,11 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 import { setCookie } from "../../utils/CookieUtil";
 
 export default function LoginPage(props: any) {
+	let location = useLocation();
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
@@ -92,11 +93,13 @@ export default function LoginPage(props: any) {
 					</button>
 					<p>Forgotten password?</p>
 					<hr className="hr-login" />
-					<button className="button-register">
-						<Link className="register-link__login" to="/register">
-							Create New Account
-						</Link>
-					</button>
+					<Link
+						className="register-link__login"
+						to="/register"
+						state={{ backgroundLocation: location }}
+					>
+						<button className="button-register">Create New Account</button>
+					</Link>
 				</div>
 			</div>
 		</div>

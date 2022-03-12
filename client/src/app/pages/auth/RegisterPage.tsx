@@ -1,10 +1,12 @@
 import React, { ChangeEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/RegisterPage.scss";
+import { dates, months, years } from "./DateModels";
 
 export default function RegisterPage(props: any) {
+	let navigate = useNavigate();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showPasswordConfirm, setShowPasswordConfirm] =
 		useState<boolean>(false);
@@ -38,6 +40,10 @@ export default function RegisterPage(props: any) {
 			// history.push("/generalChat");
 		}
 	};
+
+	function onDismiss() {
+		navigate(-1);
+	}
 	const successResponse = (response: any): void => {
 		// const { profileObj } = response;
 		setIsRegistering(true);
@@ -62,12 +68,16 @@ export default function RegisterPage(props: any) {
 			{isRegistering ? <CircleLoading /> : null}
 			<div className="container-form">
 				<div className="register-form__header">
-					<h1>Sign Up</h1>
-					<i></i>
+					<h1 className="title-signup">Sign Up</h1>
 					<p className="register-page__authen-slogan">It's quick and easy</p>
 				</div>
-
-				<hr />
+				<img
+					className="close-btn-img"
+					src="https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png"
+					alt=""
+					onClick={() => onDismiss()}
+				></img>
+				<hr className="register-hr" />
 				<div className="register-page__wrapper-input">
 					<form>
 						<div className="register-page__wrapper__name">
@@ -79,17 +89,16 @@ export default function RegisterPage(props: any) {
 							<input
 								type="text"
 								className="input__surname"
-								placeholder="surname"
+								placeholder="Surname"
 							/>
 						</div>
 						<div className="register-page__wrapper__username">
 							<input
 								type="text"
 								id="userName"
-								autoComplete="on"
 								value={userName}
 								onChange={onChangeUserName}
-								placeholder="Your user name..."
+								placeholder="Your username"
 								className="register-input__username"
 							/>
 						</div>
@@ -100,7 +109,7 @@ export default function RegisterPage(props: any) {
 								value={password}
 								autoComplete="off"
 								onChange={onChangePassword}
-								placeholder="Your password..."
+								placeholder="New password"
 								className="register-input__password"
 								size={8}
 							/>
@@ -110,14 +119,38 @@ export default function RegisterPage(props: any) {
 								Date of birth:
 							</label>
 							<div className="date-selections">
-								<select name="dates" id="date-select">
-									<option value="">--Please choose an option--</option>
+								<select
+									name="dates"
+									id="date-select"
+									className="date-selection"
+								>
+									{dates.map((date, index) => (
+										<option value={date} key={date}>
+											{date}
+										</option>
+									))}
 								</select>
-								<select name="dates" id="date-select">
-									<option value="">--Please choose an option--</option>
+								<select
+									name="dates"
+									id="date-select"
+									className="date-selection date-selection--months"
+								>
+									{months.map((month, index) => (
+										<option value={month} key={month}>
+											{month}
+										</option>
+									))}
 								</select>
-								<select name="dates" id="date-select">
-									<option value="">--Please choose an option--</option>
+								<select
+									name="dates"
+									id="date-select"
+									className="date-selection"
+								>
+									{years.map((year, index) => (
+										<option value={year} key={year}>
+											{year}
+										</option>
+									))}
 								</select>
 							</div>
 						</div>
@@ -126,30 +159,61 @@ export default function RegisterPage(props: any) {
 								Gender:
 							</label>
 							<div className="gender-selections">
-								<label htmlFor="Female" className="gender-label">
-									Female
-								</label>
-								<input type="radio" id="Female" name="gender" value="female" />
+								<div className="gender-selection">
+									<label htmlFor="Female" className="gender-label">
+										Female
+									</label>
+									<input
+										type="radio"
+										id="Female"
+										name="gender"
+										value="female"
+										className="radio-button__gender"
+									/>
+								</div>
 
-								<label htmlFor="Male" className="gender-label">
-									Male
-								</label>
-								<input type="radio" id="Male" name="gender" value="Male" />
+								<div className="gender-selection gender-selection--male">
+									<label htmlFor="Male" className="gender-label">
+										Male
+									</label>
+									<input
+										type="radio"
+										id="Male"
+										name="gender"
+										value="Male"
+										className="radio-button__gender"
+									/>
+								</div>
 
-								<label htmlFor="Custom" className="gender-label">
-									Custom
-								</label>
-								<input type="radio" id="Custom" name="gender" value="Custom" />
+								<div className="gender-selection">
+									<label htmlFor="Custom" className="gender-label">
+										Custom
+									</label>
+									<input
+										type="radio"
+										id="Custom"
+										name="gender"
+										value="Custom"
+										className="radio-button__gender"
+									/>
+								</div>
 							</div>
 						</div>
 					</form>
 				</div>
-				<button
-					className="button-register"
-					onClick={() => loginNavigate(props)}
-				>
-					Sign Up
-				</button>
+				<div className="bottom-register-container">
+					<p className="license-paragraph">
+						Bằng cách nhấp vào Đăng ký, bạn đồng ý với Điều khoản, Chính sách dữ
+						liệu và Chính sách cookie của chúng tôi. Bạn có thể nhận được thông
+						báo của chúng tôi qua SMS và hủy nhận bất kỳ lúc nào.
+					</p>
+					<button
+						className="button-register"
+						onClick={() => loginNavigate(props)}
+					>
+						Sign Up
+					</button>
+				</div>
 
 				{/* <Link className="register-link__register" to="/">
 					I've already have an account!

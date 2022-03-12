@@ -86,18 +86,20 @@
 				background: rgb(85, 85, 85);
 				opacity: 0.2;
 			}
-			.button-register {
-				background-color: #42b72a;
-				border: none;
-				border-radius: 6px;
-				font-size: 17px;
-				font-weight: 600;
-				line-height: 48px;
-				padding: 0px 15px;
-				cursor: pointer;
-				.register-link__login {
-					text-decoration: none;
+
+			.register-link__login {
+				text-decoration: none;
+
+				.button-register {
+					background-color: #42b72a;
 					color: white;
+					border: none;
+					border-radius: 6px;
+					font-size: 17px;
+					font-weight: 600;
+					line-height: 48px;
+					padding: 0px 15px;
+					cursor: pointer;
 				}
 			}
 		}
