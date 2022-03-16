@@ -4,9 +4,16 @@ interface IAuthService {
   userName: string;
   password: string;
 }
+
+interface IRegisterService {
+  // 
+}
 const LoginReq = (reqBody: IAuthService) => {
   return httpClient.post(Path.LOGIN, {
     ...reqBody,
   });
 };
-export { LoginReq };
+const RegisterReq = (reqBody: IRegisterService) => {
+  // Todo...
+}
+export { LoginReq, RegisterReq };
