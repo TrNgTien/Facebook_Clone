@@ -1,31 +1,30 @@
+const Feed = require("../model/Feed");
 
 module.exports = {
-  addNewsFeed: async (req, res) => {
+  getFeed: async (req, res) => {
     try {
-      const { id, title } = req.body;
-      const newsFeed = {
-        id: id,
-        title: title,
-      };
-      const dbConnection = await db.collection("newsFeed");
-      dbConnection.add(newsFeed);
-      res.status(200).json("Add successfully");
+      let allFeed = await Feed.find({});
+      return res.status(200).json({
+        data: allFeed,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
   },
-  getFeed: async (req, res) => {
+
+  addFeed: async (req, res) => {
     try {
-      const dbConnection = await db.collection("newsFeed");
-      const newsFeed = await dbConnection.get();
-      const dataFeed = newsFeed.docs.map((doc) => {
-        return {
-          id: doc.id,
-          title: doc.data().title,
-        };
+      let { description, feedAttachments } = req.body;
+      let newFeed = new Feed({
+        description: description,
+        feedAttachments: feedAttachments,
+        userID: req.user.id,
       });
-      res.status(200).json(dataFeed);
+      await newFeed.save();
+      return res.status(200).json({
+        message: "Post Successfully!",
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
