@@ -68,7 +68,6 @@ module.exports = {
     try {
       let { userName, password } = req.body;
       let user = await User.findOne({ userName: userName }).lean();
-      console.log(password);
       let correctPassword = bcrypt.compareSync(
         password,
         user.password.toString()
@@ -105,7 +104,6 @@ module.exports = {
   getUserInformation: async (req, res) => {
     try {
       let { id } = req.params;
-      console.log(req.params)
       let userInfo = await User.findOne({ _id: id});
       return res.status(200).json({
         data: userInfo,
