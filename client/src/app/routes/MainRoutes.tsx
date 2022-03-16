@@ -14,13 +14,13 @@ function MainRoutes() {
 	return (
 		<>
 			<Routes location={state?.backgroundLocation || location}>
-				<Route path="/" element={<LoginPage />} />
 				<Route path="/register" element={<RegisterPage />} />
 				<Route path="/profile" element={<ProfilePage />} />
 				<Route path="/chatting" element={<GeneralChat />} />
 				<Route path="/matching" element={<QuestionMatching />} />
 				<Route path="/feeds" element={<Feeds />} />
 				<Route path="*" element={<NotFound />} />
+				<Route path="/" element={<LoginPage />} />
 			</Routes>
 			{state?.backgroundLocation && (
 				<Routes>
