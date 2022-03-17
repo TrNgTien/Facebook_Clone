@@ -15,7 +15,7 @@ module.exports = {
         lastName,
         day,
         month,
-        year
+        year,
       } = req.body;
 
       if (!userName || typeof userName !== "string") {
@@ -67,15 +67,20 @@ module.exports = {
   login: async (req, res) => {
     try {
       let { userName, password } = req.body;
-      let user = await User.findOne({ userName: userName }).lean();
+      let user = await User.findOne({ userName }).lean();
+      if (!user) {
+        return res.status(400).json({
+          message: "Incorrect UserName or Password",
+        });
+      }
+      let userID = user._id.toString();
+      let userRole = user.userType;
       let correctPassword = bcrypt.compareSync(
         password,
         user.password.toString()
       );
-      let userID = user._id.toString();
-      let userRole = user.userType;
 
-      if (!user || !correctPassword) {
+      if (!correctPassword) {
         return res.status(400).json({
           message: "Incorrect UserName or Password",
         });
@@ -104,7 +109,7 @@ module.exports = {
   getUserInformation: async (req, res) => {
     try {
       let { id } = req.params;
-      let userInfo = await User.findOne({ _id: id});
+      let userInfo = await User.findOne({ _id: id });
       return res.status(200).json({
         data: userInfo,
       });
@@ -149,12 +154,11 @@ module.exports = {
         return res.status(200).json({
           message: "Update successfully!",
         });
-      }
-      else{
-          console.log(req.user.toString());
-          return res.status(401).json({
-              message: "Only edit personal profiles"
-          })
+      } else {
+        console.log(req.user.toString());
+        return res.status(401).json({
+          message: "Only edit personal profiles",
+        });
       }
     } catch (error) {
       console.log(error);
