@@ -25,7 +25,11 @@ const feedSchema = new mongoose.Schema({
     userID: {
         type: ObjectId,
         required: true,
-    }
+    },
+    userReact: {
+        type: Array,
+        default: []
+    },
 });
 
 module.exports = mongoose.model("Feed", feedSchema);
