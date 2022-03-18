@@ -97,7 +97,7 @@ module.exports = {
   },
   getAllUser: async (req, res) => {
     try {
-      let allUser = await User.find({});
+      let allUser = await User.find();
       return res.status(200).json({
         data: allUser,
       });
