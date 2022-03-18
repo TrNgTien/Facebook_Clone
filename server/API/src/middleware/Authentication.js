@@ -11,7 +11,6 @@ const Authentication = (req, res, next) => {
     } else {
       const authtoken = token.slice(7);
       const validatedUser = jwt.verify(authtoken, process.env.JWT_KEY);
-      console.log(validatedUser.id);
       req.user = validatedUser;
       next();
     }
