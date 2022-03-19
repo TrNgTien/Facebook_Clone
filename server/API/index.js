@@ -16,8 +16,9 @@ const PORT = process.env.PORT || config.port;
 connectDb();
 app.use(express.json());
 app.use(cors({
-  origin: [`http://localhost:${config.port}`, process.env.CLIENT_HOST]
+  origin: [`http://localhost:3000`, process.env.CLIENT_HOST]
 }));
+console.log(config.port);
 routes(app);
 app.get("/", (req, res) => {
   res.send("RESTful called successfully!");
