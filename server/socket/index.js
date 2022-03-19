@@ -8,7 +8,7 @@ const config = require("config").get(mode);
 const PORT = process.env.PORT || config.port;
 const io = require("socket.io")(PORT, {
   cors: {
-    origin: [`http://localhost:${config.port}`, process.env.CLIENT_HOST],
+    origin: [`http://localhost:3000`, process.env.CLIENT_HOST],
   },
 });
 
