@@ -10,7 +10,6 @@ module.exports = {
         gender,
         userName,
         password,
-        confirmPassword,
         firstName,
         lastName,
         day,
@@ -25,17 +24,12 @@ module.exports = {
       }
       if (!password || typeof password !== "string") {
         return res.status(400).json({
-          message: "Invalid UserName",
+          message: "Invalid Password",
         });
       }
       if (password.length < 6) {
         return res.status(400).json({
           message: "Password length must be more than 6 characters long",
-        });
-      }
-      if (confirmPassword !== password) {
-        return res.status(400).json({
-          message: "Password does not match",
         });
       }
       let hashedPassword = await bcrypt.hashSync(password, saltRounds);
