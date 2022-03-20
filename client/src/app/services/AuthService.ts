@@ -6,7 +6,14 @@ interface IAuthService {
 }
 
 interface IRegisterService {
-  // 
+  gender: string;
+  userName: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  day: string;
+  month: string;
+  year: string;
 }
 const LoginReq = (reqBody: IAuthService) => {
   return httpClient.post(Path.LOGIN, {
@@ -14,6 +21,8 @@ const LoginReq = (reqBody: IAuthService) => {
   });
 };
 const RegisterReq = (reqBody: IRegisterService) => {
-  // Todo...
-}
+  return httpClient.post(Path.REGISTER, {
+    ...reqBody,
+  });
+};
 export { LoginReq, RegisterReq };
