@@ -4,6 +4,7 @@ import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/RegisterPage.scss";
 import { dates, months, years } from "./DateModels";
 import { RegisterReq } from "../../services/AuthService";
+import { IoLogoClosedCaptioning } from "react-icons/io5";
 
 export default function RegisterPage(props: any) {
   let navigate = useNavigate();
@@ -13,9 +14,9 @@ export default function RegisterPage(props: any) {
   const [lastName, setLastName] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [dayBirth, setDayBirth] = useState<string>("");
-  const [monthBirth, setMonthBirth] = useState<string>("");
-  const [yearBirth, setYearBirth] = useState<string>("");
+  const [dayBirth, setDayBirth] = useState<string>("1");
+  const [monthBirth, setMonthBirth] = useState<string>("January");
+  const [yearBirth, setYearBirth] = useState<string>("2022");
   const [gender, setGender] = useState<string>("");
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const onChangeFirstName = (
@@ -73,8 +74,19 @@ export default function RegisterPage(props: any) {
       month: monthBirth,
       year: yearBirth,
     };
-    setIsRegistering(true);
-    setTimeout(() => navigate(-1), 3000);
+    RegisterReq(userRegister)
+      .then((res: any) => {
+        const { token } = res;
+        localStorage.setItem("token", token);
+        setIsRegistering(true);
+        setTimeout(() => {
+          setIsRegistering(false);
+          navigate("/feeds", { state: { userRegister } });
+        }, 2000);
+      })
+      .catch((err: any) => {
+        alert(`${err}`);
+      });
   };
 
   function cancelSignUp() {
@@ -138,12 +150,7 @@ export default function RegisterPage(props: any) {
                 Date of birth:
               </label>
               <div className='date-selections'>
-                <select
-                  name='dates'
-                  id='date-select'
-                  className='date-selection'
-                  onChange={onChangeDayBirth}
-                >
+                <select name='dates' className='date-selection' onChange={onChangeDayBirth}>
                   {dates.map((date, index) => (
                     <option value={date} key={date}>
                       {date}
@@ -152,7 +159,6 @@ export default function RegisterPage(props: any) {
                 </select>
                 <select
                   name='dates'
-                  id='date-select'
                   className='date-selection date-selection--months'
                   onChange={onChangeMonthBirth}
                 >
@@ -164,7 +170,6 @@ export default function RegisterPage(props: any) {
                 </select>
                 <select
                   name='dates'
-                  id='date-select'
                   className='date-selection'
                   onChange={onChangeYearBirth}
                 >
