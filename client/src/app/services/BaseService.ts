@@ -9,7 +9,6 @@ const axios = require("axios").create({
   baseURL: ENV_API.rootUrl,
   timeout: ENV_API.timeout,
   headers: {
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
     "Content-Type": RequestHeaders.CONTENT_TYPE,
     "Access-Control-Allow-Headers": RequestHeaders.ACESS_CONTROLL_ALLOW_HEADERS,
     "Access-Control-Allow-Origin": RequestHeaders.ACESS_CONTROLL_ALLOW_ORIGIN,
