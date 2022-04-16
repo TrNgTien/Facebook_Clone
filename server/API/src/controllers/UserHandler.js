@@ -152,7 +152,6 @@ module.exports = {
   },
   updateAvatar: async (req, res) => {
     try {
-      console.log(req.user);
       let userAvatar = req.file.path;
       let { id } = req.params;
       let user = await User.findOne({ _id: id });
