@@ -7,12 +7,18 @@ const userSchema = new mongoose.Schema({
         default: 1,
     },
     userAvatar: {
-        type: String,
-        default: picture.BLANK_AVATAR,
+        type: Object,
+        default: {
+            url: picture.BLANK_AVATAR,
+            public_id: "",
+        },
     },
     userCover: {
-        type: String,
-        default: picture.BLANK_COVER,
+        type: Object,
+        default: {
+            url: picture.BLANK_COVER,
+            public_id: "",
+        },
     },
     biography: {
         type: String,
