@@ -154,17 +154,20 @@ module.exports = {
     try {
       let userAvatar = req.file.path;
       let { id } = req.params;
-      let user = await User.findOne({ _id: id });
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userAvatar, {
           folder: "Facebook Clone/Avatar",
         });
         let userAvatarUrl = uploadResponse.secure_url;
+        let userAvatarPublicID = uploadResponse.public_id;
         await User.findByIdAndUpdate(
-          user._id,
+          id,
           {
-            userAvatar: userAvatarUrl,
-          },
+            userAvatar: {
+              url: userAvatarUrl,
+              publicID: userAvatarPublicID,
+            }}
+          ,
           {
             new: true,
           }
@@ -187,16 +190,19 @@ module.exports = {
     try {
       let userCover = req.file.path;
       let { id } = req.params;
-      let user = await User.findOne({ _id: id });
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userCover, {
           folder: "Facebook Clone/Cover",
         });
         let userCoverUrl = uploadResponse.secure_url;
+        let userCoverPublicID = uploadResponse.public_id;
         await User.findByIdAndUpdate(
-          user._id,
+          id,
           {
-            userCover: userCoverUrl,
+            userCover: {
+              url: userCoverUrl,
+              publicID: userCoverPublicID,
+            },
           },
           {
             new: true,
@@ -216,4 +222,26 @@ module.exports = {
       return res.status(500).json("Internal server error");
     }
   },
+  deleteUser: async (req, res) => {
+    try {
+      let { id } = req.params;
+      let user = await User.findOne({ _id: id });
+      if (req.user.id === id) {
+        await User.findByIdAndDelete(id);
+        await cloudinary.uploader.destroy(user.userAvatar.publicID);
+        await cloudinary.uploader.destroy(user.userCover.publicID);
+        return res.status(200).json({
+          message: "Delete successfully!",
+        });
+      } else {
+        console.log(req.user.toString());
+        return res.status(401).json({
+          message: "Only edit personal profiles",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  }
 };

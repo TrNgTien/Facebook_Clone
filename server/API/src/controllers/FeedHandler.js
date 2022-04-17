@@ -24,15 +24,41 @@ module.exports = {
         folder: "Facebook Clone/Feed Attachments", 
       });
       let feedAttachmentsUrl = uploadResponse.secure_url;
+      let feedAttachmentsPublicID = uploadResponse.public_id;
       let newFeed = new Feed({
         description: description,
-        feedAttachments: feedAttachmentsUrl,
+        feedAttachments: {
+          url: feedAttachmentsUrl,
+          publicID: feedAttachmentsPublicID,
+        },
         userID: req.user.id,
       });
       await newFeed.save();
       return res.status(200).json({
         message: "Post Successfully!",
       });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  deleteFeed: async (req, res) => {
+    try {
+      let { feedID } = req.params;
+      let {id} = req.user;
+      let feed = await Feed.findOne({_id: feedID});
+      if (feed.userID === id) {
+        await Feed.findByIdAndDelete(feedID);
+        await cloudinary.uploader.destroy(feed.feedAttachments.publicID);
+        return res.status(200).json({
+          message: "Delete successfully!",
+        });
+      }
+      else {
+        return res.status(401).json({
+          message: "You can only delete your own feed",
+        });
+      }
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
@@ -75,9 +101,13 @@ module.exports = {
         folder: "Facebook Clone/Comment Attachments",
       });
       let commentAttachmentsUrl = uploadResponse.secure_url;
+      let commentAttachmentsPublicID = uploadResponse.public_id;
       let comment = new Comment({
         commentContent: commentContent,
-        commentAttachments: commentAttachmentsUrl,
+        commentAttachments: {
+          url: commentAttachmentsUrl,
+          publicID: commentAttachmentsPublicID,
+        },
         userID: userID,
         feedID: id
       });
@@ -95,17 +125,13 @@ module.exports = {
   deleteComment: async (req, res) => {
     try{
       let {commentID, feedID} = req.params;
-      console.log(commentID);
-      console.log(feedID);
       let userID = req.user.id;
       let comment = await Comment.findById({_id: commentID});
       let feed = await Feed.findById({_id: feedID});
-      console.log(userID);
-      console.log(comment.userID);
-      console.log(feed.userID);
       if (comment.userID.toString() === userID || feed.userID.toString() === userID){
         await comment.remove();
         await Feed.updateOne({_id: comment.feedID}, {$inc: {numberOfComment: -1}});
+        await cloudinary.uploader.destroy(comment.commentAttachments.publicID);
         return res.status(200).json({
           message: "Delete successfully"
         })
