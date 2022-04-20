@@ -3,13 +3,10 @@ import { Link } from "react-router-dom";
 import "./NotFound.scss";
 
 function NotFound() {
+  const NOTFOUND_IMG = "https://images.ui8.net/uploads/6_1632688928415.png";
   return (
-    <div className='notfound-container'>
-      <img
-        className='notfound-img'
-        src='https://images.ui8.net/uploads/6_1632688928415.png'
-        alt=''
-      />
+    <div className='container-notfound'>
+      <img className='notfound-img' src={NOTFOUND_IMG} alt='' />
       <div className='container-content'>
         <h1 className='notfound-title'>Oops</h1>
         <h2 className='notfound-content'>404, page not found</h2>

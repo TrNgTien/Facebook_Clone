@@ -46,35 +46,37 @@
 				justify-content: space-around;
 				align-content: space-around;
 				margin: 10px 15px;
-				.input__firstname {
-					background-color: #f5f6f7;
-					width: 170px;
-					padding: 11px;
-					border: 1px solid #c0c0c0;
-					margin-right: 10px;
-					border-radius: 6px;
-					outline: none;
-					flex: 1;
-					&::placeholder {
-						font-size: medium;
-						color: #92969e;
-						font-size: 15px;
+				
+					.input__firstname {
+						background-color: #f5f6f7;
+						width: 170px;
+						padding: 11px;
+						border: 1px solid #c0c0c0;
+						margin-right: 10px;
+						border-radius: 6px;
+						outline: none;
+						flex: 1;
+						&::placeholder {
+							font-size: medium;
+							color: #92969e;
+							font-size: 15px;
+						}
 					}
-				}
-				.input__surname {
-					background-color: #f5f6f7;
-					width: 170px;
-					flex: 1;
-					padding: 11px;
-					border: 1px solid #c0c0c0;
-					border-radius: 6px;
-					outline: none;
-					&::placeholder {
-						font-size: medium;
-						color: #92969e;
-						font-size: 15px;
+					.input__surname {
+						background-color: #f5f6f7;
+						width: 170px;
+						flex: 1;
+						padding: 11px;
+						border: 1px solid #c0c0c0;
+						border-radius: 6px;
+						outline: none;
+						&::placeholder {
+							font-size: medium;
+							color: #92969e;
+							font-size: 15px;
+						}
 					}
-				}
+				
 			}
 			.register-page__wrapper__username {
 				margin: 10px 15px;
@@ -165,6 +167,12 @@
 				}
 			}
 		}
+		.error-message{
+			color: red;
+			font-size: small;
+			font-weight: bold;
+			
+		}
 		.bottom-register-container {
 			display: flex;
 			flex-direction: column;
@@ -187,5 +195,6 @@
 				}
 			}
 		}
+		
 	}
 }

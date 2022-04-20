@@ -4,84 +4,46 @@ import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/RegisterPage.scss";
 import { dates, months, years } from "./DateModels";
 import { RegisterReq } from "../../services/AuthService";
-import { IoLogoClosedCaptioning } from "react-icons/io5";
 
 export default function RegisterPage(props: any) {
   let navigate = useNavigate();
+  const initial_form = {
+    firstName: "",
+    lastName: "",
+    userName: "",
+    password: "",
+    day: "1",
+    month: "1",
+    year: "2022",
+    gender: "",
+  };
   const IMG_ICON_CLOSE = "https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png";
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [dayBirth, setDayBirth] = useState<string>("1");
-  const [monthBirth, setMonthBirth] = useState<string>("January");
-  const [yearBirth, setYearBirth] = useState<string>("2022");
-  const [gender, setGender] = useState<string>("");
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
-  const onChangeFirstName = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
-    setFirstName(e.target.value);
-  };
-  const onChangeLastName = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
-    setLastName(e.target.value);
-  };
-  const onChangeUserName = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
-    setUserName(e.target.value);
-  };
-  const onChangePassword = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
-    setPassword(e.target.value);
-  };
-  const onChangeDayBirth = (e: ChangeEvent<{ value: string }>) => {
-    setDayBirth(e.target.value);
-  };
-  const onChangeMonthBirth = (e: ChangeEvent<{ value: string }>) => {
-    setMonthBirth(e.target.value);
-  };
-  const onChangeYearBirth = (e: ChangeEvent<{ value: string }>) => {
-    setYearBirth(e.target.value);
-  };
-  const onChangeGender = (
-    e: ChangeEvent<{
-      value: string;
-    }>
-  ) => {
-    setGender(e.target.value);
-  };
-  const finishSignUp = (): void => {
-    let userRegister = {
-      gender: gender,
-      userName: userName,
-      password: password,
-      firstName: firstName,
-      lastName: lastName,
-      day: dayBirth,
-      month: monthBirth,
-      year: yearBirth,
-    };
-    RegisterReq(userRegister)
+  const [form, setForm] = useState<any>(initial_form);
+
+  const onChangeForm = (e: ChangeEvent<any>) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const finishSignUp = (e: any): void => {
+    e.preventDefault();
+    if (
+      form.firstName === "" ||
+      form.lastName === "" ||
+      form.userName === "" ||
+      form.password === "" ||
+      form.gender === ""
+    ) {
+      console.log("Please fill all the infomation.");
+      return;
+    }
+
+    RegisterReq(form)
       .then((res: any) => {
-        const { token } = res;
-        localStorage.setItem("token", token);
         setIsRegistering(true);
         setTimeout(() => {
           setIsRegistering(false);
-          navigate("/feeds", { state: { userRegister } });
+          navigate(-1);
         }, 2000);
       })
       .catch((err: any) => {
@@ -96,39 +58,42 @@ export default function RegisterPage(props: any) {
     <div className='register-page'>
       {isRegistering ? <CircleLoading /> : null}
       <div className='container-form'>
-        <div className='register-form__header'>
-          <h1 className='title-signup'>Sign Up</h1>
-          <p className='register-page__authen-slogan'>It's quick and easy</p>
-        </div>
-        <img
-          className='close-btn-img'
-          src={IMG_ICON_CLOSE}
-          alt=''
-          onClick={() => cancelSignUp()}
-        ></img>
-        <div className='register-hr'></div>
-        <div className='register-page__wrapper-input'>
-          <form>
+        <form onSubmit={finishSignUp}>
+          <div className='register-form__header'>
+            <h1 className='title-signup'>Sign Up</h1>
+            <p className='register-page__authen-slogan'>It's quick and easy</p>
+          </div>
+          <img
+            className='close-btn-img'
+            src={IMG_ICON_CLOSE}
+            alt=''
+            onClick={() => cancelSignUp()}
+          ></img>
+          <div className='register-hr'></div>
+          <div className='register-page__wrapper-input'>
             <div className='register-page__wrapper__name'>
               <input
                 type='text'
+                name='firstName'
                 className='input__firstname'
                 placeholder='First name'
-                onChange={onChangeFirstName}
+                onChange={onChangeForm}
               />
+
               <input
                 type='text'
+                name='lastName'
                 className='input__surname'
                 placeholder='Surname'
-                onChange={onChangeLastName}
+                onChange={onChangeForm}
               />
             </div>
             <div className='register-page__wrapper__username'>
               <input
                 type='text'
                 id='userName'
-                value={userName}
-                onChange={onChangeUserName}
+                name='userName'
+                onChange={onChangeForm}
                 placeholder='Your Account'
                 className='register-input__username'
               />
@@ -136,10 +101,10 @@ export default function RegisterPage(props: any) {
             <div className='register-page__wrapper-password'>
               <input
                 id='password'
+                name='password'
                 type={showPassword ? "text" : "password"}
-                value={password}
                 autoComplete='off'
-                onChange={onChangePassword}
+                onChange={onChangeForm}
                 placeholder='New password'
                 className='register-input__password'
                 size={8}
@@ -150,7 +115,7 @@ export default function RegisterPage(props: any) {
                 Date of birth:
               </label>
               <div className='date-selections'>
-                <select name='dates' className='date-selection' onChange={onChangeDayBirth}>
+                <select name='day' className='date-selection' onChange={onChangeForm}>
                   {dates.map((date, index) => (
                     <option value={date} key={date}>
                       {date}
@@ -158,21 +123,17 @@ export default function RegisterPage(props: any) {
                   ))}
                 </select>
                 <select
-                  name='dates'
+                  name='month'
                   className='date-selection date-selection--months'
-                  onChange={onChangeMonthBirth}
+                  onChange={onChangeForm}
                 >
                   {months.map((month, index) => (
-                    <option value={month} key={month}>
+                    <option value={months.indexOf(month) + 1} key={month}>
                       {month}
                     </option>
                   ))}
                 </select>
-                <select
-                  name='dates'
-                  className='date-selection'
-                  onChange={onChangeYearBirth}
-                >
+                <select name='year' className='date-selection' onChange={onChangeForm}>
                   {years.map((year, index) => (
                     <option value={year} key={year}>
                       {year}
@@ -196,7 +157,7 @@ export default function RegisterPage(props: any) {
                     name='gender'
                     value='female'
                     className='radio-button__gender'
-                    onChange={onChangeGender}
+                    onChange={onChangeForm}
                   />
                 </div>
 
@@ -210,7 +171,7 @@ export default function RegisterPage(props: any) {
                     name='gender'
                     value='male'
                     className='radio-button__gender'
-                    onChange={onChangeGender}
+                    onChange={onChangeForm}
                   />
                 </div>
 
@@ -224,18 +185,17 @@ export default function RegisterPage(props: any) {
                     name='gender'
                     value='custom'
                     className='radio-button__gender'
-                    onChange={onChangeGender}
+                    onChange={onChangeForm}
                   />
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-        <div className='bottom-register-container'>
-          <button className='button-register' onClick={() => finishSignUp()}>
-            Sign Up
-          </button>
-        </div>
+          </div>
+
+          <div className='bottom-register-container'>
+            <input className='button-register' type='submit' value='Sign Up' />
+          </div>
+        </form>
       </div>
     </div>
   );
