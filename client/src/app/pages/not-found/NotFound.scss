@@ -1,0 +1,28 @@
+.container-not-found {
+  font-family: "Papyrus", "Courier New", monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #87898f;
+  .notfound-img {
+    height: 70vh;
+  }
+  .container-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .notfound-title {
+      font-size: 40px;
+    }
+    .link-homepage {
+      text-decoration: none;
+      color: rgba(0, 138, 252, 0.822);
+      font-weight: bold;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

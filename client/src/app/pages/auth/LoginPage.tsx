@@ -124,7 +124,7 @@ export default function LoginPage(props: any) {
               Log In
             </button>
             <div className='hr-login'></div>
-            <button className='button-register'>
+            <div className='button-register'>
               <Link
                 className='register-link__login'
                 to='/register'
@@ -132,7 +132,7 @@ export default function LoginPage(props: any) {
               >
                 <button className='button-register'>Create New Account</button>
               </Link>
-            </button>
+            </div>
           </div>
         </div>
       </div>

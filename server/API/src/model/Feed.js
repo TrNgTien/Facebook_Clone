@@ -18,7 +18,7 @@ const feedSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    numberOfCommnet: {
+    numberOfComment: {
         type: Number,
         default: 0,
     },

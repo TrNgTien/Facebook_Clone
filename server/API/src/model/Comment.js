@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const commentSchema = new mongoose.Schema({ 
     commentContent: {
@@ -10,8 +11,12 @@ const commentSchema = new mongoose.Schema({
         default: null,
     },
     userID: {
-        type: String,
+        type: ObjectId,
         required: true, 
+    },
+    feedID:{
+        type: String,
+        required: true,
     }
 });
 

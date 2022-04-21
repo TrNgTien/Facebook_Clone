@@ -2,6 +2,8 @@ const User = require("../model/User");
 const authentication = require("../middleware/Authentication");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const cloudinary = require("../utils/cloudinary");
+require("../utils/multer");
 
 module.exports = {
   register: async (req, res) => {
@@ -114,25 +116,14 @@ module.exports = {
   },
   updateInformation: async (req, res) => {
     try {
-      let {
-        userAvatar,
-        userCover,
-        firstName,
-        lastName,
-        biography,
-        gender,
-        DOB,
-        hobbies,
-        intro,
-      } = req.body;
+      let { firstName, lastName, biography, gender, DOB, hobbies, intro } =
+        req.body;
       let { id } = req.params;
       let user = await User.findOne({ _id: id });
-      if (req.user.toString() === id) {
+      if (req.user.id === id) {
         await User.findByIdAndUpdate(
           user._id,
           {
-            userAvatar: userAvatar,
-            userCover: userCover,
             firstName: firstName,
             lastName: lastName,
             biography: biography,
@@ -140,6 +131,73 @@ module.exports = {
             DOB: DOB,
             hobbies: hobbies,
             intro: intro,
+          },
+          {
+            new: true,
+          }
+        );
+        return res.status(200).json({
+          message: "Update successfully!",
+        });
+      } else {
+        console.log(req.user.toString());
+        return res.status(401).json({
+          message: "Only edit personal profiles",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  updateAvatar: async (req, res) => {
+    try {
+      console.log(req.user);
+      let userAvatar = req.file.path;
+      let { id } = req.params;
+      let user = await User.findOne({ _id: id });
+      if (req.user.id === id) {
+        let uploadResponse = await cloudinary.uploader.upload(userAvatar, {
+          folder: "Facebook Clone/Avatar",
+        });
+        let userAvatarUrl = uploadResponse.secure_url;
+        await User.findByIdAndUpdate(
+          user._id,
+          {
+            userAvatar: userAvatarUrl,
+          },
+          {
+            new: true,
+          }
+        );
+        return res.status(200).json({
+          message: "Update successfully!",
+        });
+      } else {
+        console.log(req.user.toString());
+        return res.status(401).json({
+          message: "Only edit personal profiles",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  updateCover: async (req, res) => {
+    try {
+      let userCover = req.file.path;
+      let { id } = req.params;
+      let user = await User.findOne({ _id: id });
+      if (req.user.id === id) {
+        let uploadResponse = await cloudinary.uploader.upload(userCover, {
+          folder: "Facebook Clone/Cover",
+        });
+        let userCoverUrl = uploadResponse.secure_url;
+        await User.findByIdAndUpdate(
+          user._id,
+          {
+            userCover: userCoverUrl,
           },
           {
             new: true,
