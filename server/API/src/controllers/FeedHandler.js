@@ -17,23 +17,36 @@ module.exports = {
 
   addFeed: async (req, res) => {
     try {
-      let feedAttachments = req.file.path  
       let { description } = req.body;
-      let uploadResponse = await cloudinary.uploader.upload(feedAttachments, {
-        resource_type: "auto",
-        folder: "Facebook Clone/Feed Attachments", 
-      });
-      let feedAttachmentsUrl = uploadResponse.secure_url;
-      let feedAttachmentsPublicID = uploadResponse.public_id;
-      let newFeed = new Feed({
-        description: description,
-        feedAttachments: {
-          url: feedAttachmentsUrl,
-          publicID: feedAttachmentsPublicID,
-        },
-        userID: req.user.id,
-      });
-      await newFeed.save();
+      let feedAttachments = req.file;
+      if(typeof(feedAttachments) === "undefined"){
+        let newFeed = new Feed({
+          description: description,
+          feedAttachments: {
+            url: "",
+            publicID: "",
+          },
+          userID: req.user.id,
+        });
+        await newFeed.save();
+      }
+      else{
+        let uploadResponse = await cloudinary.uploader.upload(feedAttachments.path, {
+          resource_type: "auto",
+          folder: "Facebook Clone/Feed Attachments", 
+        });
+        let feedAttachmentsUrl = uploadResponse.secure_url;
+        let feedAttachmentsPublicID = uploadResponse.public_id;
+        let newFeed = new Feed({
+          description: description,
+          feedAttachments: {
+            url: feedAttachmentsUrl,
+            publicID: feedAttachmentsPublicID,
+          },
+          userID: req.user.id,
+        });
+        await newFeed.save();
+      }
       return res.status(200).json({
         message: "Post Successfully!",
       });
@@ -91,28 +104,42 @@ module.exports = {
   },
   commentFeed: async (req, res) => {
     try{
-      let commentAttachments = req.file.path
+      let commentAttachments = req.file
       let {id} = req.params;
       let {commentContent} = req.body;
       let userID = req.user.id;
       let feed = await Feed.findById({_id: id});
-      let uploadResponse = await cloudinary.uploader.upload(commentAttachments, {
-        resource_type: "auto",
-        folder: "Facebook Clone/Comment Attachments",
-      });
-      let commentAttachmentsUrl = uploadResponse.secure_url;
-      let commentAttachmentsPublicID = uploadResponse.public_id;
-      let comment = new Comment({
-        commentContent: commentContent,
-        commentAttachments: {
-          url: commentAttachmentsUrl,
-          publicID: commentAttachmentsPublicID,
-        },
-        userID: userID,
-        feedID: id
-      });
-      await comment.save();
-      await feed.updateOne({numberOfComment: feed.numberOfComment + 1});
+      if(typeof(commentAttachments) === "undefined"){
+        let comment = new Comment({
+          commentContent: commentContent,
+          commentAttachments: {
+            url: "",
+            publicID: "",
+          },
+          userID: userID,
+          feedID: id
+        });
+        await comment.save();
+      }
+      else{
+        let uploadResponse = await cloudinary.uploader.upload(commentAttachments.path, {
+          resource_type: "auto",
+          folder: "Facebook Clone/Comment Attachments",
+        });
+        let commentAttachmentsUrl = uploadResponse.secure_url;
+        let commentAttachmentsPublicID = uploadResponse.public_id;
+        let comment = new Comment({
+          commentContent: commentContent,
+          commentAttachments: {
+            url: commentAttachmentsUrl,
+            publicID: commentAttachmentsPublicID,
+          },
+          userID: userID,
+          feedID: id
+        });
+        await comment.save();
+        await feed.updateOne({numberOfComment: feed.numberOfComment + 1});
+      }
       return res.status(200).json({
         message: "Comment successfully"
       })
