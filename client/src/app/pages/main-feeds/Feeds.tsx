@@ -3,7 +3,6 @@ import Header from "./components/header/Header";
 import Post from "./components/post/Post";
 import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
-import { getCookie } from "../../utils/CookieUtil";
 import "./styles/Feeds.scss";
 import BlankAvatar from "../../assets/avatar.png";
 import PostImg from "../../assets/post_img.jpg";
@@ -45,11 +44,11 @@ export default function Feeds() {
     },
   ];
   return (
-    <div className="feeds-container">
+    <div className='feeds-container'>
       <Header avatarURL={imageUrlCookie} username={userNameCookie} />
-      <div className="body-container">
+      <div className='body-container'>
         <Sidebar avatarURL={imageUrlCookie} username={userNameCookie} />
-        <div className="body-feeds">
+        <div className='body-feeds'>
           <Upload avatarURL={imageUrlCookie} username={userNameCookie} />
           {posts.map((post, index) => (
             <Post

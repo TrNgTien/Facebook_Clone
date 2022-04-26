@@ -1,7 +1,7 @@
 .header {
 	display: flex;
 	justify-content: space-between;
-	padding: 5px 10px;
+	padding: 0px 10px;
 	top: 0;
 	background-color: white;
 	z-index: 10;
@@ -26,7 +26,7 @@
 			align-items: center;
 			justify-content: center;
 			background-color: rgb(230, 230, 230);
-			padding: 8px;
+			padding: 5px;
 			border-radius: 30px;
 			margin-left: 10px;
 			padding-left: 1rem;
@@ -50,7 +50,7 @@
 			align-items: center;
 			margin: 0px 10px;
 			padding: 0px 10px;
-			font-size: 15px;
+			font-size: 14px;
 			border-radius: 30px;
 			padding: 5px 5px;
 			cursor: pointer;
@@ -65,8 +65,8 @@
 			}
 		}
 		.header__option {
-			width: 40px;
-			height: 40px;
+			width: 35px;
+			height: 35px;
 			background-color: rgb(236, 229, 229);
 			margin: 5px;
 			display: flex;
@@ -78,13 +78,14 @@
 			position: relative;
 
 			.notify-counter {
+				margin-top: 2px;
 				width: 50%;
 				height: 50%;
 				color: white;
 				background-color: red;
 				border-radius: 50%;
-				padding: 9px 11px 11px 11px;
-				font-size: 10px;
+				padding: 9px 10px 10px 10px;
+				font-size: 12px;
 				display: flex;
 				align-items: center;
 				justify-content: center;

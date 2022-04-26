@@ -16,14 +16,24 @@
 			border-radius: 30px;
 			cursor: pointer;
 		}
-		input {
+		.upload-input {
 			flex: 1;
-			font-size: 17px;
-			background-color: rgb(245, 245, 245);
+			background-color: rgb(241, 241, 241);
 			border: none;
 			border-radius: 30px;
-			padding: 0px 10px;
+			padding: 5px 10px;
 			margin-left: 5px;
+			cursor: pointer;
+			&:hover {
+				
+				background-color: rgb(237, 237, 237);
+			}
+			.p-tag__place-holder{
+				font-size: 17px;
+				color: rgb(107, 107, 107);
+				
+			}
+			
 		}
 	}
 	.hr-tag {
