@@ -18,7 +18,7 @@ module.exports = {
 	addFeed: async (req, res) => {
 		try {
 			let feedAttachments = req.file.path;
-			let { description } = req.body;
+			let { description, userId } = req.body;
 			let uploadResponse = await cloudinary.uploader.upload(feedAttachments, {
 				resource_type: "auto",
 				folder: "Facebook Clone/Feed Attachments",
@@ -27,11 +27,11 @@ module.exports = {
 			let newFeed = new Feed({
 				description: description,
 				feedAttachments: feedAttachmentsUrl,
-				userID: req.user.id,
+				userID: userId,
 			});
 			await newFeed.save();
 			return res.status(200).json({
-				message: "Post Successfully!",
+				message: "Post Successfully!", 
 			});
 		} catch (error) {
 			console.log(error);

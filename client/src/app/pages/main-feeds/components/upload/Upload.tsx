@@ -12,9 +12,8 @@ const Upload = (props: any) => {
     id: string;
     role: number;
   }
-  const state = location.state as MyToken;
-  const { id } = state;
-  console.log("id: ", id);
+  // const state = location.state as MyToken;
+  // const { id } = state;
 
   return (
     <div className='upload-container'>
