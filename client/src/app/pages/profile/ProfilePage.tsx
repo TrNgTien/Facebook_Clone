@@ -11,7 +11,8 @@ import PostImg from "../../assets/post_img.jpg";
 import Post from "../main-feeds/components/post/Post";
 import deepOrange from "@mui/material/colors";
 export default function ProfilePage(props: any) {
-  const BACKGROUND_IMG = 'https://image.tmdb.org/t/p/original/c6H7Z4u73ir3cIoCteuhJh7UCAR.jpg';
+  const BACKGROUND_IMG =
+    "https://image.tmdb.org/t/p/original/c6H7Z4u73ir3cIoCteuhJh7UCAR.jpg";
   const userNameCookie = "User Name";
   const imageUrlCookie = BlankAvatar;
   const IMG_URL1 = PostImg;
@@ -48,15 +49,11 @@ export default function ProfilePage(props: any) {
   ];
   return (
     <div className='profile-page'>
-      <Header />
+      <Header avatarURL={imageUrlCookie} username={userNameCookie} />
       <div className='profile-zone'>
         <div className='profile-zone__header'>
           <div className='container-cover-photo'>
-            <img
-              className='background-img'
-              src={BACKGROUND_IMG}
-              alt=''
-            />
+            <img className='background-img' src={BACKGROUND_IMG} alt='' />
             <button className='add-cover'>
               <BsFillCameraFill className='add-cover-icon' />
               <p>Add Cover Photo</p>
@@ -80,13 +77,23 @@ export default function ProfilePage(props: any) {
                     // style={{ fontSize: "5px" }}
                     className='group-friends-avatar'
                   >
-                    <Avatar className='friend-avatar' alt='Remy Sharp'>A</Avatar>
-                    <Avatar className='friend-avatar' alt='Travis Howard' >B</Avatar>
-                    <Avatar className='friend-avatar' alt='Cindy Baker' ></Avatar>
-                    <Avatar className='friend-avatar' alt='Agnes Walker' >F</Avatar>
-                    <Avatar className='friend-avatar' alt='Trevor Henderson'>E</Avatar>
-                    <Avatar className='friend-avatar' alt='Remy Sharp' ></Avatar>
-                    <Avatar className='friend-avatar' alt='Remy Sharp' >G</Avatar>
+                    <Avatar className='friend-avatar' alt='Remy Sharp'>
+                      A
+                    </Avatar>
+                    <Avatar className='friend-avatar' alt='Travis Howard'>
+                      B
+                    </Avatar>
+                    <Avatar className='friend-avatar' alt='Cindy Baker'></Avatar>
+                    <Avatar className='friend-avatar' alt='Agnes Walker'>
+                      F
+                    </Avatar>
+                    <Avatar className='friend-avatar' alt='Trevor Henderson'>
+                      E
+                    </Avatar>
+                    <Avatar className='friend-avatar' alt='Remy Sharp'></Avatar>
+                    <Avatar className='friend-avatar' alt='Remy Sharp'>
+                      G
+                    </Avatar>
                   </AvatarGroup>
                 </div>
               </div>

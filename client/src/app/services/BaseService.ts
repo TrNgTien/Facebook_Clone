@@ -1,5 +1,6 @@
 import { resHandler, errResHandler } from "./interceptors/HttpResponseInterceptor";
 import RequestHeaders from "../constants/RequestHeadear";
+import { authHeader } from "../constants/RequestHeadear";
 import ENV_API from "../../environment/enviroment";
 
 const axios = require("axios").create({
@@ -18,11 +19,12 @@ axios.interceptors.response.use(resHandler, errResHandler);
 const get = (path = "", paramsObj = {}) => {
   return axios.get(path, {
     params: paramsObj,
+    headers: { ...authHeader() },
   });
 };
 
 const getById = (path = "", id: string) => {
-  return axios.get(`${path}/${id}`);
+  return axios.get(`${path}/${id}`, { headers: { ...authHeader() } });
 };
 
 const post = (path = "", body: any) => {

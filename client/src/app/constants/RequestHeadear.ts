@@ -6,6 +6,17 @@ const METHODS = {
   OPTIONS: "OPTIONS",
 };
 
+export const authHeader = () => {
+  const token = localStorage?.getItem("token");
+  // console.log("token: ", token);
+
+  if (token) {
+    return { Authorization: "Bearer " + token };
+  } else {
+    return {};
+  }
+};
+
 const RequestHeaders = {
   CONTENT_TYPE: "application/json;charset=utf-8",
   ACESS_CONTROLL_ALLOW_HEADERS: "*",

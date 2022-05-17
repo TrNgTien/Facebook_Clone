@@ -28,7 +28,7 @@ const Header = (props: any) => {
         </div>
       </div>
       <div className='header__right'>
-        <div className='header__user'>
+        <div className='header__user' onClick={() => navigate("/profile")}>
           <img className='img-avatar' src={avatarURL} alt='avatar' />
           <h4>{username}</h4>
         </div>

@@ -52,7 +52,7 @@
 			padding: 0px 10px;
 			font-size: 14px;
 			border-radius: 30px;
-			padding: 5px 5px;
+			padding: 2px;
 			cursor: pointer;
 			&:hover {
 				background-color: rgb(211, 211, 211);
@@ -60,8 +60,9 @@
 
 			img {
 				height: 30px;
+				width: 30px;
 				margin: 0px 5px;
-				border-radius: 30px;
+				border-radius: 50px;
 			}
 		}
 		.header__option {
