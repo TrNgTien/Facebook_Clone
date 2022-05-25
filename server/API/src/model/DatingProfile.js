@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const datingProfileSchema = new mongoose.Schema({
+    picture: {
+        type: [String],
+        default: [],
+    },
     age: {
         type: Number,
         default: 18,

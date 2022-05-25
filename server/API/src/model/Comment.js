@@ -7,8 +7,11 @@ const commentSchema = new mongoose.Schema({
         required: true,
     },
     commentAttachments: {
-        type: String,
-        default: null,
+        type: Object,
+        default: {
+            url: "",
+            public_id: ""
+        },
     },
     userID: {
         type: ObjectId,
