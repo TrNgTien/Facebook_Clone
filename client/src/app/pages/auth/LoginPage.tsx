@@ -1,20 +1,30 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { setCookie } from "../../utils/CookieUtil";
+
 import CircleLoading from "../../components/loading-component/CircleLoading";
 import "./styles/LoginPage.scss";
 import { LoginReq } from "../../services/AuthService";
+// import { selectIsLogging } from "../../slices/AuthenSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 
 export default function LoginPage(props: any) {
+  const logging = useAppSelector((state) => state.auth.logging);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isFocusPass, setIsFocusPass] = useState<boolean>(false);
   const [isFocusUser, setIsFocusUser] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoadingLogin(logging);
+  }, [logging]);
+
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   };
@@ -32,19 +42,7 @@ export default function LoginPage(props: any) {
         userName: userName,
         password: password,
       };
-      LoginReq(userData)
-        .then((res: any) => {
-          const { token } = res;
-          localStorage.setItem("token", token);
-          setIsLoadingLogin(true);
-          setTimeout(() => {
-            setIsLoadingLogin(false);
-            navigate("feeds", { state: { userData } });
-          }, 2000);
-        })
-        .catch((err: any) => {
-          alert(`${err}`);
-        });
+      LoginReq(userData, dispatch, navigate);
     }
   };
   const onPressLogin = (): void => {
@@ -52,19 +50,7 @@ export default function LoginPage(props: any) {
       userName: userName,
       password: password,
     };
-    LoginReq(userData)
-      .then((res: any) => {
-        const { token } = res;
-        localStorage.setItem("token", token);
-        setIsLoadingLogin(true);
-        setTimeout(() => {
-          setIsLoadingLogin(false);
-          navigate("feeds", { state: { userData } });
-        }, 2000);
-      })
-      .catch((err: any) => {
-        alert(`${err}`);
-      });
+    LoginReq(userData, dispatch, navigate);
   };
 
   return (

@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store/store";
+import { IUser } from "../constants/InterfaceModel";
 
 export interface AuthState {
+  currentUser?: any;
   isLoggedIn: boolean;
-  logging?: boolean;
-  //   currentUser?: User;
+  logging: boolean;
 }
 export interface LoginPayload {
   userName: string;
@@ -11,6 +13,7 @@ export interface LoginPayload {
 }
 
 const initialState: AuthState = {
+  currentUser: undefined,
   isLoggedIn: false,
   logging: false,
 };
@@ -18,30 +21,33 @@ const AuthenSlice = createSlice({
   name: "AuthenSlice",
   initialState,
   reducers: {
-    login(state, action: PayloadAction<LoginPayload>) {
+    login(state) {
       state.logging = true;
     },
-    loginSucess(state, action: PayloadAction<string>) {
-      state.logging = true;
-    },
-    loginFailed(state, action: PayloadAction<string>) {
+    loginSucess(state) {
       state.logging = false;
     },
-
+    userQuery(state, action: PayloadAction<any>) {
+      state.currentUser = action.payload;
+    },
+    loginFailed(state) {
+      state.logging = false;
+    },
     logout(state) {
+      state.currentUser = undefined;
       state.isLoggedIn = false;
     },
   },
 });
 
 //Actions
-export const AuthenAction = AuthenSlice.actions;
-
+export const { login, loginSucess, loginFailed, logout, userQuery } = AuthenSlice.actions;
 
 //Selectors
-export const selectIsLoggedIn = (state: any) => state.auth.isLoggedIn;
-export const selectIsLogging = (state: any) => state.auth.logging;
+export const selectCurrentUser = (state: RootState) => state.auth?.currentUser;
+export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
+export const selectIsLogging = (state: RootState) => state.auth.logging;
 
 //Reducer
-const AuthenReducer = AuthenSlice.reducer;
-export default AuthenReducer;
+const authReducer = AuthenSlice.reducer;
+export default authReducer;

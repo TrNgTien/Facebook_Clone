@@ -11,41 +11,39 @@ const Header = (props: any) => {
   const navigate = useNavigate();
   const [counterNoti, setCounterNoti] = useState<Number>(12);
   return (
-    <div className="header">
-      <div className="header__left">
+    <div className='header'>
+      <div className='header__left'>
         <img
           src={logo}
-          alt="logo"
+          alt='logo'
           onClick={() => {
             navigate("/feeds");
           }}
         />
-        <div className="header__search">
-          <input type="text" placeholder="Search..." />
+        <div className='header__search'>
+          <input type='text' placeholder='Search...' />
           <i>
             <AiOutlineSearch />
           </i>
         </div>
       </div>
-      <div className="header__right">
-        <div className="header__user">
-          <img className="img-avatar" src={avatarURL} alt="avatar" />
+      <div className='header__right'>
+        <div className='header__user' onClick={() => navigate("/profile")}>
+          <img className='img-avatar' src={avatarURL} alt='avatar' />
           <h4>{username}</h4>
         </div>
-        <div className="header__option header__option--add">
+        <div className='header__option header__option--add'>
           <i>
             <GrAdd />
           </i>
         </div>
-        <div className="header__option header__option--notification">
+        <div className='header__option header__option--notification'>
           <i>
             <AiTwotoneBell />
           </i>
-          <div className="notify-counter">
-            {counterNoti > 9 ? "9+" : counterNoti}
-          </div>
+          <div className='notify-counter'>{counterNoti > 9 ? "9+" : counterNoti}</div>
         </div>
-        <div className="header__option--menu header__option ">
+        <div className='header__option--menu header__option '>
           <i>
             <TiArrowSortedDown />
           </i>

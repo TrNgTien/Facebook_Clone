@@ -7,28 +7,30 @@ import QuestionMatching from "../pages/matching/QuestionMatching";
 import ProfilePage from "../pages/profile/ProfilePage";
 import Feeds from "../pages/main-feeds/Feeds";
 import NotFound from "../pages/not-found/NotFound";
+import UploadInput from "../pages/main-feeds/components/upload/upload-input/UploadInput";
 function MainRoutes() {
-	let location = useLocation();
-	let state = location.state as { backgroundLocation?: Location };
+  let location = useLocation();
+  let state = location.state as { backgroundLocation?: Location };
 
-	return (
-		<>
-			<Routes location={state?.backgroundLocation || location}>
-				<Route path="/register" element={<RegisterPage />} />
-				<Route path="/profile" element={<ProfilePage />} />
-				<Route path="/chatting" element={<GeneralChat />} />
-				<Route path="/matching" element={<QuestionMatching />} />
-				<Route path="/feeds" element={<Feeds />} />
-				<Route path="*" element={<NotFound />} />
-				<Route path="/" element={<LoginPage />} />
-			</Routes>
-			{state?.backgroundLocation && (
-				<Routes>
-					<Route path="/register" element={<RegisterPage />} />
-				</Routes>
-			)}
-		</>
-	);
+  return (
+    <>
+      <Routes location={state?.backgroundLocation || location}>
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/chatting' element={<GeneralChat />} />
+        <Route path='/matching' element={<QuestionMatching />} />
+        <Route path='/feeds' element={<Feeds />} />
+        <Route path='*' element={<NotFound />} />
+        <Route path='/' element={<LoginPage />} />
+      </Routes>
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/upload' element={<UploadInput />} />
+        </Routes>
+      )}
+    </>
+  );
 }
 
 export default MainRoutes;

@@ -1,8 +1,6 @@
-import {
-  resHandler,
-  errResHandler,
-} from "./interceptors/HttpResponseInterceptor";
+import { resHandler, errResHandler } from "./interceptors/HttpResponseInterceptor";
 import RequestHeaders from "../constants/RequestHeadear";
+import { authHeader } from "../constants/RequestHeadear";
 import ENV_API from "../../environment/enviroment";
 
 const axios = require("axios").create({
@@ -12,8 +10,7 @@ const axios = require("axios").create({
     "Content-Type": RequestHeaders.CONTENT_TYPE,
     "Access-Control-Allow-Headers": RequestHeaders.ACESS_CONTROLL_ALLOW_HEADERS,
     "Access-Control-Allow-Origin": RequestHeaders.ACESS_CONTROLL_ALLOW_ORIGIN,
-    "Access-Control-Allow-Methods":
-      RequestHeaders.ACESS_CONTROLL_ALLOW_METHODS.join(","),
+    "Access-Control-Allow-Methods": RequestHeaders.ACESS_CONTROLL_ALLOW_METHODS.join(","),
   },
 });
 
@@ -22,19 +19,20 @@ axios.interceptors.response.use(resHandler, errResHandler);
 const get = (path = "", paramsObj = {}) => {
   return axios.get(path, {
     params: paramsObj,
+    headers: { ...authHeader() },
   });
 };
 
 const getById = (path = "", id: string) => {
-  return axios.get(`${path}/${id}`);
+  return axios.get(`${path}/${id}`, { headers: { ...authHeader() } });
 };
 
-const post = (path = "", body = {}) => {
-  return axios.post(path, { ...body });
+const post = (path = "", body: any) => {
+  return axios.post(path, body);
 };
 
-const put = (path = "", body = {}) => {
-  return axios.put(path, { ...body });
+const put = (path = "", body: any) => {
+  return axios.put(path, body);
 };
 
 const deleteById = (path = "", id: string) => {

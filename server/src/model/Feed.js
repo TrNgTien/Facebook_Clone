@@ -7,8 +7,11 @@ const feedSchema = new mongoose.Schema({
         required: true,
     },
     feedAttachments: {
-        type: String,
-        default: null,
+        type: Object,
+        default: {
+            url: "",
+            public_id: ""
+        },
     },
     time: {
         type: Date,
