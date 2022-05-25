@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const userHandler = require("../controllers/UserHandler");
+const tokenHandler = require("../controllers/TokenHandler");
 const {Authentication, adminVerify} = require("../middleware/Authentication")
 const upload = require("../utils/multer")
 
-
+router.get("/token", tokenHandler.refreshToken);
 router.post("/register", userHandler.register);
 router.post("/login", userHandler.login);
 router.get("/getAllUser", Authentication, adminVerify, userHandler.getAllUser);

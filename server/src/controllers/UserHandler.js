@@ -84,6 +84,7 @@ module.exports = {
         return res.status(200).json({
           message: "Login successfully",
           token: authentication.generateAccessToken(userID, userRole),
+          refreshToken: authentication.generateRefreshToken(userID, userRole),
         });
       }
     } catch (error) {
@@ -152,7 +153,7 @@ module.exports = {
   },
   updateAvatar: async (req, res) => {
     try {
-      let userAvatar = req.file.path;
+      let {userAvatar} = req.body;
       let { id } = req.params;
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userAvatar, {
@@ -188,7 +189,7 @@ module.exports = {
   },
   updateCover: async (req, res) => {
     try {
-      let userCover = req.file.path;
+      let {userCover} = req.body;
       let { id } = req.params;
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userCover, {
