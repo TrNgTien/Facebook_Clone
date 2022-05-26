@@ -83,8 +83,18 @@ module.exports = {
       } else {
         return res.status(200).json({
           message: "Login successfully",
-          token: authentication.generateAccessToken(userID, userRole),
-          refreshToken: authentication.generateRefreshToken(userID, userRole),
+          dataUser: {
+            token: authentication.generateAccessToken(userID, userRole),
+            refreshToken: authentication.generateRefreshToken(userID, userRole),
+            userAvatar: user.userAvatar,
+            userCover: user.userCover,
+            biography: user.biography,
+            gender: user.gender,
+            fullName: user.firstName+" "+user.lastName,
+            DOB: user.DOB,
+            hobbies: user.hobbies,
+            intro: user.intro
+          }
         });
       }
     } catch (error) {
