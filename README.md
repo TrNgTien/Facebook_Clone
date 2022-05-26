@@ -5,7 +5,7 @@ You are the ![](https://visitor-badge.glitch.me/badge?page_id=TrNgTien.Facebook_
 
 ## Contributor
 Here is our team, you can connect us through our Linkedin:
-- [Tran Ngoc Tien (Team Leader)](https://www.linkedin.com/in/viet-nguyen-4b6391195/)
+- [Tran Ngoc Tien (Team Leader)](https://www.linkedin.com/in/trngtien/)
 - [Duong Thien Phuc (Front-end Developer)](https://www.linkedin.com/in/phucduongthien/)
 - [Nguyen Quoc viet (Back-end Developer)](https://www.linkedin.com/in/viet-nguyen-4b6391195/)
 # Facebook Clone
