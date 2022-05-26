@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
     },
     DOB: {
         type: String,
-        default: "",
+        default: "0/0/0",
     },
     hobbies: {
         type: [String],
