@@ -8,12 +8,15 @@ import Upload from "./components/upload/Upload";
 export default function Feeds() {
   const listInnerRef = useRef<HTMLDivElement>(null);
   const [postData, setPostData] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const userToken = localStorage.getItem("token");
     const getPostData = async () => {
+      setIsLoading(true);
       const dataPost = await getAllFeed(userToken);
       if (dataPost.status === 200) {
         setPostData(dataPost.data.data);
+        setIsLoading(false);
       }
     };
     getPostData();
@@ -33,9 +36,11 @@ export default function Feeds() {
           <Sidebar />
           <div className='body-feeds'>
             <Upload />
-            {postData.map((post: any, index: number) => (
-              <Post key={index} post={post} />
-            ))}
+            {isLoading ? (
+              <h1>Loading...</h1>
+            ) : (
+              postData.map((post: any, index: number) => <Post key={index} post={post} />)
+            )}
           </div>
         </div>
       </div>
