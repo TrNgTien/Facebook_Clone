@@ -17,8 +17,7 @@ module.exports = {
 
   addFeed: async (req, res) => {
     try {
-      let { description } = req.body;
-      let feedAttachments = req.file;
+      let { description, feedAttachments } = req.body;
       if(typeof(feedAttachments) === "undefined"){
         let newFeed = new Feed({
           description: description,
@@ -31,7 +30,7 @@ module.exports = {
         await newFeed.save();
       }
       else{
-        let uploadResponse = await cloudinary.uploader.upload(feedAttachments.path, {
+        let uploadResponse = await cloudinary.uploader.upload(feedAttachments, {
           resource_type: "auto",
           folder: "Facebook Clone/Feed Attachments", 
         });
@@ -104,9 +103,8 @@ module.exports = {
   },
   commentFeed: async (req, res) => {
     try{
-      let commentAttachments = req.file
       let {id} = req.params;
-      let {commentContent} = req.body;
+      let {commentContent, commentAttachments} = req.body;
       let userID = req.user.id;
       let feed = await Feed.findById({_id: id});
       if(typeof(commentAttachments) === "undefined"){
@@ -122,7 +120,7 @@ module.exports = {
         await comment.save();
       }
       else{
-        let uploadResponse = await cloudinary.uploader.upload(commentAttachments.path, {
+        let uploadResponse = await cloudinary.uploader.upload(commentAttachments, {
           resource_type: "auto",
           folder: "Facebook Clone/Comment Attachments",
         });
