@@ -83,7 +83,18 @@ module.exports = {
       } else {
         return res.status(200).json({
           message: "Login successfully",
-          token: authentication.generateAccessToken(userID, userRole),
+          dataUser: {
+            token: authentication.generateAccessToken(userID, userRole),
+            refreshToken: authentication.generateRefreshToken(userID, userRole),
+            userAvatar: user.userAvatar,
+            userCover: user.userCover,
+            biography: user.biography,
+            gender: user.gender,
+            fullName: user.firstName+" "+user.lastName,
+            DOB: user.DOB,
+            hobbies: user.hobbies,
+            intro: user.intro
+          }
         });
       }
     } catch (error) {
@@ -152,7 +163,7 @@ module.exports = {
   },
   updateAvatar: async (req, res) => {
     try {
-      let userAvatar = req.file.path;
+      let {userAvatar} = req.body;
       let { id } = req.params;
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userAvatar, {
@@ -188,7 +199,7 @@ module.exports = {
   },
   updateCover: async (req, res) => {
     try {
-      let userCover = req.file.path;
+      let {userCover} = req.body;
       let { id } = req.params;
       if (req.user.id === id) {
         let uploadResponse = await cloudinary.uploader.upload(userCover, {

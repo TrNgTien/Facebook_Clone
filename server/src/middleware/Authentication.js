@@ -21,8 +21,15 @@ const Authentication = (req, res, next) => {
 	}
 };
 const generateAccessToken = (user, role) => {
-	return jwt.sign({ id: user, role: role }, process.env.JWT_KEY);
+	return jwt.sign({ id: user, role: role }, process.env.JWT_KEY, {
+		expiresIn: "1h",
+	  });
 };
+const generateRefreshToken = (user, role) => {
+	return jwt.sign({ id: user, role: role }, process.env.REFRESH_JWT_KEY, {
+	  expiresIn: "1d",
+	});
+  };
 const adminVerify = (req, res, next) => {
 	if (req.user.role === 0) next();
 	else
@@ -31,4 +38,4 @@ const adminVerify = (req, res, next) => {
 		});
 };
 
-module.exports = { Authentication, generateAccessToken, adminVerify };
+module.exports = { Authentication, generateAccessToken, generateRefreshToken, adminVerify };

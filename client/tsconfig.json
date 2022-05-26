@@ -18,10 +18,11 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react-jsx"
   },
+  "extends": "./tsconfig.paths.json",
   "include": [
-    "src/**/*"
+    "src"
   ],
   "exclude": [
     "node_modules",

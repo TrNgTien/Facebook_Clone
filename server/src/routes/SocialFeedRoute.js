@@ -6,8 +6,7 @@ const upload = require("../utils/multer");
 
 router.post(
 	"/addFeed",
-	upload.single("feedAttachments"),
-
+	Authentication,
 	feedHandler.addFeed
 );
 router.get("/getAllFeed", Authentication, feedHandler.getFeed);
