@@ -5,6 +5,6 @@ import { useAppSelector } from "@store/hooks";
 function PrivateRoute({ children }: any) {
   const { isLogged } = useAppSelector((state) => state.auth);
   // const tokenData = localStorage.getItem("token");
-  return isLogged ? children : <Navigate to='' />;
+  return isLogged ? children : <Navigate to='/' />;
 }
 export default PrivateRoute;

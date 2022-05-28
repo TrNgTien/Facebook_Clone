@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Post.scss";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BiComment, BiShare } from "react-icons/bi";
-import { Modal } from "../post-modal/PostModal";
+import { Modal } from "../../feat/post-modal/PostModal";
 import { getProfileID } from "@services/FeedsService";
 import { useAppSelector } from "@store/hooks";
 

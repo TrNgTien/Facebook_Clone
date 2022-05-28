@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BiComment, BiShare } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
-import Comment from "../comment/Comment";
+import Comment from "@components/common/comment/Comment";
 import "./PostModal.scss";
 
 export const Modal = ({

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CircleLoading from "../../components/loading-component/CircleLoading";
+import CircleLoading from "../../components/common/loading-component/CircleLoading";
 import "./styles/RegisterPage.scss";
 import { dates, months, years } from "./DateModels";
 import { RegisterReq } from "../../services/AuthService";

@@ -1,4 +1,4 @@
-const Path = {
+const PATH_API = {
   LOGIN: "auth/login",
   GET_USER: "auth/getAUser",
   REFRESH_TOKEN: "/auth/token",
@@ -9,4 +9,4 @@ const Path = {
 
   GET_USER_PROFILE: "auth/getAUser",
 };
-export default Path;
+export default PATH_API;

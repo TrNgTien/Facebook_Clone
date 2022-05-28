@@ -1,45 +1,46 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdPhotoLibrary } from "react-icons/md";
-import CircleLoading from "../../../../../components/loading-component/CircleLoading";
-import { AddFeed } from "../../../../../services/FeedsService";
-import "./UploadInput.scss";
-import BlankAvatar from "../../../../../assets/avatar.png";
+import { useAppSelector, useAppDispatch } from "@store/hooks";
+import CircleLoading from "@components/common/loading-component/CircleLoading";
+import { AddFeed } from "@services/FeedsService";
+import Icons from "@theme/Icons";
+import jwtDecode from "jwt-decode";
+import "./UploadPost.scss";
+import { IJwtDecode } from "@constants/InterfaceModel";
+import { setIsCreatePost } from "@slices/PostSlice";
+
 const UploadInput = () => {
-  const userId = "62617ee6499247e9d43b0351";
-  const IMG_ICON_CLOSE = "https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png";
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector((state) => state.auth);
   const [description, setDescription] = useState("");
   const [fileInputState, setFileInputState] = useState("");
   const [previewSource, setPreviewSource] = useState("");
-  const [selectedFile, setSelectedFile] = useState();
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<any>("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [errMsg, setErrMsg] = useState("");
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
 
-  const handleFileInputChange = (e: any) => {
-    const file = e.target.files[0];
-    previewFile(file);
-    setSelectedFile(file);
-    setFileInputState(e.target.value);
-  };
-
-  const previewFile = (file: any) => {
+  const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSource(reader.result as string);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setImageBase64(reader.result);
+      }
     };
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleSubmitForm = (e: any) => {
     e.preventDefault();
-
-    if (!selectedFile && !description) return;
     let formData = new FormData();
-    if (selectedFile) {
+    if (!selectedFile && !description) return;
+    else if (selectedFile) {
       const reader = new FileReader();
-
-      formData.append("userId", userId);
+      formData.append("userId", currentUser.userId);
       formData.append("description", description);
       formData.append("feedAttachments", selectedFile);
       uploadPost(formData);
@@ -48,7 +49,7 @@ const UploadInput = () => {
         setErrMsg("something went wrong!");
       };
     } else {
-      formData.append("userId", userId);
+      formData.append("userId", currentUser.userId);
       formData.append("description", description);
       formData.append("feedAttachments", "");
       uploadPost(formData);
@@ -68,66 +69,66 @@ const UploadInput = () => {
       });
   };
   return (
-    <div className='upload-page'>
+    <div className='upload-page' onClick={() => dispatch(setIsCreatePost(false))}>
       {isRegistering ? <CircleLoading /> : null}
       <div className='container-upload-form'>
         <form onSubmit={handleSubmitForm}>
           <div className='upload-form__header'>
-            <h2 className='title-upload'>Create post</h2>
+            <h2>Create post</h2>
             <img
-              className='close-upload-form'
-              src={IMG_ICON_CLOSE}
-              alt=''
-              onClick={() => {
-                navigate(-1);
-              }}
+              className='upload-form__close-icon'
+              src={Icons.CLOSE_IC}
+              alt='close-icon'
+              onClick={() => dispatch(setIsCreatePost(false))}
             />
           </div>
           <div className='upload-hr'></div>
           <div className='upload-form__body'>
             <div className='upload-form__user'>
-              <img className='upload-form__user-avatar' src={BlankAvatar} alt='' />
-              <p className='upload-form__username'>Phuc Duong</p>
+              <img
+                className='upload-form__user-avatar'
+                src={currentUser.userAvatar}
+                alt='avatar'
+              />
+              <p className='upload-form__username'>{currentUser.fullName}</p>
             </div>
             <div className='upload-info'>
               <textarea
-                className='text-input'
+                className='upload-info__caption-post'
                 value={description}
-                maxLength={10}
-                placeholder={"What's on your mind, Phuc?"}
+                placeholder={`What's on your mind, ${currentUser.fullName}?`}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {previewSource && (
+              {imageBase64 && (
                 <div className='preview-container'>
                   <img
                     className='close-upload-img'
-                    src={IMG_ICON_CLOSE}
+                    src={Icons.CLOSE_IC}
                     alt=''
                     onClick={() => {
                       setFileInputState("");
                       setPreviewSource("");
-                      setSelectedFile(undefined);
+                      setSelectedFile(null);
                       setErrMsg("");
                     }}
                   />
-                  <img src={previewSource} className='img-preview' alt='chosen' />
+                  <img src={imageBase64} className='img-preview' alt='chosen' />
                 </div>
               )}
             </div>
             <div className='upload-form__file-input-container'>
-              <p className='file-input__label'>Add image to your post</p>
-              <label
-                className='file-input__button'
-                onChange={handleFileInputChange}
-                htmlFor='inputFile'
-              >
+              <label className='file-input__label' htmlFor='inputFile'>
+                Add image to your post
+              </label>
+              <label className='file-input__button' htmlFor='inputFile'>
                 <MdPhotoLibrary className='btn-input-photo' />
                 <input
                   className='file-input__input'
                   type='file'
                   name='input-file'
                   id='inputFile'
-                  accept='.png,.jpg,.jpeg'
+                  accept='image/x-png,image/gif,image/jpeg'
+                  onChange={handlePreviewFile}
                   multiple={false}
                   value={fileInputState}
                   hidden
@@ -137,22 +138,17 @@ const UploadInput = () => {
 
             {errMsg && <p style={{ color: "red" }}>{errMsg}</p>}
             <div className='bottom-upload-container'>
-              {!description && !selectedFile ? (
-                <input
-                  className='button-upload disabled'
-                  type='submit'
-                  value='Post'
-                  id='submit-post'
-                  disabled
-                />
-              ) : (
-                <input
-                  className='button-upload enable'
-                  type='submit'
-                  value='Post'
-                  id='submit-post'
-                />
-              )}
+              <input
+                className={
+                  !description && !selectedFile
+                    ? "button-upload disabled"
+                    : "button-upload enable"
+                }
+                type='submit'
+                value='Post'
+                id='submit-post'
+                disabled={!description && !selectedFile ? true : false}
+              />
             </div>
           </div>
         </form>
@@ -161,4 +157,4 @@ const UploadInput = () => {
   );
 };
 
-export default UploadInput;
+export default memo(UploadInput);

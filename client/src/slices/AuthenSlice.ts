@@ -1,16 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store/store";
-import { IUser } from "../constants/InterfaceModel";
-
-export interface AuthState {
-  currentUser?: any;
-  isLoggedIn: boolean;
-  logging: boolean;
-}
-export interface LoginPayload {
-  userName: string;
-  password: string;
-}
 
 interface LoginState {
   currentUser?: any;
@@ -22,7 +10,7 @@ const initialState: LoginState = {
 };
 const AuthenSlice = createSlice({
   name: "AuthenSlice",
-  initialState: initialState,
+  initialState,
   reducers: {
     setLoginSucess(state, action: PayloadAction<any>) {
       const { payload } = action;

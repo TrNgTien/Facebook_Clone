@@ -4,7 +4,7 @@ import "./Layout.scss";
 function Layout(props: any) {
   return (
     <>
-      <Header userData={props.userData} />
+      <Header />
       {props.children}
     </>
   );

@@ -1,8 +1,8 @@
 import { axiosInstance } from "./BaseService";
+import API_PATH from "@constants/API_PATH";
 
-import PATH from "../constants/PathURL";
 const AddFeed = (reqBody: any) => {
-  return axiosInstance.post(PATH.FEEDS_ADD, reqBody);
+  return axiosInstance.post(API_PATH.FEEDS_ADD, reqBody);
 };
 const getAllFeed = (token: any) => {
   let configHeader = {
@@ -10,7 +10,7 @@ const getAllFeed = (token: any) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axiosInstance.get(PATH.FEEDS_GET, configHeader);
+  return axiosInstance.get(API_PATH.FEEDS_GET, configHeader);
 };
 const getProfileID = (token: any | null, id: string) => {
   let configHeader = {
@@ -18,7 +18,7 @@ const getProfileID = (token: any | null, id: string) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axiosInstance.get(`${PATH.GET_USER_PROFILE}/${id}`, configHeader);
+  return axiosInstance.get(`${API_PATH.GET_USER_PROFILE}/${id}`, configHeader);
 };
 
 export { AddFeed, getAllFeed, getProfileID };

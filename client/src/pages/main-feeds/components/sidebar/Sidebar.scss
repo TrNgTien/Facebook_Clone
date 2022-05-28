@@ -1,44 +1,42 @@
+@import "@styles/mixin.scss";
 .sidebar {
-	width: 27%;
-	height: 100vh;
-	padding: 23px 7px;
+	width: 25%;
+	padding-left: 0.5rem;
 	position: fixed;
-
+	height: 100vh;
 	.sidebar-row {
 		display: flex;
 		align-items: center;
-		font-size: 16px;
-		cursor: pointer;
-		border-radius: 10px;
+		margin-bottom: 0.5rem;
+		padding: 10px;
+		width: 80%;
 		&:hover {
-			background-color: rgb(226, 226, 226);
-		}
+			cursor: pointer;
+			background-color: var(--hover-color);
+			width: 80%;
 
-		img {
-			height: 38px;
-			border-radius: 30px;
+			display: flex;
+			align-items: center;
+			padding: 10px;
+			border-radius: 10px;
+			margin-bottom: 0.5rem;
 		}
-
+		& > img {
+			@include sizeIcon;
+		}
+		& > p {
+			font-size: 16px;
+			font-weight: 500;
+			margin-left: 6px;
+		}
 		.sidebar-row__icon {
-			height: 30px;
-			width: 30px;
-			margin: 10px;
+			@include sizeIcon;
 			color: rgb(14, 132, 230);
 		}
 
 		.sidebar-row__icon--more {
 			border-radius: 30px;
 			background-color: rgb(226, 226, 226);
-		}
-		p {
-			font-size: 15px;
-			margin-left: 6px;
-		}
-		.sidebar-row-user-img {
-			height: 40px;
-			width: 40px;
-			margin: 5px;
-			padding: 0px;
 		}
 	}
 }

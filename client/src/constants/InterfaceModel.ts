@@ -27,3 +27,6 @@ export interface IUser {
   intro: Array<IIntro>;
   hobbies: Array<string>;
 }
+export interface IShowPass {
+  showPassword: Boolean;
+}

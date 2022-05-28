@@ -1,59 +1,23 @@
-import { getCookie } from "../../utils/CookieUtil";
-import "./styles/ProfilePage.scss";
-// import Header from "../main-feeds/components/header/Header";
+import React, { useEffect } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
-import Upload from "../main-feeds/components/upload/Upload";
-import BlankAvatar from "../../assets/avatar.png";
-import PostImg from "../../assets/post_img.jpg";
-// import Post from "../main-feeds/components/post/Post";
-import deepOrange from "@mui/material/colors";
+import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { MainLayout } from "@components/common/layout";
-import { useAppSelector } from "@store/hooks";
-import { useEffect } from "react";
+import Upload from "../main-feeds/components/upload/Upload";
+// import Post from "../main-feeds/components/post/Post";
+import "./styles/ProfilePage.scss";
+import UploadPost from "@components/feat/upload-post/UploadPost";
+import { setIsCreatePost } from "@slices/PostSlice";
 
 export default function ProfilePage() {
-  const userNameCookie = "User Name";
-  const imageUrlCookie = BlankAvatar;
-  const IMG_URL1 = PostImg;
-  const IMG_URL2 =
-    "https://media.istockphoto.com/photos/freedom-chains-that-transform-into-birds-charge-concept-picture-id1322104312?b=1&k=20&m=1322104312&s=170667a&w=0&h=VQyPkFkMKmo0e4ixjhiOLjiRs_ZiyKR_4SAsagQQdkk=";
-  const content =
-    "So after I did step 1.1|2 it was not working, then I found the above issue/solution.";
-  const current_date = new Date().toDateString().toString();
   const { currentUser } = useAppSelector((state) => state.auth);
+  const { isCreatePost } = useAppSelector((state) => state.post);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    document.title = `${currentUser.fullName} | Facebook Clone`;
-  }, [currentUser.fullName]);
-
-  const posts = [
-    {
-      id: 0,
-      avatarURL: imageUrlCookie,
-      username: userNameCookie,
-      timestamp: current_date,
-      content: content,
-      imgURL: IMG_URL1,
-    },
-    {
-      id: 1,
-      avatarURL: imageUrlCookie,
-      username: userNameCookie,
-      timestamp: current_date,
-      content: content,
-      imgURL: IMG_URL2,
-    },
-    {
-      id: 2,
-      avatarURL: imageUrlCookie,
-      username: userNameCookie,
-      timestamp: current_date,
-      content: content,
-      imgURL: IMG_URL1,
-    },
-  ];
+    dispatch(setIsCreatePost(false));
+  }, [dispatch]);
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (
@@ -81,8 +45,32 @@ export default function ProfilePage() {
       </div>
     );
   };
+  const CustomFunctionList = (): JSX.Element => {
+    const titleList = [
+      "Posts",
+      "About",
+      "Friends",
+      "Photos",
+      "Videos",
+      "Check-ins",
+      "More",
+    ];
+
+    return (
+      <div className='button-pages'>
+        {titleList.map((items, index) => {
+          return (
+            <button key={index} className='button-page'>
+              {items}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
   return (
     <MainLayout>
+      {isCreatePost && <UploadPost />}
       <div className='profile-page'>
         <div className='profile-zone'>
           <div className='profile-zone__header'>
@@ -90,7 +78,7 @@ export default function ProfilePage() {
               <img className='background-img' src={currentUser.userCover} alt='' />
               <button className='add-cover'>
                 <BsFillCameraFill className='add-cover-icon' />
-                <p>Add Cover Photo</p>
+                <p>Edit Cover Photo</p>
               </button>
             </div>
             <div className='container-info'>
@@ -129,20 +117,11 @@ export default function ProfilePage() {
               </div>
               <CustomButton />
             </div>
-            <div className='container-hr-tag'>
-              <hr className='hr-tag' />
-            </div>
             <div className='profile-functionalities'>
-              <div className='button-pages'>
-                <button className='button-page posts'>Posts</button>
-                <button className='button-page about'>About</button>
-                <button className='button-page friends'>Friends</button>
-                <button className='button-page photos'>Photos</button>
-                <button className='button-page videos'>Videos</button>
-                <button className='button-page check-ins'>Check-ins</button>
-                <button className='button-page more'>More</button>
-              </div>
-              <button className='three-dots'>...</button>
+              <CustomFunctionList />
+              <button onClick={() => console.log("hi")} className='three-dots'>
+                ...
+              </button>
             </div>
           </div>
           <div className='profile-zone__body'>

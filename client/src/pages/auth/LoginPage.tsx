@@ -1,12 +1,14 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import React, { KeyboardEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import CircleLoading from "@components/loading-component/CircleLoading";
+import CircleLoading from "@components/common/loading-component/CircleLoading";
 import { LoginReq } from "@services/AuthService";
 import { useAppDispatch } from "@store/hooks";
 import { setLoginSucess } from "@slices/AuthenSlice";
+import { IShowPass } from "@constants/InterfaceModel";
 import "./styles/LoginPage.scss";
-export default function LoginPage(props: any) {
+
+export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -17,13 +19,7 @@ export default function LoginPage(props: any) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
 
-  const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-  };
-  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-  const RenderIcon = ({ showPassword }: any) => {
+  const RenderIcon = ({ showPassword }: IShowPass) => {
     if (!showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
   };
@@ -93,7 +89,7 @@ export default function LoginPage(props: any) {
               autoComplete='on'
               onFocus={() => setIsFocusUser(true)}
               onBlur={() => setIsFocusUser(false)}
-              onChange={onChangeUserName}
+              onChange={(e) => setUserName(e.target.value)}
             />
             <div className={isFocusPass ? "wrapper-pass--clicked " : "wrapper-pass"}>
               <input
@@ -106,7 +102,7 @@ export default function LoginPage(props: any) {
                 onKeyDown={(e) => loginEnterAccept(e)}
                 onBlur={() => setIsFocusPass(false)}
                 onFocus={() => setIsFocusPass(true)}
-                onChange={onChangePassword}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder='Password'
                 size={6}
               />

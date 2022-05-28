@@ -1,14 +1,10 @@
 import { axiosInstance } from "./BaseService";
+import API_PATH from "@constants/API_PATH";
 
-import Path from "../constants/PathURL";
-
-import { NavigateFunction } from "react-router-dom";
-import { IUser } from "../constants/InterfaceModel";
 interface IAuthService {
   userName: string;
   password: string;
 }
-
 interface IRegisterService {
   gender: string;
   userName: string;
@@ -21,19 +17,10 @@ interface IRegisterService {
 }
 const LoginReq = (reqBody: IAuthService) => {
   let dataReq = { ...reqBody };
-  return axiosInstance.post(Path.LOGIN, dataReq);
+  return axiosInstance.post(API_PATH.LOGIN, dataReq);
 };
 const RegisterReq = (reqBody: IRegisterService) => {
   let dataReq = { ...reqBody };
-  return axiosInstance.post(Path.REGISTER, dataReq);
+  return axiosInstance.post(API_PATH.REGISTER, dataReq);
 };
-// const ReqUserById = async (userId: string, dispatch: any) => {
-//   try {
-//     const res = await httpClient.getById(Path.GET_USER, userId);
-//     console.log("res: ", res.data.DOB);
-//     dispatch(userQuery(res.data));
-//   } catch (error) {
-//     alert(error);
-//   }
-// };
 export { LoginReq, RegisterReq };
