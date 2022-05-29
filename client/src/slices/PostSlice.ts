@@ -1,21 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface PostState {
-  posts: Array<any>;
-  isFetching: boolean;
-  fetched: boolean;
   isCreatePost: boolean;
   viewPostData: any;
+  listPosts: Array<any>;
 }
 const initialState: PostState = {
-  posts: [],
-  isFetching: false,
-  fetched: false,
   isCreatePost: false,
   viewPostData: {
     isViewPost: false,
     dataPost: {},
   },
+  listPosts: [],
 };
 const PostSlice = createSlice({
   name: "PostSlice",
@@ -29,11 +25,15 @@ const PostSlice = createSlice({
       const { payload } = action;
       return { ...state, viewPostData: payload };
     },
+    setListPosts(state, action) {
+      const { payload } = action;
+      return { ...state, listPosts: payload };
+    },
   },
 });
 
 //Actions
-export const { setIsCreatePost, setViewPost } = PostSlice.actions;
+export const { setIsCreatePost, setViewPost, setListPosts } = PostSlice.actions;
 
 //Reducer
 const postReducer = PostSlice.reducer;

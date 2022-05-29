@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
+import { FaFacebookMessenger } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -65,6 +66,9 @@ const Header = () => {
         </div>
         <div className='header__option'>
           <GrAdd className='icon-options' />
+        </div>
+        <div className='header__option'>
+          <FaFacebookMessenger className='icon-options' />
         </div>
         <div className='header__option'>
           <AiTwotoneBell className='icon-options' />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BiComment, BiShare, BiLike } from "react-icons/bi";
 import { getProfileID } from "@services/NewsFeedService";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { setViewPost } from "@slices/PostSlice";
@@ -16,7 +15,7 @@ function Post({ postData }: IProps) {
   const { currentUser } = useAppSelector((state) => state.auth);
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
-
+  const convertedTime = new Date(time).toLocaleString();
   useEffect(() => {
     const getProfileData = async () => {
       const profileRes = await getProfileID(currentUser.token, userID);
@@ -33,7 +32,7 @@ function Post({ postData }: IProps) {
         <img className='img-avatar' src={posterData?.userAvatar} alt='avatar' />
         <div className='container__top-info'>
           <h4>{posterData?.userName}</h4>
-          <p>{time}</p>
+          <p>{convertedTime}</p>
         </div>
       </div>
       <div className='container__content'>
@@ -62,9 +61,9 @@ function Post({ postData }: IProps) {
         ) : null}
       </div>
       <div className='container__status'>
-        <p>{numberOfLike > 0 ? `${numberOfLike} likes` : `${numberOfLike} like`} </p>
+        <p>{numberOfLike > 1 ? `${numberOfLike} likes` : `${numberOfLike} like`}</p>
         <p>
-          {numberOfComment > 0
+          {numberOfComment > 1
             ? `${numberOfComment} comments`
             : `${numberOfComment} comment`}
         </p>

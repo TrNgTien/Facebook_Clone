@@ -1,76 +1,94 @@
 import React, { memo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { MdPhotoLibrary } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
-import CircleLoading from "@components/common/loading-component/CircleLoading";
-import { AddFeed } from "@services/NewsFeedService";
+import CircleLoading from "@components/common/loading-delay/CircleLoading";
+import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
-import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
-import { setIsCreatePost } from "@slices/PostSlice";
+import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import "./UploadModal.scss";
 
 const UploadInput = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
+  const { listPosts } = useAppSelector((state) => state.post);
   const [description, setDescription] = useState("");
   const [fileInputState, setFileInputState] = useState("");
-  const [previewImage, setPreviewImage] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<any>("");
-  const [selectedFile, setSelectedFile] = useState(null);
   const [errMsg, setErrMsg] = useState("");
-  const [isRegistering, setIsRegistering] = useState<boolean>(false);
-  const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
+  const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
+  const ownerToken: string = currentUser.token;
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImageBase64(reader.result);
-      }
+    const file = e.target.files[0];
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImageBase64(reader.result);
     };
-    reader.readAsDataURL(e.target.files[0]);
   };
 
-  const handleSubmitForm = (e: any) => {
+  const handleSubmitForm = async (e: any) => {
     e.preventDefault();
-    let formData = new FormData();
-    if (!selectedFile && !description) return;
-    else if (selectedFile) {
-      const reader = new FileReader();
-      formData.append("userId", currentUser.userId);
-      formData.append("description", description);
-      formData.append("feedAttachments", selectedFile);
-      uploadPost(formData);
+    setIsUpLoading(true);
+    const reader = new FileReader();
+    const dataPost = {
+      ownerToken,
+      description,
+      imageBase64,
+    };
+    const newPostData = {
+      time: new Date().toLocaleString(),
+      description,
+      feedAttachments: {
+        url: imageBase64,
+      },
+      numberOfLike: 0,
+      numberOfComment: 0,
+      _v: 0,
+    };
+    const newListPosts = [...listPosts];
+    if (!imageBase64 && !description) {
+      alert("Please select a file or write a a caption");
+    } else if (imageBase64 && description) {
+      const addPostRes = await AddPost(dataPost);
+      if (addPostRes.status === 200) {
+        newListPosts.unshift(newPostData);
+        dispatch(setListPosts(newListPosts));
+        setIsUpLoading(false);
+        dispatch(setIsCreatePost(false));
+      }
+      reader.onerror = () => {
+        setErrMsg("something went wrong!");
+      };
+    } else if (!imageBase64 && description) {
+      const addPostRes = await AddPost(dataPost);
+      if (addPostRes.status === 200) {
+        newListPosts.unshift(newPostData);
+        dispatch(setListPosts(newListPosts));
+        setIsUpLoading(false);
+        dispatch(setIsCreatePost(false));
+      }
       reader.onerror = () => {
         setErrMsg("something went wrong!");
       };
     } else {
-      formData.append("userId", currentUser.userId);
-      formData.append("description", description);
-      formData.append("feedAttachments", "");
-      uploadPost(formData);
+      const addPostRes = await AddPost(dataPost);
+      if (addPostRes.status === 200) {
+        newListPosts.unshift(newPostData);
+        dispatch(setListPosts(newListPosts));
+        setIsUpLoading(false);
+        dispatch(setIsCreatePost(false));
+      }
+      reader.onerror = () => {
+        setErrMsg("something went wrong!");
+      };
     }
-  };
-  const uploadPost = (formData: any) => {
-    AddFeed(formData)
-      .then((res: any) => {
-        setIsRegistering(true);
-        setTimeout(() => {
-          setIsRegistering(false);
-          navigate(-1);
-        }, 2000);
-      })
-      .catch((err: any) => {
-        alert(`${err}`);
-      });
   };
   return (
     <div className='upload-page'>
-      {isRegistering ? <CircleLoading /> : null}
-      <div className='container-upload-form'>
-        <form onSubmit={handleSubmitForm}>
+      {isUpLoading && <CircleLoading />}
+      <div>
+        <form onSubmit={handleSubmitForm} className='container-upload-form'>
           <div className='upload-form__header'>
             <h2>Create post</h2>
             <img
@@ -105,7 +123,7 @@ const UploadInput = () => {
                     alt=''
                     onClick={() => {
                       setFileInputState("");
-                      setSelectedFile(null);
+                      setImageBase64(null);
                       setErrMsg("");
                     }}
                   />
@@ -119,34 +137,32 @@ const UploadInput = () => {
               </label>
               <label className='file-input__button' htmlFor='inputFile'>
                 <MdPhotoLibrary className='btn-input-photo' />
-                <input
-                  className='file-input__input'
-                  type='file'
-                  name='input-file'
-                  id='inputFile'
-                  accept='image/x-png,image/gif,image/jpeg'
-                  onChange={handlePreviewFile}
-                  multiple={false}
-                  value={fileInputState}
-                  hidden
-                />
               </label>
+              <input
+                className='file-input__input'
+                type='file'
+                name='input-file'
+                id='inputFile'
+                accept='image/x-png,image/gif,image/jpeg'
+                onChange={handlePreviewFile}
+                multiple={false}
+                value={fileInputState}
+                hidden
+              />
             </div>
 
             {errMsg && <p style={{ color: "red" }}>{errMsg}</p>}
-            <div className='bottom-upload-container'>
-              <input
-                className={
-                  !description && !selectedFile
-                    ? "button-upload disabled"
-                    : "button-upload enable"
-                }
-                type='submit'
-                value='Post'
-                id='submit-post'
-                disabled={!description && !selectedFile ? true : false}
-              />
-            </div>
+            <input
+              className={
+                !description && !imageBase64
+                  ? "button-upload disabled"
+                  : "button-upload enable"
+              }
+              type='submit'
+              value='Post'
+              id='submit-post'
+              disabled={!description && !imageBase64 ? true : false}
+            />
           </div>
         </form>
       </div>

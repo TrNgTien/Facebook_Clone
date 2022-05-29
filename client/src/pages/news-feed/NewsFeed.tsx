@@ -7,31 +7,40 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
-import { setIsCreatePost } from "@slices/PostSlice";
-import "./styles/NewsFeed.scss";
+import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
+import "./styles/NewsFeed.scss";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
   const listInnerRef = useRef<HTMLDivElement>(null);
-  const { isCreatePost, viewPostData } = useAppSelector((state) => state.post);
-  const [postData, setPostData] = useState<never[]>([]);
+  const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
+  const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     dispatch(setIsCreatePost(false));
-  }, [dispatch]);
+    if (listPosts) {
+      setPostData(listPosts);
+    }
+  }, [dispatch, listPosts]);
+  console.log(listPosts)
   useEffect(() => {
     const userToken = localStorage.getItem("token");
     const getPostData = async () => {
       setIsLoading(true);
       const dataPost = await getAllFeed(userToken);
       if (dataPost.status === 200) {
-        setPostData(dataPost.data.data);
+        const sortedData = dataPost.data.data.sort((a: any, b: any) => {
+          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+        });
+        dispatch(setListPosts(sortedData));
+        setPostData(sortedData);
         setIsLoading(false);
       }
     };
     getPostData();
-  }, []);
+  }, [dispatch]);
   const onScroll = () => {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
@@ -47,7 +56,7 @@ export default function NewsFeed() {
           {isCreatePost && <UploadPost />}
           {viewPostData.isViewPost && <ViewPost />}
           <Sidebar />
-          <div className='body-feeds'>
+          <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
             <Upload />
             {isLoading ? (
               <h1>Loading...</h1>
@@ -92,5 +101,3 @@ export default function NewsFeed() {
     </MainLayout>
   );
 }
-
-//  <div className='body-feeds' onScroll={() => onScroll()} ref={listInnerRef}>

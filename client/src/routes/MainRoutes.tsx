@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import LoginPage from "@pages/auth/LoginPage";
 import RegisterPage from "@pages/auth/RegisterPage";
 import ProfilePage from "@pages/profile/ProfilePage";
-import NewsFeed from "@pages/main-feeds/NewsFeed";
+import NewsFeed from "@pages/news-feed/NewsFeed";
 import NotFound from "@pages/not-found/NotFound";
 import PrivateRoute from "./PrivateRoute";
 

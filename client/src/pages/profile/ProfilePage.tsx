@@ -5,7 +5,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { MainLayout } from "@components/common/layout";
-import Upload from "../main-feeds/components/upload/Upload";
+import Upload from "../news-feed/components/upload/Upload";
 // import Post from "../main-feeds/components/post/Post";
 import "./styles/ProfilePage.scss";
 import UploadPost from "@components/feat/upload-modal/UploadModal";

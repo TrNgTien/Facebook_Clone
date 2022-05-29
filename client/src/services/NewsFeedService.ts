@@ -1,10 +1,25 @@
 import { axiosInstance } from "./BaseService";
 import API_PATH from "@constants/API_PATH";
 
-const AddFeed = (reqBody: any) => {
-  return axiosInstance.post(API_PATH.FEEDS_ADD, reqBody);
+interface IAddFeed {
+  ownerToken: string | null;
+  imageBase64?: string | null;
+  description?: string | null;
+}
+const AddPost = (reqBody: IAddFeed) => {
+  const { ownerToken, imageBase64, description } = reqBody;
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${ownerToken}`,
+    },
+  };
+  return axiosInstance.post(
+    API_PATH.FEEDS_ADD,
+    { description, feedAttachments: imageBase64 },
+    configHeader
+  );
 };
-const getAllFeed = (token: any) => {
+const getAllFeed = (token: string | null) => {
   let configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -21,4 +36,4 @@ const getProfileID = (token: any | null, id: string) => {
   return axiosInstance.get(`${API_PATH.GET_USER_PROFILE}/${id}`, configHeader);
 };
 
-export { AddFeed, getAllFeed, getProfileID };
+export { AddPost, getAllFeed, getProfileID };

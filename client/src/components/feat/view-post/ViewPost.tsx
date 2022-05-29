@@ -1,12 +1,10 @@
 import React, { memo, useCallback, useEffect } from "react";
-import { BiComment, BiShare, BiLike } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
-import Comments from "@components/common/comments/Comments";
-import "./ViewPost.scss";
+import Comments from "@components/common/comment-bubble/Comments";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import Icons from "@theme/Icons";
 import { setViewPost } from "@slices/PostSlice";
 import InteractionPost from "../post-features/InteractionPost";
+import "./ViewPost.scss";
 
 const ViewPost = () => {
   const dispatch = useAppDispatch();
