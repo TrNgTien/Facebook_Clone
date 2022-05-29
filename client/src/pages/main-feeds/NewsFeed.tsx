@@ -1,19 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MainLayout } from "@components/common/layout/index";
-import Post from "@components/common/post/Post";
-import { getAllFeed } from "@services/FeedsService";
+import Post from "@components/common/post/Posts";
+import { getAllFeed } from "@services/NewsFeedService";
 import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
-import UploadPost from "@components/feat/upload-post/UploadPost";
+import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { setIsCreatePost } from "@slices/PostSlice";
 import "./styles/NewsFeed.scss";
+import ViewPost from "@components/feat/view-post/ViewPost";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
   const listInnerRef = useRef<HTMLDivElement>(null);
-  const { isCreatePost } = useAppSelector((state) => state.post);
+  const { isCreatePost, viewPostData } = useAppSelector((state) => state.post);
   const [postData, setPostData] = useState<never[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -44,13 +45,14 @@ export default function NewsFeed() {
       <div className='feeds-container'>
         <div className='body-container'>
           {isCreatePost && <UploadPost />}
+          {viewPostData.isViewPost && <ViewPost />}
           <Sidebar />
           <div className='body-feeds'>
             <Upload />
             {isLoading ? (
               <h1>Loading...</h1>
             ) : (
-              postData.map((post, index: number) => <Post key={index} post={post} />)
+              postData.map((post, index: number) => <Post key={index} postData={post} />)
             )}
           </div>
           <div className='list-friends'>

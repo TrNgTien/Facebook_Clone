@@ -1,3 +1,4 @@
+@import "@styles/mixin.scss";
 .upload-container {
 	padding: 10px;
 	border-radius: 10px;
@@ -36,11 +37,8 @@
 			}
 		}
 	}
-	.hr-tag {
-		border: 0;
-		height: 1px;
-		background: rgb(85, 85, 85);
-		opacity: 0.2;
+	.divider {
+		@include divider;
 	}
 	.upload__footer {
 		display: flex;

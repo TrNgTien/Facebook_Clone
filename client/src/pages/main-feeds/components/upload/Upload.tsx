@@ -30,7 +30,7 @@ const Upload = () => {
           </div>
         </div>
       </div>
-      <hr className='hr-tag' />
+      <hr className='divider' />
       <div className='upload__footer'>
         <button className='btn '>
           <BsFillCameraVideoFill className='btn--live' />

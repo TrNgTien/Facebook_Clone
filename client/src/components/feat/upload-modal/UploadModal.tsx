@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { MdPhotoLibrary } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import CircleLoading from "@components/common/loading-component/CircleLoading";
-import { AddFeed } from "@services/FeedsService";
+import { AddFeed } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
 import jwtDecode from "jwt-decode";
-import "./UploadPost.scss";
 import { IJwtDecode } from "@constants/InterfaceModel";
 import { setIsCreatePost } from "@slices/PostSlice";
+import "./UploadModal.scss";
 
 const UploadInput = () => {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ const UploadInput = () => {
   const { currentUser } = useAppSelector((state) => state.auth);
   const [description, setDescription] = useState("");
   const [fileInputState, setFileInputState] = useState("");
-  const [previewSource, setPreviewSource] = useState("");
   const [previewImage, setPreviewImage] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<any>("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -44,7 +43,6 @@ const UploadInput = () => {
       formData.append("description", description);
       formData.append("feedAttachments", selectedFile);
       uploadPost(formData);
-
       reader.onerror = () => {
         setErrMsg("something went wrong!");
       };
@@ -69,7 +67,7 @@ const UploadInput = () => {
       });
   };
   return (
-    <div className='upload-page' onClick={() => dispatch(setIsCreatePost(false))}>
+    <div className='upload-page'>
       {isRegistering ? <CircleLoading /> : null}
       <div className='container-upload-form'>
         <form onSubmit={handleSubmitForm}>
@@ -107,7 +105,6 @@ const UploadInput = () => {
                     alt=''
                     onClick={() => {
                       setFileInputState("");
-                      setPreviewSource("");
                       setSelectedFile(null);
                       setErrMsg("");
                     }}

@@ -5,12 +5,17 @@ export interface PostState {
   isFetching: boolean;
   fetched: boolean;
   isCreatePost: boolean;
+  viewPostData: any;
 }
 const initialState: PostState = {
   posts: [],
   isFetching: false,
   fetched: false,
   isCreatePost: false,
+  viewPostData: {
+    isViewPost: false,
+    dataPost: {},
+  },
 };
 const PostSlice = createSlice({
   name: "PostSlice",
@@ -20,11 +25,15 @@ const PostSlice = createSlice({
       const { payload } = action;
       return { ...state, isCreatePost: payload };
     },
+    setViewPost(state, action) {
+      const { payload } = action;
+      return { ...state, viewPostData: payload };
+    },
   },
 });
 
 //Actions
-export const { setIsCreatePost } = PostSlice.actions;
+export const { setIsCreatePost, setViewPost } = PostSlice.actions;
 
 //Reducer
 const postReducer = PostSlice.reducer;

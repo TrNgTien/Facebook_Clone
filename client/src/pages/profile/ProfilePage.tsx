@@ -8,7 +8,7 @@ import { MainLayout } from "@components/common/layout";
 import Upload from "../main-feeds/components/upload/Upload";
 // import Post from "../main-feeds/components/post/Post";
 import "./styles/ProfilePage.scss";
-import UploadPost from "@components/feat/upload-post/UploadPost";
+import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { setIsCreatePost } from "@slices/PostSlice";
 
 export default function ProfilePage() {

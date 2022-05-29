@@ -1,4 +1,4 @@
-@import "../../../styles/mixin.scss";
+@import "@styles/mixin.scss";
 
 .profile-page {
     background-color: #f0f2f5;
@@ -142,18 +142,6 @@
                     }
                 }
             }
-
-            .container-hr-tag {
-                width: 810px;
-
-                .hr-tag {
-                    border: 0;
-                    height: 1px;
-                    background: rgb(85, 85, 85);
-                    opacity: 0.2;
-                }
-            }
-
             .profile-functionalities {
                 display: flex;
                 justify-content: space-between;

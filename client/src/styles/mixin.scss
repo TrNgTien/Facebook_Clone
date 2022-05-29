@@ -26,3 +26,9 @@
   width: 36px;
   border-radius: 50%;
 }
+@mixin divider {
+  background: rgb(85, 85, 85);
+  opacity: 0.2;
+  width: 95%;
+  margin: 10px auto;
+}

@@ -1,17 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam&display=swap&text=About");
 @import "./styles/variables.scss";
-@import "./grid.scss";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 body {
-  background-color: #F0F2F5;
+  background-color: #f0f2f5;
   font-family: "Be Vietnam", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 1);
+  }
 }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
