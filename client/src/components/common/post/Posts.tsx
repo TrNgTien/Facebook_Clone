@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getProfileID } from "@services/NewsFeedService";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { BsThreeDots } from "react-icons/bs";
 import { setViewPost } from "@slices/PostSlice";
 import "./Posts.scss";
 import InteractionPost from "@components/feat/post-features/InteractionPost";
@@ -10,7 +11,7 @@ interface IProps {
 
 function Post({ postData }: IProps) {
   const dispatch = useAppDispatch();
-  const { time, description, feedAttachments, numberOfLike, numberOfComment, userID } =
+  const { time, description, postAttachments, numberOfLike, numberOfComment, userID } =
     postData;
   const { currentUser } = useAppSelector((state) => state.auth);
   const { viewPostData } = useAppSelector((state) => state.post);
@@ -34,12 +35,15 @@ function Post({ postData }: IProps) {
           <h4>{posterData?.userName}</h4>
           <p>{convertedTime}</p>
         </div>
+        <i className="three-dot__icon">
+          <BsThreeDots />
+        </i>
       </div>
       <div className='container__content'>
         <p>{description}</p>
       </div>
       <div className='container__img' id='content-img'>
-        {feedAttachments.url ? (
+        {postAttachments.url ? (
           <img
             className='img-content'
             onClick={() =>
@@ -55,7 +59,7 @@ function Post({ postData }: IProps) {
                 })
               )
             }
-            src={feedAttachments.url}
+            src={postAttachments.url}
             alt='img'
           />
         ) : null}

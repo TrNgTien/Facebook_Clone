@@ -24,7 +24,6 @@ export default function NewsFeed() {
       setPostData(listPosts);
     }
   }, [dispatch, listPosts]);
-  console.log(listPosts)
   useEffect(() => {
     const userToken = localStorage.getItem("token");
     const getPostData = async () => {

@@ -6,6 +6,8 @@ import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import "./UploadModal.scss";
+import jwtDecode from "jwt-decode";
+import { IJwtDecode } from "@constants/InterfaceModel";
 
 const UploadInput = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +19,7 @@ const UploadInput = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
+  const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -39,12 +42,14 @@ const UploadInput = () => {
     const newPostData = {
       time: new Date().toLocaleString(),
       description,
-      feedAttachments: {
+      postAttachments: {
         url: imageBase64,
       },
       numberOfLike: 0,
       numberOfComment: 0,
       _v: 0,
+      userReact: [],
+      userID: ownerId,
     };
     const newListPosts = [...listPosts];
     if (!imageBase64 && !description) {
@@ -52,7 +57,7 @@ const UploadInput = () => {
     } else if (imageBase64 && description) {
       const addPostRes = await AddPost(dataPost);
       if (addPostRes.status === 200) {
-        newListPosts.unshift(newPostData);
+        newListPosts.unshift({ ...newPostData, _id: addPostRes.data.id });
         dispatch(setListPosts(newListPosts));
         setIsUpLoading(false);
         dispatch(setIsCreatePost(false));
@@ -63,7 +68,7 @@ const UploadInput = () => {
     } else if (!imageBase64 && description) {
       const addPostRes = await AddPost(dataPost);
       if (addPostRes.status === 200) {
-        newListPosts.unshift(newPostData);
+        newListPosts.unshift({ ...newPostData, _id: addPostRes.data.id });
         dispatch(setListPosts(newListPosts));
         setIsUpLoading(false);
         dispatch(setIsCreatePost(false));
@@ -74,7 +79,7 @@ const UploadInput = () => {
     } else {
       const addPostRes = await AddPost(dataPost);
       if (addPostRes.status === 200) {
-        newListPosts.unshift(newPostData);
+        newListPosts.unshift({ ...newPostData, _id: addPostRes.data.id });
         dispatch(setListPosts(newListPosts));
         setIsUpLoading(false);
         dispatch(setIsCreatePost(false));

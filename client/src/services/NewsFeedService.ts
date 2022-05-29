@@ -15,7 +15,7 @@ const AddPost = (reqBody: IAddFeed) => {
   };
   return axiosInstance.post(
     API_PATH.FEEDS_ADD,
-    { description, feedAttachments: imageBase64 },
+    { description, postAttachments: imageBase64 },
     configHeader
   );
 };
@@ -27,7 +27,7 @@ const getAllFeed = (token: string | null) => {
   };
   return axiosInstance.get(API_PATH.FEEDS_GET, configHeader);
 };
-const getProfileID = (token: any | null, id: string) => {
+const getProfileID = (token: string | null, id: string) => {
   let configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,

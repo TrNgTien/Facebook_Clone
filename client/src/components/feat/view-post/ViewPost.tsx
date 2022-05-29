@@ -33,7 +33,7 @@ const ViewPost = () => {
         <div className='modal-wrapper__left'>
           <img
             className='modal-wrapper__img-post'
-            src={dataPost.feedAttachments.url}
+            src={dataPost.postAttachments.url}
             alt='camera'
           />
           <AiOutlineClose onClick={closeModal} className='modal-wrapper__close-btn' />
