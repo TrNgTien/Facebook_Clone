@@ -8,29 +8,40 @@ import { MainLayout } from "@components/common/layout";
 import Upload from "../news-feed/components/upload/Upload";
 import "./styles/ProfilePage.scss";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
-import { setIsCreatePost } from "@slices/PostSlice";
+import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import Post from "@components/common/post/Posts";
 import { getPostById } from "@services/NewsFeedService";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 export default function ProfilePage() {
   const { currentUser } = useAppSelector((state) => state.auth);
-  const { isCreatePost } = useAppSelector((state) => state.post);
+  const { isCreatePost, listPosts } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
-  const [ownPosts, setOwnPosts] = useState([]);
-
+  const [ownPosts, setOwnPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
-  }, [dispatch]);
+    if (listPosts) {
+      setOwnPosts(listPosts);
+    }
+  }, [dispatch, listPosts]);
   useEffect(() => {
     const getOwnPosts = async () => {
+      setIsLoading(true);
       const ownToken = currentUser.token;
       const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
       const resPosts = await getPostById(ownToken, ownerId);
-      setOwnPosts(resPosts.data.userPosts);
+      if (resPosts.status === 200) {
+        const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+        });
+        dispatch(setListPosts(sortedData));
+        setOwnPosts(sortedData);
+        setIsLoading(false);
+      }
     };
     getOwnPosts();
-  }, [currentUser]);
+  }, [dispatch, currentUser]);
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (
@@ -162,16 +173,11 @@ export default function ProfilePage() {
             </div>
             <div className='profile-body__right'>
               <Upload />
-              {/* {posts.map((post, index) => (
-                <Post
-                  key={index}
-                  avatarURL={post.avatarURL}
-                  username={post.username}
-                  timestamp={post.timestamp}
-                  content={post.content}
-                  imgURL={post.imgURL}
-                />
-              ))} */}
+              {isLoading ? (
+                <h1>Loading...</h1>
+              ) : (
+                ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
+              )}
             </div>
           </div>
         </div>
