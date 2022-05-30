@@ -11,6 +11,7 @@ const Upload = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
+  
 
   return (
     <div className='upload-container'>
@@ -32,15 +33,15 @@ const Upload = () => {
       </div>
       <hr className='divider' />
       <div className='upload__footer'>
-        <button className='btn '>
+        <button className='btn'>
           <BsFillCameraVideoFill className='btn--live' />
           <p>Live video</p>
         </button>
-        <button className='btn '>
+        <button className='btn' onClick={() => dispatch(setIsCreatePost(true))}>
           <MdPhotoLibrary className='btn--photo' />
           <p>Photo/video</p>
         </button>
-        <button className='btn '>
+        <button className='btn'>
           <MdTagFaces className='btn--feeling' />
           <p>Feeling/activity</p>
         </button>

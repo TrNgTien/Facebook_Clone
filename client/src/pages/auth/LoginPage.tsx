@@ -6,6 +6,7 @@ import { LoginReq } from "@services/AuthService";
 import { useAppDispatch } from "@store/hooks";
 import { setLoginSucess } from "@slices/AuthenSlice";
 import { IShowPass } from "@constants/InterfaceModel";
+import { setLocalStorage } from "@utils/LocalStorageUtil";
 import "./styles/LoginPage.scss";
 
 export default function LoginPage() {
@@ -33,8 +34,8 @@ export default function LoginPage() {
       };
       const loginRes = await LoginReq(userData);
       if (loginRes.status === 200) {
-        localStorage.setItem("token", loginRes.data.dataUser.token);
-        localStorage.setItem("refreshToken", loginRes.data.dataUser.refreshToken);
+        setLocalStorage("token", loginRes.data.dataUser.token);
+        setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
         dispatch(setLoginSucess(loginRes.data.dataUser));
         setIsLoadingLogin(false);
         navigate("/feeds");
@@ -53,8 +54,8 @@ export default function LoginPage() {
     const loginRes = await LoginReq(userData);
     if (loginRes.status === 200) {
       dispatch(setLoginSucess(loginRes.data.dataUser));
-      localStorage.setItem("refreshToken", loginRes.data.dataUser.refreshToken);
-      localStorage.setItem("token", loginRes.data.dataUser.token);
+      setLocalStorage("token", loginRes.data.dataUser.token);
+      setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
       setIsLoadingLogin(false);
       navigate("/feeds");
     } else {

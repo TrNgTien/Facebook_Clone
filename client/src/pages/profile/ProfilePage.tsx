@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
@@ -6,18 +6,31 @@ import { FaPen } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { MainLayout } from "@components/common/layout";
 import Upload from "../news-feed/components/upload/Upload";
-// import Post from "../main-feeds/components/post/Post";
 import "./styles/ProfilePage.scss";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { setIsCreatePost } from "@slices/PostSlice";
-
+import Post from "@components/common/post/Posts";
+import { getPostById } from "@services/NewsFeedService";
+import jwtDecode from "jwt-decode";
+import { IJwtDecode } from "@constants/InterfaceModel";
 export default function ProfilePage() {
   const { currentUser } = useAppSelector((state) => state.auth);
   const { isCreatePost } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
+  const [ownPosts, setOwnPosts] = useState([]);
+
   useEffect(() => {
     dispatch(setIsCreatePost(false));
   }, [dispatch]);
+  useEffect(() => {
+    const getOwnPosts = async () => {
+      const ownToken = currentUser.token;
+      const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
+      const resPosts = await getPostById(ownToken, ownerId);
+      setOwnPosts(resPosts.data.userPosts);
+    };
+    getOwnPosts();
+  }, [currentUser]);
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (

@@ -9,6 +9,8 @@ import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
+import { getLocalStorage } from "@utils/LocalStorageUtil";
+
 import "./styles/NewsFeed.scss";
 
 export default function NewsFeed() {
@@ -25,7 +27,7 @@ export default function NewsFeed() {
     }
   }, [dispatch, listPosts]);
   useEffect(() => {
-    const userToken = localStorage.getItem("token");
+    const userToken = getLocalStorage("token");
     const getPostData = async () => {
       setIsLoading(true);
       const dataPost = await getAllFeed(userToken);

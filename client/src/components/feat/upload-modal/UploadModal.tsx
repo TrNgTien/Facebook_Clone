@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 import { MdPhotoLibrary } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
@@ -9,10 +9,10 @@ import "./UploadModal.scss";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 
-const UploadInput = () => {
+const UploadModal = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
-  const { listPosts } = useAppSelector((state) => state.post);
+  const { listPosts, isCreatePost } = useAppSelector((state) => state.post);
   const [description, setDescription] = useState("");
   const [fileInputState, setFileInputState] = useState("");
   const [imageBase64, setImageBase64] = useState<any>("");
@@ -20,6 +20,20 @@ const UploadInput = () => {
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
   const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
+
+  const keyPress = useCallback(
+    (e) => {
+      if (e.key === "Escape" && isCreatePost) {
+        dispatch(setIsCreatePost(false));
+      }
+    },
+    [dispatch, isCreatePost]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyPress);
+    return () => document.removeEventListener("keydown", keyPress);
+  }, [keyPress]);
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -175,4 +189,4 @@ const UploadInput = () => {
   );
 };
 
-export default memo(UploadInput);
+export default memo(UploadModal);

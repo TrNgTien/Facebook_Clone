@@ -1,30 +1,42 @@
 const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const AWS = require("aws-sdk");
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("../utils/cloudinary");
 const bluebird = require("bluebird");
 require("../utils/multer");
-const {S3Client, DeleteObjectCommand} = require("@aws-sdk/client-s3");
-const s3Client = new S3Client({region: process.env.AWS_BUCKET_REGION});
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const s3Client = new S3Client({ region: process.env.AWS_BUCKET_REGION });
 module.exports = {
-	getFeed: async (req, res) => {
-		try {
-			let allFeed = await Post.find();
-			return res.status(200).json({
-				data: allFeed,
-			});
-		} catch (error) {
-			console.log(error);
-			return res.status(500).json("Internal server error");
-		}
-	},
+  getFeed: async (req, res) => {
+    try {
+      let allFeed = await Post.find();
+      return res.status(200).json({
+        data: allFeed,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  getPostById: async (req, res) => {
+    const userID = req.query.id;
+    try {
+      let userPost = await Post.find({ userID: userID });
+      return res.status(200).json({
+        userPosts: userPost,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
 
   addFeed: async (req, res) => {
     try {
       let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
-      if(postAttachments === ""){
+      if (postAttachments === "") {
         let newFeed = new Post({
           description: description,
           postAttachments: {
@@ -39,14 +51,9 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      }
-      else if  (description === ""){
-        const {
-          AWS_ACCESS_KEY,
-          AWS_SECRET_KEY,
-          AWS_BUCKET_REGION,
-          AWS_BUCKET_NAME,
-        } = process.env;
+      } else if (description === "") {
+        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
+          process.env;
 
         // Configure AWS to use promise
         AWS.config.setPromisesDependency(bluebird);
@@ -95,20 +102,15 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      }
-      else{
+      } else {
         // let uploadResponse = await cloudinary.uploader.upload(postAttachments, {
         //   resource_type: "auto",
-        //   folder: "Facebook Clone/Feed Attachments", 
+        //   folder: "Facebook Clone/Feed Attachments",
         // });
         // let postAttachmentsUrl = uploadResponse.secure_url;
         // let postAttachmentsPublicID = uploadResponse.public_id;
-        const {
-          AWS_ACCESS_KEY,
-          AWS_SECRET_KEY,
-          AWS_BUCKET_REGION,
-          AWS_BUCKET_NAME,
-        } = process.env;
+        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
+          process.env;
 
         // Configure AWS to use promise
         AWS.config.setPromisesDependency(bluebird);
@@ -166,22 +168,21 @@ module.exports = {
   deleteFeed: async (req, res) => {
     try {
       let { feedID } = req.params;
-      let {id} = req.user;
-      let feed = await Post.findOne({_id: feedID});
+      let { id } = req.user;
+      let feed = await Post.findOne({ _id: feedID });
       console.log(feed);
       console.log(feed.postAttachments.publicID);
       let bucketParams = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: feed.postAttachments.publicID, 
-      }
+        Key: feed.postAttachments.publicID,
+      };
       if (feed.userID === id) {
         await Post.findByIdAndDelete(feedID);
         await s3Client.send(new DeleteObjectCommand(bucketParams));
         return res.status(200).json({
           message: "Delete successfully!",
         });
-      }
-      else {
+      } else {
         return res.status(401).json({
           message: "You can only delete your own feed",
         });
@@ -192,37 +193,35 @@ module.exports = {
     }
   },
   reactFeed: async (req, res) => {
-    try{
-      let {id} = req.params;
+    try {
+      let { id } = req.params;
       let userID = req.user.id;
-      let feed = await Post.findById({_id: id})
-      if (!feed.userReact.includes(userID)){
-        await feed.updateOne({$push: {userReact: userID}});
-        await feed.updateOne({numberOfLike: feed.numberOfLike + 1});
+      let feed = await Post.findById({ _id: id });
+      if (!feed.userReact.includes(userID)) {
+        await feed.updateOne({ $push: { userReact: userID } });
+        await feed.updateOne({ numberOfLike: feed.numberOfLike + 1 });
         return res.status(200).json({
-          message: "likes successfully"
-        })
-      }
-      else{
-        await feed.updateOne({$pull: {userReact: userID}});
-        await feed.updateOne({numberOfLike: feed.numberOfLike - 1});
+          message: "likes successfully",
+        });
+      } else {
+        await feed.updateOne({ $pull: { userReact: userID } });
+        await feed.updateOne({ numberOfLike: feed.numberOfLike - 1 });
         return res.status(200).json({
-          message: "dislikes successfully"
-        })
+          message: "dislikes successfully",
+        });
       }
-    }
-    catch(error){
+    } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
   },
   commentFeed: async (req, res) => {
-    try{
-      let {id} = req.params;
-      let {commentContent, commentAttachments} = req.body;
+    try {
+      let { id } = req.params;
+      let { commentContent, commentAttachments } = req.body;
       let userID = req.user.id;
-      let feed = await Post.findById({_id: id});
-      if(typeof(commentAttachments) === "undefined"){
+      let feed = await Post.findById({ _id: id });
+      if (typeof commentAttachments === "undefined") {
         let comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
@@ -230,23 +229,18 @@ module.exports = {
             publicID: "",
           },
           userID: userID,
-          feedID: id
+          feedID: id,
         });
         await comment.save();
-      }
-      else{
+      } else {
         // let uploadResponse = await cloudinary.uploader.upload(commentAttachments, {
         //   resource_type: "auto",
         //   folder: "Facebook Clone/Comment Attachments",
         // });
         // let commentAttachmentsUrl = uploadResponse.secure_url;
         // let commentAttachmentsPublicID = uploadResponse.public_id;
-        const {
-          AWS_ACCESS_KEY,
-          AWS_SECRET_KEY,
-          AWS_BUCKET_REGION,
-          AWS_BUCKET_NAME,
-        } = process.env;
+        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
+          process.env;
 
         // Configure AWS to use promise
         AWS.config.setPromisesDependency(bluebird);
@@ -288,56 +282,68 @@ module.exports = {
             publicID: key,
           },
           userID: userID,
-          feedID: id
+          feedID: id,
         });
         await comment.save();
-        await feed.updateOne({numberOfComment: feed.numberOfComment + 1});
+        await feed.updateOne({ numberOfComment: feed.numberOfComment + 1 });
       }
       return res.status(200).json({
-        message: "Comment successfully"
-      })
-    }
-    catch(error){
+        message: "Comment successfully",
+      });
+    } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
   },
   deleteComment: async (req, res) => {
-    try{
-      let {commentID, feedID} = req.params;
+    try {
+      let { commentID, feedID } = req.params;
       let userID = req.user.id;
-      let comment = await Comment.findById({_id: commentID});
-      let feed = await Feed.findById({_id: feedID});
-      if (comment.userID.toString() === userID || feed.userID.toString() === userID){
+      let comment = await Comment.findById({ _id: commentID });
+      let feed = await Feed.findById({ _id: feedID });
+      if (comment.userID.toString() === userID || feed.userID.toString() === userID) {
         await comment.remove();
-        await Feed.updateOne({_id: comment.feedID}, {$inc: {numberOfComment: -1}});
+        await Feed.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
         await cloudinary.uploader.destroy(comment.commentAttachments.publicID);
         return res.status(200).json({
-          message: "Delete successfully"
-        })
-      }
-      else{
+          message: "Delete successfully",
+        });
+      } else {
         return res.status(401).json({
-          message: "You are not allowed to delete this comment"
-        })
+          message: "You are not allowed to delete this comment",
+        });
       }
-    }
-    catch(error){
+    } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
   },
   getCommentOfFeed: async (req, res) => {
-    try{
-      let {id} = req.params;
-      let comment = await Comment.find({feedID: id});
+    try {
+      let { id } = req.params;
+      let comment = await Comment.find({ feedID: id });
       return res.status(200).json({
-        data: comment
-      })
-    }
-    catch(error){
+        data: comment,
+      });
+    } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
-  }
+  },
+  updatePost: async (req, res) => {
+    try {
+      const { description } = req.body;
+      const idPost = req.params;
+      let postSchema = await postSchema.findOne({ _id: idPost });
+      if (postSchema.userID.toString() === req.user.id) {
+        await postSchema.updateOne({ description: description });
+        return res.status(200).json({
+          message: "Update successfully",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
 };

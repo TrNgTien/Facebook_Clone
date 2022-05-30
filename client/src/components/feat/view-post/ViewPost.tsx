@@ -13,6 +13,8 @@ const ViewPost = () => {
   const closeModal = () => {
     dispatch(setViewPost({ ...viewPostData, isViewPost: false }));
   };
+  const convertedTime = new Date(dataPost.time).toLocaleString();
+
   const keyPress = useCallback(
     (e) => {
       if (e.key === "Escape" && isViewPost) {
@@ -44,17 +46,17 @@ const ViewPost = () => {
               <img className='avatar-img' src={dataPost.userAvatar} alt='avatar' />
               <div className='content__info'>
                 <p className='content__info__username'>{dataPost.userName}</p>
-                <p className='content__info__timestamp'>{dataPost.time}</p>
+                <p className='content__info__timestamp'>{convertedTime}</p>
               </div>
             </div>
             <p className='content__para'>{dataPost.description}</p>
           </div>
           <div className='wrapper-interaction'>
             <p>{`${dataPost.numberOfLike} ${
-              dataPost.numberOfLike > 0 ? "likes" : "like"
+              dataPost.numberOfLike > 1 ? "likes" : "like"
             }`}</p>
             <p>{`${dataPost.numberOfComment} ${
-              dataPost.numberOfComment > 0 ? "comments" : "comment"
+              dataPost.numberOfComment > 1 ? "comments" : "comment"
             }`}</p>
           </div>
           <hr className='divider' />
