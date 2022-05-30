@@ -6,6 +6,7 @@ import ProfilePage from "@pages/profile/ProfilePage";
 import NewsFeed from "@pages/news-feed/NewsFeed";
 import NotFound from "@pages/not-found/NotFound";
 import PrivateRoute from "./PrivateRoute";
+import FindFriends from "@pages/find-friend/FindFriends";
 
 function MainRoutes() {
   let location = useLocation();
@@ -14,7 +15,15 @@ function MainRoutes() {
     <>
       <Routes location={state?.backgroundLocation || location}>
         <Route path='/register' element={<RegisterPage />} />
-        <Route path='/profile/:id' element={<ProfilePage />} />
+        <Route path='/profile/:userID' element={<ProfilePage />} />
+        <Route
+          path='/friend'
+          element={
+            <PrivateRoute>
+              <FindFriends />
+            </PrivateRoute>
+          }
+        />
         <Route
           path='/feeds'
           element={

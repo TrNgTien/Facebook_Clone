@@ -3,18 +3,21 @@ import "./Sidebar.scss";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useAppSelector } from "@store/hooks";
 import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import Icons from "@theme/Icons";
+import { IJwtDecode } from "@constants/InterfaceModel";
 
 const Sidebar = () => {
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
+  const ownID = jwtDecode<IJwtDecode>(currentUser.token).id;
   return (
     <div className='sidebar'>
-      <div className='sidebar-row' onClick={() => navigate("/profile")}>
+      <div className='sidebar-row' onClick={() => navigate(`/profile/${ownID}`)}>
         <img src={currentUser.userAvatar} alt='avatar' />
         <p>{currentUser.fullName}</p>
       </div>
-      <div className='sidebar-row'>
+      <div className='sidebar-row' onClick={() => navigate("/friend")}>
         <img src={Icons.FRIEND_IC} alt='friends' />
         <p>Friends</p>
       </div>

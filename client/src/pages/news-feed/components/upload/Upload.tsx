@@ -39,7 +39,7 @@ const Upload = () => {
         </button>
         <button className='btn' onClick={() => dispatch(setIsCreatePost(true))}>
           <MdPhotoLibrary className='btn--photo' />
-          <p>Photo/video</p>
+          <p>Photo</p>
         </button>
         <button className='btn'>
           <MdTagFaces className='btn--feeling' />

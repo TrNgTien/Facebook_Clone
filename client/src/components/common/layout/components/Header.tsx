@@ -15,26 +15,20 @@ const Header = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [onwIdUser, setOnwIdUser] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);
-  const location = useLocation();
-  const { id } = useParams();
+  const { pathname } = useLocation();
+  const { userID } = useParams();
 
   useEffect(() => {
     if (currentUser) {
       const onwID = jwtDecode<IJwtDecode>(currentUser.token).id;
       setOnwIdUser(onwID);
-      if (location.pathname === `/profile/${onwID}`) {
-        document.title = `${currentUser?.fullName} | Facebook Clone`;
-      } else {
-        document.title = `Facebook Clone`;
-      }
-    } else {
-      if (location.pathname === `/profile/${id}`) {
+      if (pathname === `/profile/${onwID}`) {
         document.title = `${currentUser?.fullName} | Facebook Clone`;
       } else {
         document.title = `Facebook Clone`;
       }
     }
-  }, [location.pathname, id, currentUser]);
+  }, [pathname, userID, currentUser]);
 
   return (
     <nav className='header'>
@@ -72,7 +66,7 @@ const Header = () => {
         <div className='header__right'>
           <div
             className={
-              location.pathname === "/profile"
+              pathname === `/profile/${onwIdUser}`
                 ? "header__wrapper-user--highlighted"
                 : "header__wrapper-user"
             }
