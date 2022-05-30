@@ -10,15 +10,18 @@ import "./styles/ProfilePage.scss";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import Post from "@components/common/post/Posts";
-import { getPostById } from "@services/NewsFeedService";
+import { getPostById } from "@services/ProfileService";
+import ViewPost from "@components/feat/view-post/ViewPost";
+import { useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 export default function ProfilePage() {
-  const { currentUser } = useAppSelector((state) => state.auth);
-  const { isCreatePost, listPosts } = useAppSelector((state) => state.post);
   const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector((state) => state.auth);
+  const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { id } = useParams();
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
@@ -28,20 +31,31 @@ export default function ProfilePage() {
   useEffect(() => {
     const getOwnPosts = async () => {
       setIsLoading(true);
-      const ownToken = currentUser.token;
-      const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
-      const resPosts = await getPostById(ownToken, ownerId);
-      if (resPosts.status === 200) {
-        const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
-          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
-        });
-        dispatch(setListPosts(sortedData));
-        setOwnPosts(sortedData);
-        setIsLoading(false);
+      if (currentUser) {
+        const onwID = jwtDecode<IJwtDecode>(currentUser.token).id;
+        const resPosts = await getPostById(onwID);
+        if (resPosts.status === 200) {
+          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+          });
+          dispatch(setListPosts(sortedData));
+          setOwnPosts(sortedData);
+          setIsLoading(false);
+        }
+      } else {
+        const resPosts = await getPostById(id);
+        if (resPosts.status === 200) {
+          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+          });
+          dispatch(setListPosts(sortedData));
+          setOwnPosts(sortedData);
+          setIsLoading(false);
+        }
       }
     };
     getOwnPosts();
-  }, [dispatch, currentUser]);
+  }, [dispatch, currentUser, id]);
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (
@@ -94,12 +108,13 @@ export default function ProfilePage() {
   };
   return (
     <MainLayout>
-      {isCreatePost && <UploadPost />}
+      {isCreatePost && currentUser && <UploadPost />}
       <div className='profile-page'>
         <div className='profile-zone'>
+          {viewPostData.isViewPost && <ViewPost />}
           <div className='profile-zone__header'>
             <div className='container-cover-photo'>
-              <img className='background-img' src={currentUser.userCover} alt='' />
+              <img className='background-img' src={currentUser?.userCover} alt='' />
               <button className='add-cover'>
                 <BsFillCameraFill className='add-cover-icon' />
                 <p>Edit Cover Photo</p>
@@ -108,14 +123,14 @@ export default function ProfilePage() {
             <div className='container-info'>
               <div className='container-info__left'>
                 <div className='container-avatar'>
-                  <img src={currentUser.userAvatar} alt='avatar' className='avatar-img' />
+                  <img src={currentUser?.userAvatar} alt='avatar' className='avatar-img' />
                   <button className='add-avatar'>
                     <BsFillCameraFill className='add-avatar-icon' />
                   </button>
                 </div>
                 <div className='container-side-info'>
                   <div className='container-user-info'>
-                    <h1 className='username'>{currentUser.fullName}</h1>
+                    <h1 className='username'>{currentUser?.fullName}</h1>
                     <h4 className='friends-number'>176 friends</h4>
                     <AvatarGroup max={7} className='group-friends-avatar'>
                       <Avatar className='friend-avatar' alt='Remy Sharp'>
@@ -172,7 +187,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              <Upload />
+              {currentUser && <Upload />}
               {isLoading ? (
                 <h1>Loading...</h1>
               ) : (

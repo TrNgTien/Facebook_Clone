@@ -17,6 +17,7 @@ export default function NewsFeed() {
   const dispatch = useAppDispatch();
   const listInnerRef = useRef<HTMLDivElement>(null);
   const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
+  const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +59,7 @@ export default function NewsFeed() {
           {viewPostData.isViewPost && <ViewPost />}
           <Sidebar />
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
-            <Upload />
+            {currentUser && <Upload />}
             {isLoading ? (
               <h1>Loading...</h1>
             ) : (

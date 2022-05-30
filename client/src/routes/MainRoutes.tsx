@@ -14,14 +14,7 @@ function MainRoutes() {
     <>
       <Routes location={state?.backgroundLocation || location}>
         <Route path='/register' element={<RegisterPage />} />
-        <Route
-          path='/profile'
-          element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          }
-        />
+        <Route path='/profile/:id' element={<ProfilePage />} />
         <Route
           path='/feeds'
           element={

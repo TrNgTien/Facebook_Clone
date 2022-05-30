@@ -4,20 +4,20 @@ import { MdPhotoLibrary, MdTagFaces } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { setIsCreatePost } from "@slices/PostSlice";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Upload.scss";
 
 const Upload = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  
+  const { id } = useParams();
 
   return (
     <div className='upload-container'>
       <div className='upload__header'>
         <img
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate(`/profile/${id}`)}
           className='img-avatar'
           src={currentUser.userAvatar}
           alt='avatar'
