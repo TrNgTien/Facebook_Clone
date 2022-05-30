@@ -1,0 +1,87 @@
+@import "@styles/mixin.scss";
+.upload-container {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: white;
+	z-index: 999;
+	box-shadow: var(--box-shadow-strong);
+	.upload__header {
+		display: flex;
+		margin: 10px 5px;
+		.img-avatar {
+			height: 40px;
+			width: 40px;
+			border-radius: 30px;
+			&:hover {
+				background-color: var(--hover-color);
+				transition: linear 0.5s;
+				cursor: pointer;
+			}
+		}
+		.upload-input {
+			flex: 1;
+			background-color: rgb(241, 241, 241);
+			border: none;
+			border-radius: 30px;
+			padding: 5px 10px;
+			margin-left: 5px;
+			&:hover {
+				cursor: pointer;
+				background-color: var(--hover-color);
+				transition: linear 0.5s;
+			}
+			.upload__place-holder {
+				font-size: 17px;
+				color: rgb(107, 107, 107);
+				padding: 4px 8px;
+			}
+		}
+	}
+	.divider {
+		@include divider;
+	}
+	.upload__footer {
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+		height: 50px;
+
+		.btn {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-weight: bold;
+			color: gray;
+			flex: 1;
+			border-radius: 5px;
+			border: none;
+			padding: 1%;
+			background-color: transparent;
+			font-size: 14px;
+
+			cursor: pointer;
+			&:hover {
+				opacity: 0.8;
+				background-color: rgb(211, 211, 211);
+			}
+			p {
+				margin-left: 5px;
+			}
+			.btn--live {
+				color: rgb(252, 72, 72);
+				height: 28px;
+				width: 25px;
+			}
+			.btn--photo {
+				color: rgb(81, 170, 81);
+				height: 28px;
+				width: 25px;
+			}
+			.btn--feeling {
+				color: rgb(255, 208, 0);
+				height: 28px;
+				width: 25px;
+			}
+		}
+	}
+}

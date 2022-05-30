@@ -1,13 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam&display=swap&text=About");
 @import "./styles/variables.scss";
-@import "./grid.scss";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 body {
-  background-color: #F0F2F5;
+  background-color: #f0f2f5;
   font-family: "Be Vietnam", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -1,37 +1,32 @@
+@import "@styles/mixin.scss";
+
 .header {
+	@include positionFixedTop;
 	display: flex;
 	justify-content: space-between;
 	padding: 0px 10px;
-	position: fixed;
-	right: 0;
-	left: 0;
-	top: 0;
-	background-color: white;
-	z-index: 999;
-	box-shadow: 0px 5px 8px -10px rgba(0, 0, 0, 0.75);
+	background-color: var(--white);
+	z-index: var(--z-index-low);
+	box-shadow: var(--box-shadow-common);
 	height: 56px;
-
 	.header__left {
 		display: flex;
 		align-items: center;
-
 		.logo_img {
-			height: 40px;
-			width: 40px;
-			border-radius: 30px;
+			height: 50px;
+			width: 50px;
 			cursor: pointer;
 		}
-
 		.header__search {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			background-color: var(--background-color-common);
+			border-radius: 30px;
 			padding-top: 5px;
 			padding-bottom: 5px;
-			border-radius: 30px;
-			margin-left: 10px;
 			padding-left: 1rem;
+			margin-left: 10px;
 			.icon_search {
 				font-size: 20px;
 			}
@@ -53,7 +48,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin-right: 1rem;
 		.header__wrapper-user {
 			display: flex;
 			align-items: center;
@@ -67,10 +61,10 @@
 				background-color: var(--hover-color);
 			}
 			.img-avatar {
-				height: 28px;
-				width: 28px;
+				height: 30px;
+				width: 30px;
 				margin: 0px 5px;
-				border-radius: 50px;
+				border-radius: 50%;
 			}
 		}
 		.header__wrapper-user--highlighted {
@@ -80,17 +74,12 @@
 			font-size: 14px;
 			border-radius: 30px;
 			padding: 5px 10px;
-			width: 100px;
 			height: 40px;
 			cursor: pointer;
 			background-color: #e7f3ff;
-
 			.header__user-name {
 				color: #1877f2;
 				font-weight: 600;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
 			}
 			.img-avatar {
 				height: 28px;

@@ -1,18 +1,26 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
+import { FaFacebookMessenger } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { useLocation, useNavigate } from "react-router-dom";
-import FacebookLogo from "@assets/icons8-facebook.svg";
+import FacebookLogo from "@assets/icons/icons8-facebook.svg";
 import "./Header.scss";
 import { useAppSelector } from "@store/hooks";
 
-const Header = (props: any) => {
+const Header = () => {
   const navigate = useNavigate();
   const [counterNoti, setCounterNoti] = useState<Number>(12);
   const [searchText, setSearchText] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);
   const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === "/profile") {
+      document.title = `${currentUser.fullName} | Facebook Clone`;
+    } else {
+      document.title = `Facebook Clone`;
+    }
+  }, [currentUser.fullName, location.pathname]);
 
   return (
     <nav className='header'>
@@ -53,11 +61,14 @@ const Header = (props: any) => {
           }
           onClick={() => navigate("/profile")}
         >
-          <img className={"img-avatar"} src={currentUser.userAvatar} alt='avatar' />
-          <p className="header__user-name">{currentUser.fullName}</p>
+          <img className='img-avatar' src={currentUser.userAvatar} alt='avatar' />
+          <p className='header__user-name'>{currentUser.fullName}</p>
         </div>
         <div className='header__option'>
           <GrAdd className='icon-options' />
+        </div>
+        <div className='header__option'>
+          <FaFacebookMessenger className='icon-options' />
         </div>
         <div className='header__option'>
           <AiTwotoneBell className='icon-options' />

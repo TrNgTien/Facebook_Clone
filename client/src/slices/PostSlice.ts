@@ -1,28 +1,39 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store/store";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface PostState {
-  posts: Array<any>;
-  isFetching: boolean;
-  fetched: boolean;
+  isCreatePost: boolean;
+  viewPostData: any;
+  listPosts: Array<any>;
 }
 const initialState: PostState = {
-  posts: [],
-  isFetching: false,
-  fetched: false,
+  isCreatePost: false,
+  viewPostData: {
+    isViewPost: false,
+    dataPost: {},
+  },
+  listPosts: [],
 };
 const PostSlice = createSlice({
   name: "PostSlice",
   initialState,
   reducers: {
-    postFetch(state, action: PayloadAction<Array<any>>) {
-      state.posts = [...state.posts, ...action.payload];
+    setIsCreatePost(state, action) {
+      const { payload } = action;
+      return { ...state, isCreatePost: payload };
+    },
+    setViewPost(state, action) {
+      const { payload } = action;
+      return { ...state, viewPostData: payload };
+    },
+    setListPosts(state, action) {
+      const { payload } = action;
+      return { ...state, listPosts: payload };
     },
   },
 });
 
 //Actions
-export const { postFetch } = PostSlice.actions;
+export const { setIsCreatePost, setViewPost, setListPosts } = PostSlice.actions;
 
 //Reducer
 const postReducer = PostSlice.reducer;

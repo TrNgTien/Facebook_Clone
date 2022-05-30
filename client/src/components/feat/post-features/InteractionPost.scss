@@ -1,0 +1,28 @@
+.container__features {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 40px;
+    .container__feature {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1% 8%;
+        border-radius: 5px;
+        border: none;
+        background-color: transparent;
+        font-size: 15px;
+        color: gray;
+
+        p {
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        &:hover {
+            opacity: 0.8;
+            background-color: rgb(201, 201, 201);
+            cursor: pointer;
+        }
+    }
+}

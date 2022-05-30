@@ -1,0 +1,42 @@
+@import "@styles/mixin.scss";
+.sidebar {
+	width: 25%;
+	padding-left: 0.5rem;
+	position: fixed;
+	height: 100vh;
+	.sidebar-row {
+		display: flex;
+		align-items: center;
+		margin-bottom: 0.5rem;
+		padding: 10px;
+		width: 80%;
+		&:hover {
+			cursor: pointer;
+			background-color: var(--hover-color);
+			width: 80%;
+
+			display: flex;
+			align-items: center;
+			padding: 10px;
+			border-radius: 10px;
+			margin-bottom: 0.5rem;
+		}
+		& > img {
+			@include sizeIcon;
+		}
+		& > p {
+			font-size: 16px;
+			font-weight: 500;
+			margin-left: 6px;
+		}
+		.sidebar-row__icon {
+			@include sizeIcon;
+			color: rgb(14, 132, 230);
+		}
+
+		.sidebar-row__icon--more {
+			border-radius: 30px;
+			background-color: rgb(226, 226, 226);
+		}
+	}
+}

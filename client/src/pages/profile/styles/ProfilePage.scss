@@ -1,4 +1,4 @@
-@import "../../../styles/mixin.scss";
+@import "@styles/mixin.scss";
 
 .profile-page {
     background-color: #f0f2f5;
@@ -8,21 +8,17 @@
 
         .profile-zone__header {
             margin-bottom: 15px;
-            width: 100vw;
-            height: 510px;
             background-color: white;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            align-items: center;
-
+            box-shadow: var(--box-shadow-common);
+            padding-bottom: 1rem;
             .container-cover-photo {
-                width: 850px;
-                height: 300px;
-                background-color: palevioletred;
+                width: 80%;
+                height: calc(100vh / 2);
                 border-bottom-right-radius: 10px;
                 border-bottom-left-radius: 10px;
                 position: relative;
+                margin-left: auto;
+                margin-right: auto;
 
                 .background-img {
                     width: 100%;
@@ -57,10 +53,10 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
-                position: relative;
-                bottom: 30px;
-                width: 850px;
-
+                margin-bottom: 30px;
+                margin-top: -30px;
+                width: 80%;
+                margin-left: 10%;
                 .container-info__left {
                     display: flex;
                     align-items: flex-end;
@@ -123,18 +119,13 @@
                 }
 
                 .more-functions {
-                    margin-right: 20px;
                     display: flex;
                     .add-story {
-                        border: none;
-                        padding: 10px;
+                        @include btnProfile;
                         color: white;
-                        background-color: #3c74e4;
-                        font-weight: bold;
-                        border-radius: 6px;
-                        margin-right: 5px;
-                        display: flex;
                         cursor: pointer;
+                        background-color: #3c74e4;
+                        margin-right: 5px;
                         .add-story-icon {
                             font-size: medium;
                             margin-right: 5px;
@@ -142,87 +133,80 @@
                     }
 
                     .edit-profile {
-                        border: none;
-                        padding: 10px;
+                        @include btnProfile;
                         color: black;
                         background-color: rgb(219, 219, 219);
-                        font-weight: bold;
-                        border-radius: 6px;
-                        display: flex;
-                        cursor: pointer;
-
                         .edit-profile-icon {
                             margin-right: 5px;
                         }
                     }
                 }
             }
-
-            .container-hr-tag {
-                width: 810px;
-
-                .hr-tag {
-                    border: 0;
-                    height: 1px;
-                    background: rgb(85, 85, 85);
-                    opacity: 0.2;
-                }
-            }
-
             .profile-functionalities {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                width: 810px;
-                margin: 5px 0px;
+                width: 80%;
+                border-top: 1px solid var(--divider-color);
+                padding-top: 1rem;
+                margin-left: auto;
+                margin-right: auto;
 
                 .button-pages {
                     .button-page {
                         border: none;
-                        margin: 10px 15px;
-                        color: rgb(85, 85, 85);
                         background-color: transparent;
                         font-weight: bold;
+                        padding: 1rem;
+                        &:hover {
+                            padding: 1rem;
+                            border-radius: 6px;
+                            background-color: var(--hover-color);
+                            font-weight: bold;
+                            border: none;
+                            cursor: pointer;
+                        }
                     }
                 }
-
                 .three-dots {
                     padding: 0px 12px 7px 12px;
                     font-weight: bolder;
                     font-size: 20px;
                     border: none;
-                    border-radius: 5px;
+                    border-radius: 6px;
+                    &:hover {
+                        cursor: pointer;
+                        background-color: var(--hover-color);
+                    }
+                    &:active {
+                        outline: none;
+                        opacity: 0.5;
+                    }
                 }
             }
         }
 
         .profile-zone__body {
             display: flex;
-            justify-content: center;
-
             .profile-body__left {
-                margin-right: 15px;
-                // position: fixed;
-
+                margin-left: 11%;
+                margin-right: 4%;
+                width: 30%;
                 .container-intro {
-                    display: flex;
-                    flex-direction: column;
-                    background-color: white;
+                    background-color: var(--white);
                     border-radius: 10px;
-                    width: 350px;
-                    height: 270px;
                     padding: 15px;
                     margin-bottom: 15px;
                     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-                    // z-index: 999;
                     .add-intro-btn {
+                        display: block;
                         border: none;
                         padding: 10px;
                         font-weight: bold;
+                        width: 100%;
                         margin: 10px 0px;
-                        border-radius: 5px;
-                        background-color: rgb(212, 212, 212);
+                        border-radius: 6px;
+                        background-color: var(--background-color-btn);
                         cursor: pointer;
                     }
                 }
@@ -277,7 +261,7 @@
             }
 
             .profile-body__right {
-                max-width: 450px;
+                width: 45%;
             }
         }
     }

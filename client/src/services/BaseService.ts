@@ -1,7 +1,18 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
-import Path from "@constants/PathURL";
+import API_PATH from "@constants/API_PATH";
+import {
+  deleteLocalStorage,
+  setLocalStorage,
+  getLocalStorage,
+} from "@utils/LocalStorageUtil";
+
+interface IAxios {
+  config?: AxiosRequestConfig<any>;
+  headers?: any;
+}
+
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/",
   timeout: 30000,
@@ -11,14 +22,14 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  async (config: any) => {
+  async (config: IAxios) => {
     try {
       if (!config.headers.Authorization) {
         return config;
       } else {
         const tokenOriginal = config.headers.Authorization.slice(7);
         const tokenDecoded = jwtDecode<IJwtDecode>(tokenOriginal);
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = getLocalStorage("refreshToken");
         const date = new Date();
         if (tokenDecoded.exp < date.getTime() / 1000) {
           const refreshTokenValue = refreshToken;
@@ -27,8 +38,10 @@ axiosInstance.interceptors.request.use(
               refreshToken: `${refreshTokenValue}`,
             },
           };
-          const res = await axiosInstance.get(`${Path.REFRESH_TOKEN}`, configHeader);
+          const res = await axiosInstance.get(`${API_PATH.REFRESH_TOKEN}`, configHeader);
           const newToken = res.data.token;
+          setLocalStorage("token", newToken);
+          deleteLocalStorage("refreshToken");
           config.headers.Authorization = `Bearer ${newToken}`;
         }
         return config;

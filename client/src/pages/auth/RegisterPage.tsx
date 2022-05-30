@@ -1,9 +1,13 @@
 import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CircleLoading from "../../components/loading-component/CircleLoading";
-import "./styles/RegisterPage.scss";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+
+import CircleLoading from "../../components/common/loading-delay/CircleLoading";
 import { dates, months, years } from "./DateModels";
 import { RegisterReq } from "../../services/AuthService";
+import { IShowPass } from "@constants/InterfaceModel";
+import Icons from "@theme/Icons";
+import "./styles/RegisterPage.scss";
 
 export default function RegisterPage(props: any) {
   let navigate = useNavigate();
@@ -17,14 +21,16 @@ export default function RegisterPage(props: any) {
     year: "2022",
     gender: "",
   };
-  const IMG_ICON_CLOSE = "https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png";
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [form, setForm] = useState<any>(initial_form);
 
   const onChangeForm = (e: ChangeEvent<any>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
+  const RenderIcon = ({ showPassword }: IShowPass) => {
+    if (!showPassword) return <AiFillEyeInvisible />;
+    else return <AiFillEye />;
+  };
   const finishSignUp = (e: any): void => {
     e.preventDefault();
     if (
@@ -65,7 +71,7 @@ export default function RegisterPage(props: any) {
           </div>
           <img
             className='close-btn-img'
-            src={IMG_ICON_CLOSE}
+            src={Icons.CLOSE_IC}
             alt=''
             onClick={() => cancelSignUp()}
           ></img>
@@ -109,6 +115,12 @@ export default function RegisterPage(props: any) {
                 className='register-input__password'
                 size={8}
               />
+              <i
+                className='icon-password--hidden'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <RenderIcon showPassword={showPassword} />
+              </i>
             </div>
             <div className='register-page__wrapper-date-of-birth'>
               <label htmlFor='date-select' className='label-container'>
