@@ -38,7 +38,7 @@ API Testing: Postman.
 
 ## 🔗Our system design for this project
 
-[Database Design](https://app.diagrams.net/#G14e2qY_iwxaKzx4obkxVMY3IJHQOGCcPb)
+[Database Design](https://app.diagrams.net/#G1jOkO6GnPS2UvqOe3rX46RnKTnSuKjA1w)
 
 ## Demo
 
