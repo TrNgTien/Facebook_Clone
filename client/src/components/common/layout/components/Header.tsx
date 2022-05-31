@@ -79,7 +79,7 @@ const Header = () => {
             <GrAdd className='icon-options' />
           </div>
           <div className='header__option'>
-            <FaFacebookMessenger className='icon-options' />
+            <FaFacebookMessenger className='icon-options' onClick={() => navigate("/messenger")}/>
           </div>
           <div className='header__option'>
             <AiTwotoneBell className='icon-options' />
