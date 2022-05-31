@@ -31,7 +31,7 @@ function Post({ postData }: IProps) {
       <div className='container__top'>
         <img className='img-avatar' src={posterData?.userAvatar} alt='avatar' />
         <div className='container__top-info'>
-          <h4>{posterData?.userName}</h4>
+          <h4>{posterData?.firstName + " " + posterData?.lastName}</h4>
           <p>{convertedTime}</p>
         </div>
         <i className='three-dot__icon'>

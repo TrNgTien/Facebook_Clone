@@ -138,7 +138,9 @@ export default function ProfilePage() {
                 </div>
                 <div className='container-side-info'>
                   <div className='container-user-info'>
-                    <h1 className='username'>{userData?.fullName}</h1>
+                    <h1 className='username'>
+                      {userData?.fullName || userData?.firstName + " " + userData?.lastName}
+                    </h1>
                     <h4 className='friends-number'>176 friends</h4>
                     <AvatarGroup max={5} total={10} className='group-friends-avatar'>
                       <Avatar src={userData?.userAvatar} alt='friend avatar' />
