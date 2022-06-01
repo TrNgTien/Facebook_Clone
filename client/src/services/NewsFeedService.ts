@@ -28,13 +28,23 @@ const getAllFeed = (token: string | null) => {
   return axiosInstance.get(API_PATH.POST_GET, configHeader);
 };
 
-const updatePost = (token: string | null, id: string, description: string) => {
+interface IUpdatePost {
+  idPost: string;
+  description: string;
+  token: string | null;
+}
+const updatePost = (reqBody: IUpdatePost) => {
+  const { idPost, description, token } = reqBody;
   let configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axiosInstance.put(`${API_PATH.POST_UPDATE}/${id}`, configHeader);
+  return axiosInstance.put(
+    `${API_PATH.POST_UPDATE}/${idPost}`,
+    { description },
+    configHeader
+  );
 };
 
 export { AddPost, getAllFeed, updatePost };

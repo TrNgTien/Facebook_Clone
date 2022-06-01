@@ -39,7 +39,24 @@ function Post({ postData }: IProps) {
         </i>
       </div>
       <div className='container__content'>
-        <p>{description}</p>
+        <p
+          onClick={() =>
+            dispatch(
+              setViewPost({
+                ...viewPostData,
+                isViewPost: true,
+                dataPost: {
+                  ...postData,
+                  userName: posterData?.userName,
+                  userAvatar: posterData?.userAvatar,
+                },
+              })
+            )
+          }
+          className="caption-post"
+        >
+          {description}
+        </p>
       </div>
       <div className='container__img' id='content-img'>
         {postAttachments.url ? (

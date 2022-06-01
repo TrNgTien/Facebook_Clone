@@ -80,7 +80,7 @@ export default function NewsFeed() {
                 <img
                   src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
                   alt='avatar'
-                  className='avartar-friend'
+                  className='avatar-friend'
                 />
                 <p className='active-point'>&nbsp;</p>
               </div>
@@ -91,7 +91,7 @@ export default function NewsFeed() {
                 <img
                   src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
                   alt='avatar'
-                  className='avartar-friend'
+                  className='avatar-friend'
                 />
                 <p className='active-point'>&nbsp;</p>
               </div>

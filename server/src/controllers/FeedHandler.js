@@ -333,14 +333,12 @@ module.exports = {
   updatePost: async (req, res) => {
     try {
       const { description } = req.body;
-      const idPost = req.params;
-      let postSchema = await postSchema.findOne({ _id: idPost });
-      if (postSchema.userID.toString() === req.user.id) {
-        await postSchema.updateOne({ description: description });
-        return res.status(200).json({
-          message: "Update successfully",
-        });
-      }
+      const { idPost } = req.params;
+
+      await Post.findOneAndUpdate({ _id: idPost }, { description: description });
+      return res.status(200).json({
+        message: "Update successfully",
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
