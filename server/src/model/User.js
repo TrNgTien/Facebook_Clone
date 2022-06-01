@@ -64,7 +64,11 @@ const userSchema = new mongoose.Schema({
             hometown: "",
             relationship: ""
         },
+    },
+    friends: {
+        type: Array,
+        default: [],
     }
 });
 
-module.exports = User = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);
