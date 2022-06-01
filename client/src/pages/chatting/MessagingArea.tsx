@@ -7,7 +7,6 @@ import {
   BsStickyFill,
   BsTelephoneFill,
 } from "react-icons/bs";
-import { io } from "socket.io-client";
 import { MdInfo, MdOutlineAddCircle, MdThumbUp } from "react-icons/md";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import "./styles/messagingArea.scss";
@@ -53,10 +52,10 @@ const MessagingArea = () => {
   ]
   const [msgs, setMsgs] = useState(initMsgs);
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900", { transports: ["websocket"] });
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  // useEffect(() => {
+  //   socket.current = io("ws://localhost:8900", { transports: ["websocket"] });
+  //   scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, []);
   
   return (
     <div className='messaging-area'>

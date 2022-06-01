@@ -20,5 +20,5 @@ router.delete(
   Authentication,
   feedHandler.deleteComment
 );
-router.put("/updatePost/:id", Authentication, feedHandler.updatePost);
+router.put("/updatePost/:idPost", Authentication, feedHandler.updatePost);
 module.exports = router;

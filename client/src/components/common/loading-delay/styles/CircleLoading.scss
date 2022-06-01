@@ -6,7 +6,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     opacity: 0.5;
-    z-index: 3;
+    z-index: var(--z-index-highest);
     .circle-loading {
         width: 10rem;
         height: 10rem;
