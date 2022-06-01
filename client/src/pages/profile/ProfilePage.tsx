@@ -4,33 +4,66 @@ import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
-import { MainLayout } from "@components/common/layout";
-import Upload from "../news-feed/components/upload/Upload";
-import "./styles/ProfilePage.scss";
-import UploadPost from "@components/feat/upload-modal/UploadModal";
-import { setIsCreatePost } from "@slices/PostSlice";
-import Post from "@components/common/post/Posts";
-import { getPostById } from "@services/NewsFeedService";
+import { useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
-export default function ProfilePage() {
-  const { currentUser } = useAppSelector((state) => state.auth);
-  const { isCreatePost } = useAppSelector((state) => state.post);
-  const dispatch = useAppDispatch();
-  const [ownPosts, setOwnPosts] = useState([]);
 
+import { MainLayout } from "@components/common/layout";
+import { getPostById, getProfileID } from "@services/ProfileService";
+import { IJwtDecode } from "@constants/InterfaceModel";
+import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
+import Upload from "../news-feed/components/upload/Upload";
+import UploadPost from "@components/feat/upload-modal/UploadModal";
+import Post from "@components/common/post/Posts";
+import ViewPost from "@components/feat/view-post/ViewPost";
+
+import "./styles/ProfilePage.scss";
+
+export default function ProfilePage() {
+  const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector((state) => state.auth);
+  const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
+  const [ownPosts, setOwnPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { userID } = useParams();
+  const [userData, setUserData] = useState(currentUser);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
-  }, [dispatch]);
+    if (listPosts) {
+      setOwnPosts(listPosts);
+    }
+  }, [dispatch, listPosts]);
   useEffect(() => {
     const getOwnPosts = async () => {
-      const ownToken = currentUser.token;
-      const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
-      const resPosts = await getPostById(ownToken, ownerId);
-      setOwnPosts(resPosts.data.userPosts);
+      setIsLoading(true);
+      if (currentUser) {
+        const onwID = jwtDecode<IJwtDecode>(currentUser.token).id;
+        const resPosts = await getPostById(onwID);
+        if (resPosts.status === 200) {
+          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+          });
+          dispatch(setListPosts(sortedData));
+          setOwnPosts(sortedData);
+          setIsLoading(false);
+        }
+      } else {
+        const resProfile = await getProfileID(userID);
+        if (resProfile.status === 200) {
+          setUserData(resProfile.data.data);
+        }
+        const resPosts = await getPostById(userID);
+        if (resPosts.status === 200) {
+          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+          });
+          dispatch(setListPosts(sortedData));
+          setOwnPosts(sortedData);
+          setIsLoading(false);
+        }
+      }
     };
     getOwnPosts();
-  }, [currentUser]);
+  }, [dispatch, currentUser, userID]);
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (
@@ -83,12 +116,13 @@ export default function ProfilePage() {
   };
   return (
     <MainLayout>
-      {isCreatePost && <UploadPost />}
+      {isCreatePost && currentUser && <UploadPost />}
       <div className='profile-page'>
         <div className='profile-zone'>
+          {viewPostData.isViewPost && <ViewPost />}
           <div className='profile-zone__header'>
             <div className='container-cover-photo'>
-              <img className='background-img' src={currentUser.userCover} alt='' />
+              <img className='background-img' src={userData?.userCover} alt='' />
               <button className='add-cover'>
                 <BsFillCameraFill className='add-cover-icon' />
                 <p>Edit Cover Photo</p>
@@ -97,33 +131,24 @@ export default function ProfilePage() {
             <div className='container-info'>
               <div className='container-info__left'>
                 <div className='container-avatar'>
-                  <img src={currentUser.userAvatar} alt='avatar' className='avatar-img' />
+                  <img src={userData?.userAvatar} alt='avatar' className='avatar-img' />
                   <button className='add-avatar'>
                     <BsFillCameraFill className='add-avatar-icon' />
                   </button>
                 </div>
                 <div className='container-side-info'>
                   <div className='container-user-info'>
-                    <h1 className='username'>{currentUser.fullName}</h1>
+                    <h1 className='username'>
+                      {userData?.fullName || userData?.firstName + " " + userData?.lastName}
+                    </h1>
                     <h4 className='friends-number'>176 friends</h4>
-                    <AvatarGroup max={7} className='group-friends-avatar'>
-                      <Avatar className='friend-avatar' alt='Remy Sharp'>
-                        A
-                      </Avatar>
-                      <Avatar className='friend-avatar' alt='Travis Howard'>
-                        B
-                      </Avatar>
-                      <Avatar className='friend-avatar' alt='Cindy Baker'></Avatar>
-                      <Avatar className='friend-avatar' alt='Agnes Walker'>
-                        F
-                      </Avatar>
-                      <Avatar className='friend-avatar' alt='Trevor Henderson'>
-                        E
-                      </Avatar>
-                      <Avatar className='friend-avatar' alt='Remy Sharp'></Avatar>
-                      <Avatar className='friend-avatar' alt='Remy Sharp'>
-                        G
-                      </Avatar>
+                    <AvatarGroup max={5} total={10} className='group-friends-avatar'>
+                      <Avatar src={userData?.userAvatar} alt='friend avatar' />
+                      <Avatar alt='friend avatar'>B</Avatar>
+                      <Avatar alt='friend avatar'>F</Avatar>
+                      <Avatar alt='friend avatar'>F</Avatar>
+                      <Avatar alt='friend avatar'>F</Avatar>
+                      <Avatar alt='friend avatar'>F</Avatar>
                     </AvatarGroup>
                   </div>
                 </div>
@@ -161,17 +186,12 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              <Upload />
-              {/* {posts.map((post, index) => (
-                <Post
-                  key={index}
-                  avatarURL={post.avatarURL}
-                  username={post.username}
-                  timestamp={post.timestamp}
-                  content={post.content}
-                  imgURL={post.imgURL}
-                />
-              ))} */}
+              {currentUser && <Upload />}
+              {isLoading ? (
+                <h1>Loading...</h1>
+              ) : (
+                ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getProfileID } from "@services/NewsFeedService";
+import { getProfileID } from "@services/ProfileService";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
 import { BsThreeDots } from "react-icons/bs";
 import { setViewPost } from "@slices/PostSlice";
@@ -13,34 +13,50 @@ function Post({ postData }: IProps) {
   const dispatch = useAppDispatch();
   const { time, description, postAttachments, numberOfLike, numberOfComment, userID } =
     postData;
-  const { currentUser } = useAppSelector((state) => state.auth);
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
   const convertedTime = new Date(time).toLocaleString();
   useEffect(() => {
     const getProfileData = async () => {
-      const profileRes = await getProfileID(currentUser.token, userID);
+      const profileRes = await getProfileID(userID);
       if (profileRes.status === 200) {
         setPosterData(profileRes.data.data);
       }
     };
     getProfileData();
-  }, [userID, currentUser.token]);
+  }, [userID]);
 
   return (
     <div className='container' id='container-post'>
       <div className='container__top'>
         <img className='img-avatar' src={posterData?.userAvatar} alt='avatar' />
         <div className='container__top-info'>
-          <h4>{posterData?.userName}</h4>
+          <h4>{posterData?.firstName + " " + posterData?.lastName}</h4>
           <p>{convertedTime}</p>
         </div>
-        <i className="three-dot__icon">
+        <i className='three-dot__icon'>
           <BsThreeDots />
         </i>
       </div>
       <div className='container__content'>
-        <p>{description}</p>
+        <p
+          onClick={() =>
+            dispatch(
+              setViewPost({
+                ...viewPostData,
+                isViewPost: true,
+                dataPost: {
+                  ...postData,
+                  userName: posterData?.userName,
+                  userAvatar: posterData?.userAvatar,
+                },
+              })
+            )
+          }
+          className="caption-post"
+        >
+          {description}
+        </p>
       </div>
       <div className='container__img' id='content-img'>
         {postAttachments.url ? (

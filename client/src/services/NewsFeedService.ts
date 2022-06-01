@@ -27,29 +27,24 @@ const getAllFeed = (token: string | null) => {
   };
   return axiosInstance.get(API_PATH.POST_GET, configHeader);
 };
-const getProfileID = (token: string | null, id: string) => {
+
+interface IUpdatePost {
+  idPost: string;
+  description: string;
+  token: string | null;
+}
+const updatePost = (reqBody: IUpdatePost) => {
+  const { idPost, description, token } = reqBody;
   let configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  return axiosInstance.get(`${API_PATH.GET_USER_PROFILE}/${id}`, configHeader);
+  return axiosInstance.put(
+    `${API_PATH.POST_UPDATE}/${idPost}`,
+    { description },
+    configHeader
+  );
 };
 
-const updatePost = (token: string | null, id: string, description: string) => {
-  let configHeader = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  return axiosInstance.put(`${API_PATH.POST_UPDATE}/${id}`, configHeader);
-};
-const getPostById = (token: string | null, userID: string) => {
-  let configHeader = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  return axiosInstance.get(`${API_PATH.POST_GET_ID}?id=${userID}`, configHeader);
-};
-export { AddPost, getAllFeed, getProfileID, updatePost, getPostById };
+export { AddPost, getAllFeed, updatePost };

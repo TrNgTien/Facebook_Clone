@@ -17,6 +17,7 @@ export default function NewsFeed() {
   const dispatch = useAppDispatch();
   const listInnerRef = useRef<HTMLDivElement>(null);
   const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
+  const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +59,7 @@ export default function NewsFeed() {
           {viewPostData.isViewPost && <ViewPost />}
           <Sidebar />
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
-            <Upload />
+            {currentUser && <Upload />}
             {isLoading ? (
               <h1>Loading...</h1>
             ) : (
@@ -79,7 +80,7 @@ export default function NewsFeed() {
                 <img
                   src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
                   alt='avatar'
-                  className='avartar-friend'
+                  className='avatar-friend'
                 />
                 <p className='active-point'>&nbsp;</p>
               </div>
@@ -90,7 +91,7 @@ export default function NewsFeed() {
                 <img
                   src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
                   alt='avatar'
-                  className='avartar-friend'
+                  className='avatar-friend'
                 />
                 <p className='active-point'>&nbsp;</p>
               </div>

@@ -12,7 +12,7 @@ const AuthenSlice = createSlice({
   name: "AuthenSlice",
   initialState,
   reducers: {
-    setLoginSucess(state, action: PayloadAction<any>) {
+    setLoginSuccess(state, action: PayloadAction<any>) {
       const { payload } = action;
       return { ...state, currentUser: payload, isLogged: true };
     },
@@ -24,7 +24,7 @@ const AuthenSlice = createSlice({
 });
 
 //Actions
-export const { setLoginSucess, setLogout } = AuthenSlice.actions;
+export const { setLoginSuccess, setLogout } = AuthenSlice.actions;
 
 //Reducer
 const authReducer = AuthenSlice.reducer;

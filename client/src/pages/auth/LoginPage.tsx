@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { LoginReq } from "@services/AuthService";
 import { useAppDispatch } from "@store/hooks";
-import { setLoginSucess } from "@slices/AuthenSlice";
+import { setLoginSuccess } from "@slices/AuthenSlice";
 import { IShowPass } from "@constants/InterfaceModel";
 import { setLocalStorage } from "@utils/LocalStorageUtil";
 import "./styles/LoginPage.scss";
@@ -36,7 +36,7 @@ export default function LoginPage() {
       if (loginRes.status === 200) {
         setLocalStorage("token", loginRes.data.dataUser.token);
         setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
-        dispatch(setLoginSucess(loginRes.data.dataUser));
+        dispatch(setLoginSuccess(loginRes.data.dataUser));
         setIsLoadingLogin(false);
         navigate("/feeds");
       } else if (loginRes.status === 400) {
@@ -53,7 +53,7 @@ export default function LoginPage() {
     };
     const loginRes = await LoginReq(userData);
     if (loginRes.status === 200) {
-      dispatch(setLoginSucess(loginRes.data.dataUser));
+      dispatch(setLoginSuccess(loginRes.data.dataUser));
       setLocalStorage("token", loginRes.data.dataUser.token);
       setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
       setIsLoadingLogin(false);

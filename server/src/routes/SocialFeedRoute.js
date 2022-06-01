@@ -6,7 +6,7 @@ const upload = require("../utils/multer");
 
 router.post("/addFeed", Authentication, feedHandler.addFeed);
 router.get("/getAllFeed", Authentication, feedHandler.getFeed);
-router.get("/search", Authentication, feedHandler.getPostById);
+router.get("/search", feedHandler.getPostById);
 router.get("/getCommentOfFeed/:id", Authentication, feedHandler.getCommentOfFeed);
 router.put("/reactFeed/:id", Authentication, feedHandler.reactFeed);
 router.post(
@@ -20,5 +20,5 @@ router.delete(
   Authentication,
   feedHandler.deleteComment
 );
-router.put("/updatePost/:id", Authentication, feedHandler.updatePost);
+router.put("/updatePost/:idPost", Authentication, feedHandler.updatePost);
 module.exports = router;
