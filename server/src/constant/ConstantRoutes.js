@@ -3,4 +3,5 @@ module.exports = {
   AUTH: "/auth",
   PROFILE: "/profile",
   POST: "/post",
+  FRIEND: "/friend",
 };

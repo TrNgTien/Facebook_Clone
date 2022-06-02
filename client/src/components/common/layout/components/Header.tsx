@@ -11,7 +11,7 @@ import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 const Header = () => {
   const navigate = useNavigate();
-  const [counterNoti, setCounterNoti] = useState<Number>(12);
+  const [counterNoti] = useState<Number>(12);
   const [searchText, setSearchText] = useState<string>("");
   const [onwIdUser, setOnwIdUser] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);

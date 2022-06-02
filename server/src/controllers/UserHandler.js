@@ -324,10 +324,48 @@ module.exports = {
     try{
       let { friendID } = req.params;
       let userID = req.user.id;
-      let newFriend = new Friend({
-        userID: userID,
-        
+      let user = await User.findOne({ _id: userID });
+      await user.updateOne({$push: {friends: friendID}});
+      return res.status(200).json({
+        message: "Add friend successfully!",
       })
+    }
+    catch(error){
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  getFriends: async (req, res, next) => {
+    try{
+      let id = req.user.id;
+      let user = await User.findOne({ _id: id });
+      let friendList = user.friends;
+      return res.status(200).json({
+        friends: friendList,
+      })
+    } 
+    catch(error){
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  getFriendsOfUser: async (req, res) => {
+    let { ownId } = req.params;
+    let user = await User.findOne({ _id: ownId });
+    let friendList = user.friends;
+    return res.status(200).json({
+      friends: friendList,
+    });
+  },
+  deleteFriends: async (req, res) => {
+    try{
+      let { friendID } = req.params;
+      let userID = req.user.id;
+      let user = await User.findOne({ _id: userID });
+      await user.updateOne({$pull: {friends: friendID}});
+      return res.status(200).json({
+        message: "Delete friend successfully!",
+      });
     }
     catch(error){
       console.log(error);
