@@ -18,7 +18,7 @@ connectDb();
 app.use(express.json({limit: '50mb'}));
 app.use(
   cors({
-    origin: [`http://localhost:3333`],
+    origin: [`http://localhost:3333`,`https://fb.iuweb.online`],
   })
 );
 routes(app);
