@@ -1,17 +1,13 @@
 const Post = require("../model/Post");
 const Comment = require("../model/Comment");
-const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
-const bluebird = require("bluebird");
-require("../utils/multer");
-const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-const s3Client = new S3Client({ region: process.env.AWS_BUCKET_REGION });
+const { uploadS3, deleteS3 } = require("../middleware/s3Services");
 module.exports = {
-  getFeed: async (req, res) => {
+  getPost: async (req, res) => {
     try {
-      let allFeed = await Post.find();
+      let allPost = await Post.find();
       return res.status(200).json({
-        data: allFeed,
+        data: allPost,
       });
     } catch (error) {
       console.log(error);
@@ -31,12 +27,13 @@ module.exports = {
     }
   },
 
-  addFeed: async (req, res) => {
+  addPost: async (req, res) => {
     try {
       let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
+      let key = `post/${req.user.id}-${suffixes}`
       if (postAttachments === "") {
-        let newFeed = new Post({
+        let newPost = new Post({
           description: description,
           postAttachments: {
             url: "",
@@ -44,116 +41,40 @@ module.exports = {
           },
           userID: req.user.id,
         });
-        await newFeed.save();
-        let id = newFeed._id;
+        await newPost.save();
+        let id = newPost._id;
         return res.status(200).json({
           message: "Post Successfully!",
           id: id,
         });
       } else if (description === "") {
-        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
-          process.env;
-
-        // Configure AWS to use promise
-        AWS.config.setPromisesDependency(bluebird);
-        AWS.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          region: AWS_BUCKET_REGION,
-        });
-
-        // Create an s3 instance
-        const s3 = new AWS.S3();
-
-        // Ensure that you POST a base64 data to your server.
-        // Let's assume the variable "base64" is one.
-        const base64Data = new Buffer.from(
-          postAttachments.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-
-        // Getting the file type, ie: jpeg, png or gif
-        const type = postAttachments.split(";")[0].split("/")[1];
-        const params = {
-          Bucket: AWS_BUCKET_NAME,
-          Key: `post/${req.user.id}-${suffixes}`, // type is not required
-          Body: base64Data,
-          // ACL: 'public-read',
-          ContentEncoding: "base64", // required
-          ContentType: `image/jpeg`, // required. Notice the back ticks
-        };
-        let location = "";
-        let key = "";
-        const { Location, Key } = await s3.upload(params).promise();
-        location = Location;
-        key = Key;
-        let newFeed = new Post({
+        let uploadResponse = await uploadS3(key, postAttachments);
+        let newPost = new Post({
           description: "",
           postAttachments: {
-            url: location,
-            publicID: key,
+            url: uploadResponse.locationS3,
+            publicID: uploadResponse.keyS3,
           },
           userID: req.user.id,
         });
-        await newFeed.save();
-        let id = newFeed._id;
+        await newPost.save();
+        let id = newPost._id;
         return res.status(200).json({
           message: "Post Successfully!",
           id: id,
         });
       } else {
-        // let uploadResponse = await cloudinary.uploader.upload(postAttachments, {
-        //   resource_type: "auto",
-        //   folder: "Facebook Clone/Feed Attachments",
-        // });
-        // let postAttachmentsUrl = uploadResponse.secure_url;
-        // let postAttachmentsPublicID = uploadResponse.public_id;
-        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
-          process.env;
-
-        // Configure AWS to use promise
-        AWS.config.setPromisesDependency(bluebird);
-        AWS.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          region: AWS_BUCKET_REGION,
-        });
-
-        // Create an s3 instance
-        const s3 = new AWS.S3();
-
-        // Ensure that you POST a base64 data to your server.
-        // Let's assume the variable "base64" is one.
-        const base64Data = new Buffer.from(
-          postAttachments.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-
-        // Getting the file type, ie: jpeg, png or gif
-        const type = postAttachments.split(";")[0].split("/")[1];
-        const params = {
-          Bucket: AWS_BUCKET_NAME,
-          Key: `post/${req.user.id}-${suffixes}`, // type is not required
-          Body: base64Data,
-          // ACL: 'public-read',
-          ContentEncoding: "base64", // required
-          ContentType: `image/jpeg`, // required. Notice the back ticks
-        };
-        let location = "";
-        let key = "";
-        const { Location, Key } = await s3.upload(params).promise();
-        location = Location;
-        key = Key;
-        let newFeed = new Post({
+        let uploadResponse = await uploadS3(key, postAttachments);
+        let newPost = new Post({
           description: description,
           postAttachments: {
-            url: location,
-            publicID: key,
+            url: uploadResponse.locationS3,
+            publicID: uploadResponse.keyS3,
           },
           userID: req.user.id,
         });
-        await newFeed.save();
-        let id = newFeed._id;
+        await newPost.save();
+        let id = newPost._id;
         return res.status(200).json({
           message: "Post Successfully!",
           id: id,
@@ -164,47 +85,69 @@ module.exports = {
       return res.status(500).json("Internal server error");
     }
   },
-  deleteFeed: async (req, res) => {
+  deletePost: async (req, res) => {
     try {
-      let { feedID } = req.params;
+      let { postID } = req.params;
       let { id } = req.user;
-      let feed = await Post.findOne({ _id: feedID });
-      console.log(feed);
-      console.log(feed.postAttachments.publicID);
-      let bucketParams = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: feed.postAttachments.publicID,
-      };
-      if (feed.userID === id) {
-        await Post.findByIdAndDelete(feedID);
-        await s3Client.send(new DeleteObjectCommand(bucketParams));
-        return res.status(200).json({
-          message: "Delete successfully!",
-        });
-      } else {
-        return res.status(401).json({
-          message: "You can only delete your own feed",
-        });
+      let post = await Post.findOne({ _id: postID });
+      if (post.postAttachments.publicID === "" && post.postAttachments.url === "") {
+        if (post.userID.toString() === id) {
+          await post.remove();
+          return res.status(200).json({
+            message: "Delete successfully!",
+          });
+        } else {
+          return res.status(401).json({
+            message: "You can only delete your own feed",
+          });
+        }
       }
+      else if (post.description === ""){
+        if (post.userID.toString() === id) {
+          await post.remove();
+          await deleteS3(post.postAttachments.publicID);
+          return res.status(200).json({
+            message: "Delete successfully!",
+          });
+        } else {
+          return res.status(401).json({
+            message: "You can only delete your own feed",
+          });
+        }
+      } 
+      else {
+        if (post.userID.toString() === id) {
+          await post.remove();
+          await deleteS3(post.postAttachments.publicID);
+          return res.status(200).json({
+            message: "Delete successfully!",
+          });
+        } else {
+          return res.status(401).json({
+            message: "You can only delete your own feed",
+          });
+        }
+      }
+      //let feed = await Post.find({ _id: feedID });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
     }
   },
-  reactFeed: async (req, res) => {
+  reactPost: async (req, res) => {
     try {
       let { id } = req.params;
       let userID = req.user.id;
-      let feed = await Post.findById({ _id: id });
-      if (!feed.userReact.includes(userID)) {
-        await feed.updateOne({ $push: { userReact: userID } });
-        await feed.updateOne({ numberOfLike: feed.numberOfLike + 1 });
+      let post = await Post.findById({ _id: id });
+      if (!post.userReact.includes(userID)) {
+        await post.updateOne({ $push: { userReact: userID } });
+        await post.updateOne({ numberOfLike: post.numberOfLike + 1 });
         return res.status(200).json({
           message: "likes successfully",
         });
       } else {
-        await feed.updateOne({ $pull: { userReact: userID } });
-        await feed.updateOne({ numberOfLike: feed.numberOfLike - 1 });
+        await post.updateOne({ $pull: { userReact: userID } });
+        await post.updateOne({ numberOfLike: post.numberOfLike - 1 });
         return res.status(200).json({
           message: "dislikes successfully",
         });
@@ -214,13 +157,15 @@ module.exports = {
       return res.status(500).json("Internal server error");
     }
   },
-  commentFeed: async (req, res) => {
+  commentPost: async (req, res) => {
     try {
       let { id } = req.params;
       let { commentContent, commentAttachments } = req.body;
       let userID = req.user.id;
-      let feed = await Post.findById({ _id: id });
-      if (typeof commentAttachments === "undefined") {
+      let suffixes = uuidv4();
+      let key = `comment/${req.user.id}-${suffixes}`;
+      let post = await Post.findOne({"_id": id});
+      if (commentAttachments === "") {
         let comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
@@ -231,64 +176,46 @@ module.exports = {
           feedID: id,
         });
         await comment.save();
-      } else {
-        // let uploadResponse = await cloudinary.uploader.upload(commentAttachments, {
-        //   resource_type: "auto",
-        //   folder: "Facebook Clone/Comment Attachments",
-        // });
-        // let commentAttachmentsUrl = uploadResponse.secure_url;
-        // let commentAttachmentsPublicID = uploadResponse.public_id;
-        const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME } =
-          process.env;
-
-        // Configure AWS to use promise
-        AWS.config.setPromisesDependency(bluebird);
-        AWS.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          region: AWS_BUCKET_REGION,
+        await post.updateOne({ numberOfComment: post.numberOfComment + 1 });
+        return res.status(200).json({
+          message: "Comment successfully",
+          id: comment._id,
         });
-
-        // Create an s3 instance
-        const s3 = new AWS.S3();
-
-        // Ensure that you POST a base64 data to your server.
-        // Let's assume the variable "base64" is one.
-        const base64Data = new Buffer.from(
-          commentAttachments.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-
-        // Getting the file type, ie: jpeg, png or gif
-        const type = commentAttachments.split(";")[0].split("/")[1];
-        const params = {
-          Bucket: AWS_BUCKET_NAME,
-          Key: req.user.id, // type is not required
-          Body: base64Data,
-          // ACL: 'public-read',
-          ContentEncoding: "base64", // required
-          ContentType: `image/jpeg`, // required. Notice the back ticks
-        };
-        let location = "";
-        let key = "";
-        const { Location, Key } = await s3.upload(params).promise();
-        location = Location;
-        key = Key;
+      } else if (commentContent === "") {
+        let uploadResponse = await uploadS3(key, commentAttachments);
         let comment = new Comment({
-          commentContent: commentContent,
+          commentContent: "",
           commentAttachments: {
-            url: location,
-            publicID: key,
+            url: uploadResponse.locationS3,
+            publicID: uploadResponse.keyS3,
           },
           userID: userID,
           feedID: id,
         });
         await comment.save();
-        await feed.updateOne({ numberOfComment: feed.numberOfComment + 1 });
+        await post.updateOne({ numberOfComment: post.numberOfComment + 1 });
+        return res.status(200).json({
+          message: "Comment successfully",
+          id: comment._id,
+        });
+      } else {
+        let uploadResponse = await uploadS3(key, commentAttachments);
+        let comment = new Comment({
+          commentContent: commentContent,
+          commentAttachments: {
+            url: uploadResponse.locationS3,
+            publicID: uploadResponse.keyS3,
+          },
+          userID: userID,
+          feedID: id,
+        });
+        await comment.save();
+        await post.updateOne({ numberOfComment: post.numberOfComment + 1 });
+        return res.status(200).json({
+          message: "Comment successfully",
+          id: comment._id,
+        });
       }
-      return res.status(200).json({
-        message: "Comment successfully",
-      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
@@ -296,17 +223,34 @@ module.exports = {
   },
   deleteComment: async (req, res) => {
     try {
-      let { commentID, feedID } = req.params;
+      let { commentID, postID } = req.params;
       let userID = req.user.id;
-      let comment = await Comment.findById({ _id: commentID });
-      let feed = await Feed.findById({ _id: feedID });
-      if (comment.userID.toString() === userID || feed.userID.toString() === userID) {
-        await comment.remove();
-        await Feed.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
-        await cloudinary.uploader.destroy(comment.commentAttachments.publicID);
-        return res.status(200).json({
-          message: "Delete successfully",
-        });
+      let comment = await Comment.findOne({ _id: commentID });
+      let post = await Post.findById({ _id: postID });
+      if (comment.userID.toString() === userID || post.userID.toString() === userID) {
+        if (comment.commentAttachments.url === "" && comment.commentAttachments.publicID === "") {
+          await comment.remove();
+          await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
+          return res.status(200).json({
+            message: "Delete successfully",
+          });
+        }
+        else if (comment.commentContent === ""){
+          await comment.remove();
+          await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
+          deleteS3(comment.commentAttachments.publicID);
+          return res.status(200).json({
+            message: "Delete successfully",
+          });
+        }
+        else{
+          await comment.remove();
+          await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
+          deleteS3(comment.commentAttachments.publicID);
+          return res.status(200).json({
+            message: "Delete successfully",
+          });
+        }
       } else {
         return res.status(401).json({
           message: "You are not allowed to delete this comment",
@@ -317,7 +261,7 @@ module.exports = {
       return res.status(500).json("Internal server error");
     }
   },
-  getCommentOfFeed: async (req, res) => {
+  getCommentOfPost: async (req, res) => {
     try {
       let { id } = req.params;
       let comment = await Comment.find({ feedID: id });

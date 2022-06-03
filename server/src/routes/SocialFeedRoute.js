@@ -2,23 +2,22 @@ const express = require("express");
 const router = express.Router();
 const feedHandler = require("../controllers/FeedHandler");
 const { Authentication } = require("../middleware/Authentication");
-const upload = require("../utils/multer");
 
-router.post("/addFeed", Authentication, feedHandler.addFeed);
-router.get("/getAllFeed", Authentication, feedHandler.getFeed);
+router.post("/addPost", Authentication, feedHandler.addPost);
+router.get("/getAllPost", Authentication, feedHandler.getPost);
 router.get("/search", feedHandler.getPostById);
-router.get("/getCommentOfFeed/:id", Authentication, feedHandler.getCommentOfFeed);
-router.put("/reactFeed/:id", Authentication, feedHandler.reactFeed);
+router.get("/getCommentOfPost/:id", Authentication, feedHandler.getCommentOfPost);
+router.put("/reactPost/:id", Authentication, feedHandler.reactPost);
 router.post(
-  "/commentFeed/:id",
-  upload.single("commentAttachments"),
+  "/commentPost/:id",
   Authentication,
-  feedHandler.commentFeed
+  feedHandler.commentPost
 );
 router.delete(
-  "/deleteComment/:commentID/:feedID",
+  "/deleteComment/:commentID/:postID",
   Authentication,
   feedHandler.deleteComment
 );
 router.put("/updatePost/:idPost", Authentication, feedHandler.updatePost);
+router.delete("/deletePost/:postID", Authentication, feedHandler.deletePost);
 module.exports = router;
