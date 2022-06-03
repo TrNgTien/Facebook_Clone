@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
-const commentSchema = new mongoose.Schema({ 
+const commentSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        default: mongoose.Types.ObjectId().toString(),
+    }, 
     commentContent: {
         type: String,
         required: true,
