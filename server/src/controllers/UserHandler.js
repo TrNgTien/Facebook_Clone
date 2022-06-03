@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const AWS = require("aws-sdk");
 const bluebird = require("bluebird");
-const cloudinary = require("../utils/cloudinary");
 const { v4: uuidv4 } = require("uuid");
 require("../utils/multer");
 
@@ -304,8 +303,8 @@ module.exports = {
       let user = await User.findOne({ _id: id });
       if (req.user.id === id) {
         await User.findByIdAndDelete(id);
-        await cloudinary.uploader.destroy(user.userAvatar.publicID);
-        await cloudinary.uploader.destroy(user.userCover.publicID);
+        // await cloudinary.uploader.destroy(user.userAvatar.publicID);
+        // await cloudinary.uploader.destroy(user.userCover.publicID);
         return res.status(200).json({
           message: "Delete successfully!",
         });

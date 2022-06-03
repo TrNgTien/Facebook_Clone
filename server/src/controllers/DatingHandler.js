@@ -1,5 +1,4 @@
 const Dating = require("../model/DatingProfile");
-const cloudinary = require("../utils/cloudinary");
 require("../utils/multer");
 
 module.exports = {

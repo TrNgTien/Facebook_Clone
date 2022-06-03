@@ -2,7 +2,6 @@ const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
-const cloudinary = require("../utils/cloudinary");
 const bluebird = require("bluebird");
 require("../utils/multer");
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");

@@ -2,9 +2,9 @@ import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-import CircleLoading from "../../components/common/loading-delay/CircleLoading";
+import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { dates, months, years } from "./DateModels";
-import { RegisterReq } from "../../services/AuthService";
+import { RegisterReq } from "@services/AuthService";
 import { IShowPass } from "@constants/InterfaceModel";
 import Icons from "@theme/Icons";
 import "./styles/RegisterPage.scss";
@@ -31,8 +31,9 @@ export default function RegisterPage(props: any) {
     if (!showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
   };
-  const finishSignUp = (e: any): void => {
+  const finishSignUp = async (e: any) => {
     e.preventDefault();
+    setIsRegistering(true);
     if (
       form.firstName === "" ||
       form.lastName === "" ||
@@ -40,21 +41,19 @@ export default function RegisterPage(props: any) {
       form.password === "" ||
       form.gender === ""
     ) {
-      console.log("Please fill all the infomation.");
+      setIsRegistering(false);
+      alert("Please fill all the information!");
       return;
+    } else {
+      const resRegister = await RegisterReq(form);
+      if (resRegister.status === 200) {
+        setIsRegistering(false);
+        navigate(-1);
+      } else {
+        setIsRegistering(false);
+        alert("Something went wrong!");
+      }
     }
-
-    RegisterReq(form)
-      .then((res: any) => {
-        setIsRegistering(true);
-        setTimeout(() => {
-          setIsRegistering(false);
-          navigate(-1);
-        }, 2000);
-      })
-      .catch((err: any) => {
-        alert(`${err}`);
-      });
   };
 
   function cancelSignUp() {
