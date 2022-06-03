@@ -180,7 +180,7 @@ module.exports = {
       let key = `avatar/${req.user.id}-${suffixes}`;
       let { id } = req.params;
       if (req.user.id === id) {
-        let uploadResponse = await uploadS3(base64, key);
+        let uploadResponse = await uploadS3(key, base64);
         await User.findByIdAndUpdate(
           id,
           {
@@ -213,7 +213,7 @@ module.exports = {
       let key = `cover/${req.user.id}-${suffixes}`;
       let { id } = req.params;
       if (req.user.id === id) {
-        let uploadResponse = await uploadS3(base64, key);
+        let uploadResponse = await uploadS3(key, base64);
         await User.findByIdAndUpdate(
           id,
           {
