@@ -30,3 +30,32 @@ export interface IUser {
 export interface IShowPass {
   showPassword: Boolean;
 }
+export interface IUserData {
+  DOB: string;
+  biography: string;
+  firstName: string;
+  friends: [];
+  gender: string;
+  hobbies: [];
+  intro: {
+    currentJob: string;
+    currentEducation: string;
+    currentCity: string;
+    hometown: string;
+    relationship: string;
+  };
+  lastName: string;
+  password: string;
+  userAvatar: {
+    url: string;
+    public_id: string;
+  };
+  userCover: {
+    url: string;
+    public_id: string;
+  };
+  userName: string;
+  userType: number;
+  __v: number;
+  _id: string;
+}

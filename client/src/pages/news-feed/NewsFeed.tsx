@@ -6,7 +6,7 @@ import { getAllFeed } from "@services/NewsFeedService";
 import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
@@ -60,8 +60,8 @@ export default function NewsFeed() {
           <Sidebar />
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
             {currentUser && <Upload />}
-            {isLoading ? (
-              <Post.PostLoading/>
+            {isLoading && currentUser ? (
+              <Post.PostLoading />
             ) : (
               postData.map((post, index: number) => <Post key={index} postData={post} />)
             )}

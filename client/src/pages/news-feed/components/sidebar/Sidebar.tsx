@@ -1,7 +1,7 @@
 import React from "react";
 import "./Sidebar.scss";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { useAppSelector } from "@store/hooks";
+import { useAppSelector } from "@hooks/useStore";
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import Icons from "@theme/Icons";
@@ -14,7 +14,7 @@ const Sidebar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-row' onClick={() => navigate(`/profile/${ownID}`)}>
-        <img src={currentUser.userAvatar} alt='avatar' />
+        <img src={currentUser.userAvatar.url} alt='avatar' />
         <p>{currentUser.fullName}</p>
       </div>
       <div className='sidebar-row' onClick={() => navigate("/friend")}>

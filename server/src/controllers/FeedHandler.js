@@ -164,9 +164,9 @@ module.exports = {
       return res.status(500).json("Internal server error");
     }
   },
-  deleteFeed: async (req, res) => {
+  deletePost: async (req, res) => {
     try {
-      let { feedID } = req.params;
+      let { idPost } = req.params;
       let { id } = req.user;
       let feed = await Post.findOne({ _id: feedID });
       console.log(feed);

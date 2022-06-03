@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
-import { useParams } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
+import { useParams, useLocation } from "react-router-dom";
 
 import { MainLayout } from "@components/common/layout";
 import { getPostById, getProfileID } from "@services/ProfileService";
-import { IJwtDecode } from "@constants/InterfaceModel";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import Upload from "../news-feed/components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
-
+import { IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
+import { url } from "inspector";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -25,42 +24,45 @@ export default function ProfilePage() {
   const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { userID } = useParams();
-  const [userData, setUserData] = useState(currentUser);
+  const { userID } = useParams<string>();
+  const [userData, setUserData] = useState<IUserData>();
+  const { pathname } = useLocation();
+  const profileRef = useRef<any>(null);
+  useEffect(() => {
+    profileRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, []);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
       setOwnPosts(listPosts);
     }
   }, [dispatch, listPosts]);
+
+  useEffect(() => {
+    if (pathname === `/profile/${userData?._id}`) {
+      document.title = `${userData?.firstName + " " + userData?.lastName} | Facebook Clone`;
+    } else {
+      document.title = `Facebook Clone`;
+    }
+  }, [pathname, userID, userData]);
   useEffect(() => {
     const getOwnPosts = async () => {
       setIsLoading(true);
-      if (currentUser) {
-        const onwID = jwtDecode<IJwtDecode>(currentUser.token).id;
-        const resPosts = await getPostById(onwID);
-        if (resPosts.status === 200) {
-          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
-            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
-          });
-          dispatch(setListPosts(sortedData));
-          setOwnPosts(sortedData);
-          setIsLoading(false);
-        }
-      } else {
-        const resProfile = await getProfileID(userID);
-        if (resProfile.status === 200) {
-          setUserData(resProfile.data.data);
-        }
-        const resPosts = await getPostById(userID);
-        if (resPosts.status === 200) {
-          const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
-            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
-          });
-          dispatch(setListPosts(sortedData));
-          setOwnPosts(sortedData);
-          setIsLoading(false);
-        }
+      const resProfile = await getProfileID(userID);
+      if (resProfile.status === 200) {
+        setUserData(resProfile.data.data);
+      }
+      const resPosts = await getPostById(userID);
+      if (resPosts.status === 200) {
+        const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+        });
+        dispatch(setListPosts(sortedData));
+        setOwnPosts(sortedData);
+        setIsLoading(false);
       }
     };
     getOwnPosts();
@@ -118,12 +120,12 @@ export default function ProfilePage() {
   return (
     <MainLayout>
       {isCreatePost && currentUser && <UploadPost />}
-      <div className='profile-page'>
+      <div className='profile-page' ref={profileRef}>
         <div className='profile-zone'>
           {viewPostData.isViewPost && <ViewPost />}
           <div className='profile-zone__header'>
             <div className='container-cover-photo'>
-              <img className='background-img' src={userData?.userCover} alt='' />
+              <img className='background-img' src={userData?.userCover.url} alt='' />
               <button className='add-cover'>
                 <BsFillCameraFill className='add-cover-icon' />
                 <p>Edit Cover Photo</p>
@@ -132,7 +134,7 @@ export default function ProfilePage() {
             <div className='container-info'>
               <div className='container-info__left'>
                 <div className='container-avatar'>
-                  <img src={userData?.userAvatar} alt='avatar' className='avatar-img' />
+                  <img src={userData?.userAvatar.url} alt='avatar' className='avatar-img' />
                   <button className='add-avatar'>
                     <BsFillCameraFill className='add-avatar-icon' />
                   </button>
@@ -140,17 +142,41 @@ export default function ProfilePage() {
                 <div className='container-side-info'>
                   <div className='container-user-info'>
                     <h1 className='username'>
-                      {userData?.fullName || userData?.firstName + " " + userData?.lastName}
+                      {userData?.firstName + " " + userData?.lastName}
                     </h1>
                     <h4 className='friends-number'>176 friends</h4>
-                    <AvatarGroup max={5} total={10} className='group-friends-avatar'>
-                      <Avatar src={userData?.userAvatar} alt='friend avatar' />
-                      <Avatar alt='friend avatar'>B</Avatar>
-                      <Avatar alt='friend avatar'>F</Avatar>
-                      <Avatar alt='friend avatar'>F</Avatar>
-                      <Avatar alt='friend avatar'>F</Avatar>
-                      <Avatar alt='friend avatar'>F</Avatar>
-                    </AvatarGroup>
+                    <div style={{ width: "fit-content" }}>
+                      <AvatarGroup max={5} total={175}>
+                        <Avatar
+                          src={userData?.userAvatar.url}
+                          alt='friend avatar'
+                          sx={{ width: 40, height: 40 }}
+                        />
+                        <Avatar
+                          src={userData?.userAvatar.url}
+                          alt='friend avatar'
+                          sx={{ width: 40, height: 40 }}
+                        />
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          B
+                        </Avatar>
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          F
+                        </Avatar>
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          F
+                        </Avatar>
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          E
+                        </Avatar>
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          F
+                        </Avatar>
+                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
+                          F
+                        </Avatar>
+                      </AvatarGroup>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -187,7 +213,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              {currentUser && <Upload />}
+              {currentUser === userData?._id && <Upload />}
               {isLoading ? (
                 <Post.PostLoading />
               ) : (
@@ -197,7 +223,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {true ?? <EditProfile />}
+      {/* {true && <EditProfile />} */}
     </MainLayout>
   );
 }

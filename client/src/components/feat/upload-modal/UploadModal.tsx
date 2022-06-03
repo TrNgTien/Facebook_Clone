@@ -1,6 +1,6 @@
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { memo, useState, useCallback, useEffect, useRef } from "react";
 import { MdPhotoLibrary } from "react-icons/md";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
@@ -20,7 +20,7 @@ const UploadModal = () => {
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
   const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
-
+  const inputFileRef = useRef<any>(null);
   const keyPress = useCallback(
     (e) => {
       if (e.key === "Escape" && isCreatePost) {
@@ -34,6 +34,11 @@ const UploadModal = () => {
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
+
+  const triggerOpenInputFile = () => {
+    // `current` points to the mounted file input element
+    inputFileRef.current.click();
+  };
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -122,7 +127,7 @@ const UploadModal = () => {
             <div className='upload-form__user'>
               <img
                 className='upload-form__user-avatar'
-                src={currentUser.userAvatar}
+                src={currentUser.userAvatar.url}
                 alt='avatar'
               />
               <p className='upload-form__username'>{currentUser.fullName}</p>
@@ -150,7 +155,10 @@ const UploadModal = () => {
                 </div>
               )}
             </div>
-            <div className='upload-form__file-input-container'>
+            <div
+              className='upload-form__file-input-container'
+              onClick={triggerOpenInputFile}
+            >
               <label className='file-input__label' htmlFor='inputFile'>
                 Add image to your post
               </label>
@@ -159,6 +167,7 @@ const UploadModal = () => {
               </label>
               <input
                 className='file-input__input'
+                ref={inputFileRef}
                 type='file'
                 name='input-file'
                 id='inputFile'

@@ -6,6 +6,11 @@ interface IAddFeed {
   imageBase64?: string | null;
   description?: string | null;
 }
+interface IUpdatePost {
+  idPost: string;
+  description: string;
+  token: string | null;
+}
 const AddPost = (reqBody: IAddFeed) => {
   const { ownerToken, imageBase64, description } = reqBody;
   let configHeader = {
@@ -28,11 +33,6 @@ const getAllFeed = (token: string | null) => {
   return axiosInstance.get(API_PATH.POST_GET, configHeader);
 };
 
-interface IUpdatePost {
-  idPost: string;
-  description: string;
-  token: string | null;
-}
 const updatePost = (reqBody: IUpdatePost) => {
   const { idPost, description, token } = reqBody;
   let configHeader = {
@@ -46,5 +46,13 @@ const updatePost = (reqBody: IUpdatePost) => {
     configHeader
   );
 };
+const deletePost = (idPost: string, token: string | null) => {
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.delete(`${API_PATH.POST_DELETE}/${idPost}`, configHeader);
+};
 
-export { AddPost, getAllFeed, updatePost };
+export { AddPost, getAllFeed, updatePost, deletePost };

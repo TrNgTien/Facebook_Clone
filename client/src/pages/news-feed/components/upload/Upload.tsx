@@ -1,7 +1,7 @@
 import React from "react";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { MdPhotoLibrary, MdTagFaces } from "react-icons/md";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { setIsCreatePost } from "@slices/PostSlice";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,7 +19,7 @@ const Upload = () => {
         <img
           onClick={() => navigate(`/profile/${id}`)}
           className='img-avatar'
-          src={currentUser.userAvatar}
+          src={currentUser.userAvatar.url}
           alt='avatar'
         />
         <div className='upload-input'>
