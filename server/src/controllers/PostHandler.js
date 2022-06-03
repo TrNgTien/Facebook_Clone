@@ -19,6 +19,8 @@ module.exports = {
     const userID = req.query.id;
     try {
       let userPost = await Post.find({ userID: userID });
+      let userReact = userPost[0].userReact;
+      console.log(userReact[0]);
       return res.status(200).json({
         userPosts: userPost,
       });
@@ -267,21 +269,17 @@ module.exports = {
       let { id } = req.params;
       let comment = await Comment.find({ feedID: id });
       let commentLength = comment.length;
-      console.log(commentLength);
-      let idUser = [];
       let commentData = [];
       for (let i = 0; i < commentLength; i++) {
         let id = comment[i].userID;
-        idUser.push(id);
-        for (let j = 0; j < idUser.length; j++) {
-          let user = await User.find({ "_id": idUser[j]});
-          commentData.push({
-            commentID: comment[i]._id,
-            commentContent: comment[i].commentContent,
-            userAvatarCommented: user[0].userAvatar.url,
-            userFullName: user[0].FirstName+" "+user[0].LastName,
-          })
-        }
+        let user = await User.find({ "_id": id});
+        console.log(user);
+        commentData.push({
+          commentID: comment[i]._id,
+          commentContent: comment[i].commentContent,
+          userAvatarCommented: user[0].userAvatar.url,
+          userFullName: user[0].firstName+" "+user[0].lastName,
+        })
       }
       return res.status(200).json({
         commentData: commentData,
