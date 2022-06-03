@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 import API_PATH from "@constants/API_PATH";
+import ENV_API from "@environment/environment";
 import {
   deleteLocalStorage,
   setLocalStorage,
@@ -13,13 +14,7 @@ interface IAxios {
   headers?: any;
 }
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/",
-  timeout: 30000,
-  headers: {
-    "Content-Type": "application/json;charset=utf-8",
-  },
-});
+const axiosInstance = axios.create(ENV_API);
 
 axiosInstance.interceptors.request.use(
   async (config: IAxios) => {

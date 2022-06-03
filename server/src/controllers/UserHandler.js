@@ -2,7 +2,10 @@ const User = require("../model/User");
 const authentication = require("../middleware/Authentication");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const AWS = require("aws-sdk");
+const bluebird = require("bluebird");
 const cloudinary = require("../utils/cloudinary");
+const { v4: uuidv4 } = require("uuid");
 require("../utils/multer");
 
 module.exports = {
@@ -93,8 +96,8 @@ module.exports = {
             fullName: user.firstName+" "+user.lastName,
             DOB: user.DOB,
             hobbies: user.hobbies,
-            intro: user.intro
-          }
+            intro: user.intro,
+          },
         });
       }
     } catch (error) {
@@ -163,22 +166,53 @@ module.exports = {
   },
   updateAvatar: async (req, res) => {
     try {
-      let {userAvatar} = req.body;
+      let base64 = req.body.userAvatar;
+      let suffixes = uuidv4();
       let { id } = req.params;
       if (req.user.id === id) {
-        let uploadResponse = await cloudinary.uploader.upload(userAvatar, {
-          folder: "Facebook Clone/Avatar",
+        const {AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME} = process.env;
+
+        // Configure AWS to use promise
+        AWS.config.setPromisesDependency(bluebird);
+        AWS.config.update({
+          accessKeyId: AWS_ACCESS_KEY,
+          secretAccessKey: AWS_SECRET_KEY,
+          region: AWS_BUCKET_REGION,
         });
-        let userAvatarUrl = uploadResponse.secure_url;
-        let userAvatarPublicID = uploadResponse.public_id;
+
+        // Create an s3 instance
+        const s3 = new AWS.S3();
+
+        // Ensure that you POST a base64 data to your server.
+        // Let's assume the variable "base64" is one.
+        const base64Data = new Buffer.from(
+          base64.replace(/^data:image\/\w+;base64,/, ""),
+          "base64"
+        );
+
+        // Getting the file type, ie: jpeg, png or gif
+        const type = base64.split(";")[0].split("/")[1];
+        const params = {
+          Bucket: AWS_BUCKET_NAME,
+          Key: `avatar/${req.user.id}-${suffixes}`, // type is not required
+          Body: base64Data,
+          // ACL: 'public-read',
+          ContentEncoding: "base64", // required
+          ContentType: `image/jpeg`, // required. Notice the back ticks
+        };
+        let location = "";
+        let key = "";
+        const { Location, Key } = await s3.upload(params).promise();
+        location = Location;
+        key = Key;
         await User.findByIdAndUpdate(
           id,
           {
             userAvatar: {
-              url: userAvatarUrl,
-              publicID: userAvatarPublicID,
-            }}
-          ,
+              url: location,
+              publicID: key,
+            },
+          },
           {
             new: true,
           }
@@ -199,20 +233,51 @@ module.exports = {
   },
   updateCover: async (req, res) => {
     try {
-      let {userCover} = req.body;
+      let base64 = req.body.userCover;
+      let suffixes = uuidv4();
       let { id } = req.params;
       if (req.user.id === id) {
-        let uploadResponse = await cloudinary.uploader.upload(userCover, {
-          folder: "Facebook Clone/Cover",
+        const {AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME} = process.env;
+
+        // Configure AWS to use promise
+        AWS.config.setPromisesDependency(bluebird);
+        AWS.config.update({
+          accessKeyId: AWS_ACCESS_KEY,
+          secretAccessKey: AWS_SECRET_KEY,
+          region: AWS_BUCKET_REGION,
         });
-        let userCoverUrl = uploadResponse.secure_url;
-        let userCoverPublicID = uploadResponse.public_id;
+
+        // Create an s3 instance
+        const s3 = new AWS.S3();
+
+        // Ensure that you POST a base64 data to your server.
+        // Let's assume the variable "base64" is one.
+        const base64Data = new Buffer.from(
+          base64.replace(/^data:image\/\w+;base64,/, ""),
+          "base64"
+        );
+
+        // Getting the file type, ie: jpeg, png or gif
+        const type = base64.split(";")[0].split("/")[1];
+        const params = {
+          Bucket: AWS_BUCKET_NAME,
+          Key: `cover/${req.user.id}-${suffixes}`, // type is not required
+          Body: base64Data,
+          // ACL: 'public-read',
+          ContentEncoding: "base64", // required
+          ContentType: `image/jpeg`, // required. Notice the back ticks
+        };
+        let location = "";
+        let key = "";
+        const { Location, Key } = await s3.upload(params).promise();
+        location = Location;
+        key = Key;
         await User.findByIdAndUpdate(
           id,
           {
             userCover: {
-              url: userCoverUrl,
-              publicID: userCoverPublicID,
+              url: location,
+              publicID: key,
             },
           },
           {
@@ -251,6 +316,58 @@ module.exports = {
         });
       }
     } catch (error) {
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  addFriend: async (req, res) => {
+    try{
+      let { friendID } = req.params;
+      let userID = req.user.id;
+      let user = await User.findOne({ _id: userID });
+      await user.updateOne({$push: {friends: friendID}});
+      return res.status(200).json({
+        message: "Add friend successfully!",
+      })
+    }
+    catch(error){
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  getFriends: async (req, res, next) => {
+    try{
+      let id = req.user.id;
+      let user = await User.findOne({ _id: id });
+      let friendList = user.friends;
+      return res.status(200).json({
+        friends: friendList,
+      })
+    } 
+    catch(error){
+      console.log(error);
+      return res.status(500).json("Internal server error");
+    }
+  },
+  getFriendsOfUser: async (req, res) => {
+    let { ownId } = req.params;
+    let user = await User.findOne({ _id: ownId });
+    let friendList = user.friends;
+    return res.status(200).json({
+      friends: friendList,
+    });
+  },
+  deleteFriends: async (req, res) => {
+    try{
+      let { friendID } = req.params;
+      let userID = req.user.id;
+      let user = await User.findOne({ _id: userID });
+      await user.updateOne({$pull: {friends: friendID}});
+      return res.status(200).json({
+        message: "Delete friend successfully!",
+      });
+    }
+    catch(error){
       console.log(error);
       return res.status(500).json("Internal server error");
     }

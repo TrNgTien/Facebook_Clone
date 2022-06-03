@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./styles/messagesPage.scss";
 import { MainLayout } from "@components/common/layout/index";
 import MessagesList from "./MessagesList";
 import MessagingArea from "./MessagingArea";
 import UserInfoSide from "./UserInfoSide";
-import { io } from "socket.io-client";
 
 const MessagesPage = () => {
   return (
