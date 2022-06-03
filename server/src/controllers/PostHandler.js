@@ -1,4 +1,5 @@
 const Post = require("../model/Post");
+const User =  require("../model/User");
 const Comment = require("../model/Comment");
 const { v4: uuidv4 } = require("uuid");
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
@@ -238,7 +239,7 @@ module.exports = {
         else if (comment.commentContent === ""){
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
-          deleteS3(comment.commentAttachments.publicID);
+          await deleteS3(comment.commentAttachments.publicID);
           return res.status(200).json({
             message: "Delete successfully",
           });
@@ -246,7 +247,7 @@ module.exports = {
         else{
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
-          deleteS3(comment.commentAttachments.publicID);
+          await deleteS3(comment.commentAttachments.publicID);
           return res.status(200).json({
             message: "Delete successfully",
           });
@@ -265,9 +266,26 @@ module.exports = {
     try {
       let { id } = req.params;
       let comment = await Comment.find({ feedID: id });
+      let commentLength = comment.length;
+      console.log(commentLength);
+      let idUser = [];
+      let commentData = [];
+      for (let i = 0; i < commentLength; i++) {
+        let id = comment[i].userID;
+        idUser.push(id);
+        for (let j = 0; j < idUser.length; j++) {
+          let user = await User.find({ "_id": idUser[j]});
+          commentData.push({
+            commentID: comment[i]._id,
+            commentContent: comment[i].commentContent,
+            userAvatarCommented: user[0].userAvatar.url,
+            userFullName: user[0].FirstName+" "+user[0].LastName,
+          })
+        }
+      }
       return res.status(200).json({
-        data: comment,
-      });
+        commentData: commentData,
+      })
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");

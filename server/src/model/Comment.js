@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const id = new mongoose.Types.ObjectId().toString();
 
 const commentSchema = new mongoose.Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString(),
+        default: id,
     }, 
     commentContent: {
         type: String,
@@ -18,7 +18,7 @@ const commentSchema = new mongoose.Schema({
         },
     },
     userID: {
-        type: ObjectId,
+        type: String,
         required: true, 
     },
     feedID:{

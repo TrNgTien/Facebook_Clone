@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const picture = require('../constant/ConstantPicture');
+const id = new mongoose.Types.ObjectId().toString(); 
 
 const userSchema = new mongoose.Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString(),
+        default: id,
     },
     userType: {
         type: Number,

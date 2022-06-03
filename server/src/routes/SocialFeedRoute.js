@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const feedHandler = require("../controllers/FeedHandler");
+const feedHandler = require("../controllers/PostHandler");
 const { Authentication } = require("../middleware/Authentication");
 
 router.post("/addPost", Authentication, feedHandler.addPost);

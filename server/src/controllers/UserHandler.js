@@ -2,11 +2,8 @@ const User = require("../model/User");
 const authentication = require("../middleware/Authentication");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const AWS = require("aws-sdk");
-const bluebird = require("bluebird");
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
 const { v4: uuidv4 } = require("uuid");
-require("../utils/multer");
 
 module.exports = {
   register: async (req, res) => {

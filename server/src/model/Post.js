@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
-
+const id = new mongoose.Types.ObjectId().toString();
 const postSchema = new mongoose.Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString(),
+        default: id,
     },
     description: {
         type: String,
@@ -30,7 +29,7 @@ const postSchema = new mongoose.Schema({
         default: 0,
     },
     userID: {
-        type: ObjectId,
+        type: String,
         required: true,
     },
     userReact: {
