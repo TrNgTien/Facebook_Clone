@@ -61,7 +61,7 @@ export default function NewsFeed() {
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
             {currentUser && <Upload />}
             {isLoading ? (
-              <h1>Loading...</h1>
+              <Post.PostLoading/>
             ) : (
               postData.map((post, index: number) => <Post key={index} postData={post} />)
             )}

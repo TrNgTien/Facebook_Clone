@@ -14,7 +14,7 @@ interface IAxios {
 }
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3334/",
+  baseURL: "http://localhost:8080/",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json;charset=utf-8",

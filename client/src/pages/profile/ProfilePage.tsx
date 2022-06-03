@@ -17,6 +17,7 @@ import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
 
 import "./styles/ProfilePage.scss";
+import EditProfile from "./EditProfile";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -188,7 +189,7 @@ export default function ProfilePage() {
             <div className='profile-body__right'>
               {currentUser && <Upload />}
               {isLoading ? (
-                <h1>Loading...</h1>
+                <Post.PostLoading />
               ) : (
                 ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
               )}
@@ -196,6 +197,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      {true ?? <EditProfile />}
     </MainLayout>
   );
 }

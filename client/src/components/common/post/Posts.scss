@@ -7,19 +7,23 @@
 	padding-top: 13px;
 	margin-top: 15px;
 	box-shadow: 0px 5px 8px -1px rgba(0, 0, 0, 0.3);
+
 	.divider {
 		@include divider;
 	}
+
 	.container__top {
 		display: flex;
 		align-items: center;
 		position: relative;
 		padding: 0px 15px;
+
 		.three-dot__icon {
 			margin-left: auto;
 			border-radius: 50%;
 			font-size: 20px;
 			padding: 4px 8px;
+
 			&:hover {
 				cursor: pointer;
 				transition: linear 0.3s;
@@ -28,6 +32,7 @@
 				font-size: 20px;
 				padding: 4px 8px;
 			}
+
 			&:active {
 				cursor: pointer;
 				background-color: rgb(234, 230, 230);
@@ -35,46 +40,96 @@
 				padding: 6px;
 			}
 		}
+
 		.img-avatar {
 			width: 40px;
 			height: 40px;
-			cursor: pointer;
 			margin-right: 10px;
 			border-radius: 30px;
 			cursor: pointer;
+
+			&.skeleton {
+				min-height: 40px;
+				min-width: 40px;
+				border-radius: 30px;
+			}
 		}
+
 		.container__top-info {
-			h4 {
+			.container__top-username {
 				font-size: medium;
 				cursor: pointer;
+
+				&.skeleton {
+					height: 15px;
+					width: 170px;
+					margin-bottom: 5px;
+				}
 			}
-			p {
+
+			.container__top-timestamp {
 				font-size: small;
 				color: gray;
+
+				&.skeleton {
+					height: 10px;
+					width: 120px;
+				}
 			}
+
 		}
 	}
+
 	.container__content {
 		padding: 10px 15px;
+
 		.caption-post {
 			font-size: 15px;
+
 			&:hover {
 				cursor: pointer;
 				opacity: 0.8;
 			}
 		}
 	}
+
 	.container__img {
+		width: 100%;
 		cursor: pointer;
+
 		.img-content {
 			width: 100%;
 		}
+
+		&.skeleton {
+			height: 300px;
+		}
 	}
+
 	.container__status {
 		display: flex;
 		justify-content: space-between;
 		padding: 5px 10px;
 		font-size: 15px;
 		color: rgb(105, 105, 105);
+	}
+}
+
+.skeleton {
+	background-color: #e2e5e7;
+	background-image:
+		linear-gradient(90deg,
+			rgba(#fff, 0),
+			rgba(#fff, 0.5),
+			rgba(#fff, 0));
+	background-size: 40px 100%;
+	background-repeat: no-repeat;
+	background-position: left -40px top 0;
+	animation: shine 1s ease infinite;
+}
+
+@keyframes shine {
+	to {
+		background-position: right -40px top 0;
 	}
 }
