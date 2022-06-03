@@ -3,7 +3,7 @@ import { Avatar, AvatarGroup } from "@mui/material";
 import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 

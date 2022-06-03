@@ -6,7 +6,7 @@ import { getAllFeed } from "@services/NewsFeedService";
 import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
@@ -31,15 +31,18 @@ export default function NewsFeed() {
     const userToken = getLocalStorage("token");
     const getPostData = async () => {
       setIsLoading(true);
-      const dataPost = await getAllFeed(userToken);
-      if (dataPost.status === 200) {
-        const sortedData = dataPost.data.data.sort((a: any, b: any) => {
-          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+      await getAllFeed(userToken)
+        .then((dataPost) => {
+          const sortedData = dataPost.data.data.sort((a: any, b: any) => {
+            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
+          });
+          dispatch(setListPosts(sortedData));
+          setPostData(sortedData);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setIsLoading(false);
         });
-        dispatch(setListPosts(sortedData));
-        setPostData(sortedData);
-        setIsLoading(false);
-      }
     };
     getPostData();
   }, [dispatch]);
@@ -61,9 +64,11 @@ export default function NewsFeed() {
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
             {currentUser && <Upload />}
             {isLoading ? (
-              <Post.PostLoading/>
-            ) : (
+              <Post.PostLoading />
+            ) : postData.length > 0 ? (
               postData.map((post, index: number) => <Post key={index} postData={post} />)
+            ) : (
+              <h1 style={{ marginTop: "5%" }}>No Post Yet</h1>
             )}
           </div>
           <div className='list-friends'>

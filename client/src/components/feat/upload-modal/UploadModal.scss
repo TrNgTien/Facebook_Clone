@@ -116,6 +116,16 @@
 				display: flex;
 				justify-content: space-between;
 				align-content: center;
+				&:hover {
+					cursor: pointer;
+					border: 0.1px solid #ced0d4;
+					border-radius: 7px;
+					margin: 10px 0px;
+					padding: 10px 20px;
+					display: flex;
+					justify-content: space-between;
+					align-content: center;
+				}
 				.file-input__label {
 					margin-top: 4px;
 					font-size: 13px;

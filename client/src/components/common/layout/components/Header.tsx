@@ -6,7 +6,7 @@ import { TiArrowSortedDown } from "react-icons/ti";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import FacebookLogo from "@assets/icons/icons8-facebook.svg";
 import "./Header.scss";
-import { useAppSelector } from "@store/hooks";
+import { useAppSelector } from "@hooks/useStore";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
 const Header = () => {
@@ -72,7 +72,7 @@ const Header = () => {
             }
             onClick={() => navigate(`/profile/${onwIdUser}`)}
           >
-            <img className='img-avatar' src={currentUser.userAvatar} alt='avatar' />
+            <img className='img-avatar' src={currentUser.userAvatar.url} alt='avatar' />
             <p className='header__user-name'>{currentUser.fullName}</p>
           </div>
           <div className='header__option'>

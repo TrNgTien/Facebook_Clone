@@ -3,7 +3,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { LoginReq } from "@services/AuthService";
-import { useAppDispatch } from "@store/hooks";
+import { useAppDispatch } from "@hooks/useStore";
 import { setLoginSuccess } from "@slices/AuthenSlice";
 import { IShowPass } from "@constants/InterfaceModel";
 import { setLocalStorage } from "@utils/LocalStorageUtil";
@@ -32,17 +32,18 @@ export default function LoginPage() {
         userName: userName,
         password: password,
       };
-      const loginRes = await LoginReq(userData);
-      if (loginRes.status === 200) {
-        setLocalStorage("token", loginRes.data.dataUser.token);
-        setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
-        dispatch(setLoginSuccess(loginRes.data.dataUser));
-        setIsLoadingLogin(false);
-        navigate("/feeds");
-      } else if (loginRes.status === 400) {
-        setIsLoadingLogin(false);
-        alert("Wrong username or password!");
-      }
+      await LoginReq(userData)
+        .then((loginRes) => {
+          setLocalStorage("token", loginRes.data.dataUser.token);
+          setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
+          dispatch(setLoginSuccess(loginRes.data.dataUser));
+          setIsLoadingLogin(false);
+          navigate("/feeds");
+        })
+        .catch((err) => {
+          setIsLoadingLogin(false);
+          alert("Wrong username or password!");
+        });
     }
   };
   const onPressLogin = async () => {
@@ -51,17 +52,18 @@ export default function LoginPage() {
       userName: userName,
       password: password,
     };
-    const loginRes = await LoginReq(userData);
-    if (loginRes.status === 200) {
-      dispatch(setLoginSuccess(loginRes.data.dataUser));
-      setLocalStorage("token", loginRes.data.dataUser.token);
-      setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
-      setIsLoadingLogin(false);
-      navigate("/feeds");
-    } else {
-      setIsLoadingLogin(false);
-      alert("Login failed");
-    }
+    await LoginReq(userData)
+      .then((loginRes) => {
+        setLocalStorage("token", loginRes.data.dataUser.token);
+        setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
+        dispatch(setLoginSuccess(loginRes.data.dataUser));
+        setIsLoadingLogin(false);
+        navigate("/feeds");
+      })
+      .catch((err) => {
+        setIsLoadingLogin(false);
+        alert("Wrong username or password!");
+      });
   };
 
   return (

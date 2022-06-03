@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getProfileID } from "@services/ProfileService";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { BsThreeDots } from "react-icons/bs";
 import { setViewPost } from "@slices/PostSlice";
 import "./Posts.scss";

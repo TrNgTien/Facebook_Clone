@@ -6,6 +6,11 @@ interface IAddFeed {
   imageBase64?: string | null;
   description?: string | null;
 }
+interface IUpdatePost {
+  idPost: string;
+  description: string;
+  token: string | null;
+}
 const AddPost = (reqBody: IAddFeed) => {
   const { ownerToken, imageBase64, description } = reqBody;
   let configHeader = {
