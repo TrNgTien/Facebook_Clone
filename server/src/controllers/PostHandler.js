@@ -7,8 +7,43 @@ module.exports = {
   getPost: async (req, res) => {
     try {
       let allPost = await Post.find();
+      let allPostLength = allPost.length;
+      let postData = {};
+      let allPostData = [];
+      for (let i = 0; i < allPostLength; i++) {
+        let user = await User.findOne({ _id: allPost[i].userID });
+        let userReact = allPost[i].userReact;
+        let userReactLength = userReact.length;
+        if (userReactLength > 0) {
+          let likedPost = [];
+          for (let j = 0; j < userReactLength; j++) {
+            let userReactInfo = await User.findOne({_id: userReact[j]});
+            likedPost.push({
+              userAvatarLiked: userReactInfo.userAvatar.url,
+              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userID: userReactInfo._id,
+            });
+            postData = {
+              postID: allPost[i].postID,
+              description: allPost[i].description,
+              postAttachments: allPost[i].postAttachments,
+              userAvatarPosted: user.userAvatar.url,
+            }
+          }
+          allPostData.push({postData: postData}, {likedPost: likedPost});
+        }
+        else {
+          postData = {
+            postID: allPost[i].postID,
+            description: allPost[i].description,
+            postAttachments: allPost[i].postAttachments,
+            userAvatarPosted: user.userAvatar.url,
+         }
+         allPostData.push({postData: postData});
+        }
+      }
       return res.status(200).json({
-        data: allPost,
+        data: allPostData
       });
     } catch (error) {
       console.log(error);
@@ -19,10 +54,43 @@ module.exports = {
     const userID = req.query.id;
     try {
       let userPost = await Post.find({ userID: userID });
-      let userReact = userPost[0].userReact;
-      console.log(userReact[0]);
+      let userPostLength = userPost.length;
+      let postData = {};
+      let allUserPost = [];
+      for (let i = 0; i < userPostLength; i++) {
+        let user = await User.findOne({ _id: userPost[i].userID });
+        let userReact = userPost[i].userReact;
+        let userReactLength = userReact.length;
+        if (userReactLength > 0){
+          let likedPost = [];
+          for (let j = 0; j < userReactLength; j++) {
+            let userReactInfo = await User.findOne({_id: userReact[j]});
+            likedPost.push({
+              userAvatarLiked: userReactInfo.userAvatar.url,
+              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userID: userReactInfo._id,
+            })
+            postData = {
+              postID: userPost[i].postID,
+              description: userPost[i].description,
+              postAttachments: userPost[i].postAttachments,
+              userAvatarPosted: user.userAvatar.url,
+            }
+          }
+          allUserPost.push({postData: postData}, {likedPost: likedPost});
+        }
+        else{
+          postData = {
+            postID: userPost[i].postID,
+            description: userPost[i].description,
+            postAttachments: userPost[i].postAttachments,
+            userAvatarPosted: user.userAvatar.url,
+          }
+          allUserPost.push({postData: postData});
+        }
+      }
       return res.status(200).json({
-        userPosts: userPost,
+        data: allUserPost
       });
     } catch (error) {
       console.log(error);
@@ -35,7 +103,7 @@ module.exports = {
       let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
       let key = `post/${req.user.id}-${suffixes}`
-      if (postAttachments === "") {
+      if (typeof(postAttachments) === "undefined") {
         let newPost = new Post({
           description: description,
           postAttachments: {
@@ -50,7 +118,7 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      } else if (description === "") {
+      } else if (typeof(description) === "undefined") {
         let uploadResponse = await uploadS3(key, postAttachments);
         let newPost = new Post({
           description: "",
@@ -168,7 +236,7 @@ module.exports = {
       let suffixes = uuidv4();
       let key = `comment/${req.user.id}-${suffixes}`;
       let post = await Post.findOne({"_id": id});
-      if (commentAttachments === "") {
+      if (typeof(commentAttachments) === "undefined") {
         let comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
@@ -184,7 +252,7 @@ module.exports = {
           message: "Comment successfully",
           id: comment._id,
         });
-      } else if (commentContent === "") {
+      } else if (typeof(commentContent) === "undefined") {
         let uploadResponse = await uploadS3(key, commentAttachments);
         let comment = new Comment({
           commentContent: "",

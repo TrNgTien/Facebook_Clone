@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
-const id = new mongoose.Types.ObjectId().toString();
+const { v4: uuidv4 } = require("uuid");
 
 const commentSchema = new mongoose.Schema({
     _id: {
         type: String,
-        default: id,
+        required: true,
+        default: () => uuidv4(),
     }, 
     commentContent: {
         type: String,
