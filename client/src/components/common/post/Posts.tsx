@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getProfileID } from "@services/ProfileService";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { BsThreeDots } from "react-icons/bs";
 import { setViewPost } from "@slices/PostSlice";
 import "./Posts.scss";
@@ -31,8 +31,8 @@ function Post({ postData }: IProps) {
       <div className='container__top'>
         <img className='img-avatar' src={posterData?.userAvatar} alt='avatar' />
         <div className='container__top-info'>
-          <h4>{posterData?.firstName + " " + posterData?.lastName}</h4>
-          <p>{convertedTime}</p>
+          <h4 className="container__top-username">{posterData?.firstName + " " + posterData?.lastName}</h4>
+          <p className="container__top-timestamp">{convertedTime}</p>
         </div>
         <i className='three-dot__icon'>
           <BsThreeDots />
@@ -93,5 +93,33 @@ function Post({ postData }: IProps) {
     </div>
   );
 }
+
+const PostLoading = () => {
+  return (
+    <div className='container' id='container-post'>
+      <div className='container__top'>
+        <div className='img-avatar skeleton'></div>
+        <div className='container__top-info '>
+          <div className="container__top-username skeleton"></div>
+          <div className="container__top-timestamp skeleton"></div>
+        </div>
+        <i className='three-dot__icon'>
+          <BsThreeDots />
+        </i>
+      </div>
+      <div className='container__content'>
+        <p className="caption-post skeleton"></p>
+      </div>
+      <div className='container__img skeleton' id='content-img'></div>
+      <div className='container__status'>
+        <p></p>
+        <p></p>
+      </div>
+      <hr className='divider' />
+    </div>
+  )
+}
+
+Post.PostLoading = PostLoading;
 
 export default Post;

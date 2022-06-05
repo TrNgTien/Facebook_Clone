@@ -2,11 +2,8 @@ const User = require("../model/User");
 const authentication = require("../middleware/Authentication");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const AWS = require("aws-sdk");
-const bluebird = require("bluebird");
-const cloudinary = require("../utils/cloudinary");
+const { uploadS3, deleteS3 } = require("../middleware/s3Services");
 const { v4: uuidv4 } = require("uuid");
-require("../utils/multer");
 
 module.exports = {
   register: async (req, res) => {
@@ -121,7 +118,19 @@ module.exports = {
       let { id } = req.params;
       let userInfo = await User.findOne({ _id: id });
       return res.status(200).json({
-        data: userInfo,
+        data: {
+          _id: userInfo._id,
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          DOB: userInfo.DOB,
+          gender: userInfo.gender,
+          biography: userInfo.biography,
+          hobbies: userInfo.hobbies,
+          intro: userInfo.intro,
+          friends: userInfo.friends,
+          userAvatar: userInfo.userAvatar,
+          userCover: userInfo.userCover
+        },
       });
     } catch (error) {
       console.log(error);
@@ -168,49 +177,16 @@ module.exports = {
     try {
       let base64 = req.body.userAvatar;
       let suffixes = uuidv4();
+      let key = `avatar/${req.user.id}-${suffixes}`;
       let { id } = req.params;
       if (req.user.id === id) {
-        const {AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME} = process.env;
-
-        // Configure AWS to use promise
-        AWS.config.setPromisesDependency(bluebird);
-        AWS.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          region: AWS_BUCKET_REGION,
-        });
-
-        // Create an s3 instance
-        const s3 = new AWS.S3();
-
-        // Ensure that you POST a base64 data to your server.
-        // Let's assume the variable "base64" is one.
-        const base64Data = new Buffer.from(
-          base64.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-
-        // Getting the file type, ie: jpeg, png or gif
-        const type = base64.split(";")[0].split("/")[1];
-        const params = {
-          Bucket: AWS_BUCKET_NAME,
-          Key: `avatar/${req.user.id}-${suffixes}`, // type is not required
-          Body: base64Data,
-          // ACL: 'public-read',
-          ContentEncoding: "base64", // required
-          ContentType: `image/jpeg`, // required. Notice the back ticks
-        };
-        let location = "";
-        let key = "";
-        const { Location, Key } = await s3.upload(params).promise();
-        location = Location;
-        key = Key;
+        let uploadResponse = await uploadS3(key, base64);
         await User.findByIdAndUpdate(
           id,
           {
             userAvatar: {
-              url: location,
-              publicID: key,
+              url: uploadResponse.locationS3,
+              publicID: uploadResponse.keyS3,
             },
           },
           {
@@ -221,7 +197,6 @@ module.exports = {
           message: "Update successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "Only edit personal profiles",
         });
@@ -235,49 +210,16 @@ module.exports = {
     try {
       let base64 = req.body.userCover;
       let suffixes = uuidv4();
+      let key = `cover/${req.user.id}-${suffixes}`;
       let { id } = req.params;
       if (req.user.id === id) {
-        const {AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_BUCKET_REGION, AWS_BUCKET_NAME} = process.env;
-
-        // Configure AWS to use promise
-        AWS.config.setPromisesDependency(bluebird);
-        AWS.config.update({
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey: AWS_SECRET_KEY,
-          region: AWS_BUCKET_REGION,
-        });
-
-        // Create an s3 instance
-        const s3 = new AWS.S3();
-
-        // Ensure that you POST a base64 data to your server.
-        // Let's assume the variable "base64" is one.
-        const base64Data = new Buffer.from(
-          base64.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-
-        // Getting the file type, ie: jpeg, png or gif
-        const type = base64.split(";")[0].split("/")[1];
-        const params = {
-          Bucket: AWS_BUCKET_NAME,
-          Key: `cover/${req.user.id}-${suffixes}`, // type is not required
-          Body: base64Data,
-          // ACL: 'public-read',
-          ContentEncoding: "base64", // required
-          ContentType: `image/jpeg`, // required. Notice the back ticks
-        };
-        let location = "";
-        let key = "";
-        const { Location, Key } = await s3.upload(params).promise();
-        location = Location;
-        key = Key;
+        let uploadResponse = await uploadS3(key, base64);
         await User.findByIdAndUpdate(
           id,
           {
             userCover: {
-              url: location,
-              publicID: key,
+              url: uploadResponse.locationS3,
+              publicID: uploadResponse.keyS3,
             },
           },
           {
@@ -300,19 +242,19 @@ module.exports = {
   },
   deleteUser: async (req, res) => {
     try {
-      let { id } = req.params;
-      let user = await User.findOne({ _id: id });
-      if (req.user.id === id) {
-        await User.findByIdAndDelete(id);
-        await cloudinary.uploader.destroy(user.userAvatar.publicID);
-        await cloudinary.uploader.destroy(user.userCover.publicID);
+      let { userID } = req.params;
+      let user = await User.findOne({ _id: userID });
+      if (req.user.id === userID || req.user.role === 0) {
+        await user.remove();
+        await deleteS3(user.userAvatar.publicID);
+        await deleteS3(user.userCover.publicID);
         return res.status(200).json({
           message: "Delete successfully!",
         });
       } else {
         console.log(req.user.toString());
         return res.status(401).json({
-          message: "Only edit personal profiles",
+          message: "You are not allowed",
         });
       }
     } catch (error) {

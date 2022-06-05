@@ -1,6 +1,6 @@
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { memo, useState, useCallback, useEffect, useRef } from "react";
 import { MdPhotoLibrary } from "react-icons/md";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
@@ -20,7 +20,7 @@ const UploadModal = () => {
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
   const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
-
+  const inputFileRef = useRef<any>(null);
   const keyPress = useCallback(
     (e) => {
       if (e.key === "Escape" && isCreatePost) {
@@ -34,6 +34,10 @@ const UploadModal = () => {
     document.addEventListener("keydown", keyPress);
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
+
+  const triggerOpenInputFile = () => {
+    inputFileRef.current.click();
+  };
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -150,7 +154,10 @@ const UploadModal = () => {
                 </div>
               )}
             </div>
-            <div className='upload-form__file-input-container'>
+            <div
+              className='upload-form__file-input-container'
+              onClick={triggerOpenInputFile}
+            >
               <label className='file-input__label' htmlFor='inputFile'>
                 Add image to your post
               </label>
@@ -161,6 +168,7 @@ const UploadModal = () => {
                 className='file-input__input'
                 type='file'
                 name='input-file'
+                ref={inputFileRef}
                 id='inputFile'
                 accept='image/x-png,image/gif,image/jpeg'
                 onChange={handlePreviewFile}

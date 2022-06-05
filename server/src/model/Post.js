@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
-
+const { v4: uuidv4 } = require("uuid");
+const id = uuidv4();
 const postSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+        default: () => uuidv4(),
+    },
     description: {
         type: String,
         required: true,
@@ -26,7 +31,7 @@ const postSchema = new mongoose.Schema({
         default: 0,
     },
     userID: {
-        type: ObjectId,
+        type: String,
         required: true,
     },
     userReact: {

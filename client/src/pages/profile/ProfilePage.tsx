@@ -3,7 +3,7 @@ import { Avatar, AvatarGroup } from "@mui/material";
 import { BsFillCameraFill } from "react-icons/bs";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
-import { useAppSelector, useAppDispatch } from "@store/hooks";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -17,6 +17,7 @@ import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
 
 import "./styles/ProfilePage.scss";
+import EditProfile from "./EditProfile";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -188,7 +189,7 @@ export default function ProfilePage() {
             <div className='profile-body__right'>
               {currentUser && <Upload />}
               {isLoading ? (
-                <h1>Loading...</h1>
+                <Post.PostLoading />
               ) : (
                 ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
               )}
@@ -196,6 +197,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      {true ?? <EditProfile />}
     </MainLayout>
   );
 }

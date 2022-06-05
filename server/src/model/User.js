@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 const picture = require('../constant/ConstantPicture');
+const { v4: uuidv4 } = require("uuid");
+const id = uuidv4(); 
 
 const userSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+        default: () => uuidv4(),
+    },
     userType: {
         type: Number,
         default: 1,
@@ -10,14 +17,14 @@ const userSchema = new mongoose.Schema({
         type: Object,
         default: {
             url: picture.BLANK_AVATAR,
-            public_id: "",
+            publicID: "",
         },
     },
     userCover: {
         type: Object,
         default: {
             url: picture.BLANK_COVER,
-            public_id: "",
+            publicID: "",
         },
     },
     biography: {

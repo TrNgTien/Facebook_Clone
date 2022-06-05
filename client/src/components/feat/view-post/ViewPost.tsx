@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Comments from "@components/common/comment-bubble/Comments";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { useAppDispatch, useAppSelector } from "@hooks/useStore";
 import { setViewPost } from "@slices/PostSlice";
 import { MdEdit } from "react-icons/md";
 import InteractionPost from "../post-features/InteractionPost";

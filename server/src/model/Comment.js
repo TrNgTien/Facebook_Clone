@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const { v4: uuidv4 } = require("uuid");
 
-const commentSchema = new mongoose.Schema({ 
+const commentSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+        default: () => uuidv4(),
+    }, 
     commentContent: {
         type: String,
         required: true,
@@ -14,7 +19,7 @@ const commentSchema = new mongoose.Schema({
         },
     },
     userID: {
-        type: ObjectId,
+        type: String,
         required: true, 
     },
     feedID:{

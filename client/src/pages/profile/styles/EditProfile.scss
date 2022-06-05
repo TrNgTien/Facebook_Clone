@@ -1,0 +1,131 @@
+@import "@styles/mixin.scss";
+
+.edit-profile-page{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(225, 225, 225, 0.7);
+    
+    .edit-profile-background{
+        height: 100vh;
+        
+        .edit-profile-container{
+            
+            position: absolute;
+            left: 25%;
+            top: 10%;
+            background-color: var(--white);
+            border-radius: 5px;
+            width: 630px;
+            height: fit-content;
+            padding: 5px 0px;
+            
+            .edit-profile-container__header{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 8px 0px;
+
+                .header__container-title{
+                    .header__title-tag{
+                        font-size: 18px;
+                        font-weight: 600;
+                    }
+                }
+                .header__container-close-btn{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    padding: 15px;
+                    margin: 15px;
+                    background-color: var(--secondary-bubble-chat);
+                    cursor: pointer;
+                    .header__close-btn{
+                    
+                    }
+                }
+            }
+            .divider {
+                @include divider;
+            }
+            .edit-profile-container__body{
+                width: 100%;
+                padding: 0px 10px;
+                .body__container-profile-field{
+                    .profile-field__container-title{
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 16px;
+
+                        .profile-field__title-tag{
+                            font-size: 18px;
+                            font-weight: 600;
+                        }
+                        .profile-field__functional-btn{
+                            color: var(--primary-color);
+                            border-radius: 5px;
+                            padding: 5px;
+                            font-size: 15px;
+                            background-color: transparent;
+                            outline: none;
+                            border: none;
+                            cursor: pointer;
+                            &:hover{
+                                background-color: var(--secondary-bubble-chat);
+                            }
+                        }
+                    }
+                    .profile-field__container-content{
+                        display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        
+                        .profile-field__content{
+                            margin-top: 16px;
+
+                            .profile-field__avatar-img{
+                                height: 100%;
+                                width: 100%;
+                                border-radius: 50%;
+                            }
+                            .profile-field__background-img{
+                                height: 100%;
+                                width: 100%;
+                                border-radius: 50%;
+                                
+                            }
+
+                            &.profile-field__content--container-avatar-img{
+                                width: 150px;
+                                height: 150px;
+                                
+                            }
+                            &.profile-field__content--container-background-img{
+                                background-color: var(--secondary-bubble-chat);
+                                width: 440px;
+                                height: 160px;
+                                border-radius: 5px;
+                            }
+                            &.profile-field__content--container-bio{}
+                            
+                            
+                        }
+                        .bio__describe-yourself{
+                            font-size: 15px;
+                            color: var(--secondary-text);
+                        }
+                    }
+                }
+            }
+            .edit-profile-container__footer{}
+        }
+    }
+}
