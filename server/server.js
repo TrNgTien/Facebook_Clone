@@ -1,8 +1,8 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import connectDb from "./src/database/mongodb_connection";
-import routes from "./src/routes/index.js";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const connectDb = require("./src/database/mongodb_connection");
+const routes = require("./src/routes/index.js");
 
 const app = express();
 const server = require("http").Server(app);
@@ -18,7 +18,7 @@ connectDb();
 app.use(express.json({ limit: "50mb" }));
 app.use(
   cors({
-    origin: [`http://localhost:3333`,`https://fb.iuweb.online`],
+    origin: [`http://localhost:3333`, `https://fb.iuweb.online`],
   })
 );
 routes(app);
