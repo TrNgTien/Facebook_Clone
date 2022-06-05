@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const picture = require('../constant/ConstantPicture');
 const { v4: uuidv4 } = require("uuid");
-const id = uuidv4(); 
 
 const userSchema = new mongoose.Schema({
     _id: {

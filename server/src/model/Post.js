@@ -22,10 +22,6 @@ const postSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    numberOfLike: {
-        type: Number,
-        default: 0,
-    },
     numberOfComment: {
         type: Number,
         default: 0,

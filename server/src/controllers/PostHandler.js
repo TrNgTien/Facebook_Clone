@@ -9,13 +9,12 @@ module.exports = {
       let allPost = await Post.find();
       let allPostLength = allPost.length;
       let postData = {};
-      let allPostData = [];
+      let dataPost = [];
       for (let i = 0; i < allPostLength; i++) {
-        let user = await User.findOne({ _id: allPost[i].userID });
         let userReact = allPost[i].userReact;
         let userReactLength = userReact.length;
+        let likedPost = [];
         if (userReactLength > 0) {
-          let likedPost = [];
           for (let j = 0; j < userReactLength; j++) {
             let userReactInfo = await User.findOne({_id: userReact[j]});
             likedPost.push({
@@ -24,26 +23,37 @@ module.exports = {
               userID: userReactInfo._id,
             });
             postData = {
-              postID: allPost[i].postID,
               description: allPost[i].description,
+              numberOfComment: allPost[i].numberOfComment,
               postAttachments: allPost[i].postAttachments,
-              userAvatarPosted: user.userAvatar.url,
+              time: allPost[i].time,
+              userID: allPost[i].userID,
+              userReact: allPost[i].userReact,
+              likedPost: likedPost,
+              __v: allPost[i].__v,
+              _id: allPost[i]._id,
             }
           }
-          allPostData.push({postData: postData}, {likedPost: likedPost});
+          dataPost.push(postData);
         }
         else {
+          likedPost = [];
           postData = {
-            postID: allPost[i].postID,
             description: allPost[i].description,
+            numberOfComment: allPost[i].numberOfComment,
             postAttachments: allPost[i].postAttachments,
-            userAvatarPosted: user.userAvatar.url,
-         }
-         allPostData.push({postData: postData});
+            time: allPost[i].time,
+            userID: allPost[i].userID,
+            userReact: allPost[i].userReact,
+            likedPost: likedPost,
+            __v: allPost[i].__v,
+            _id: allPost[i]._id,
+          }
+          dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        data: allPostData
+        dataPost
       });
     } catch (error) {
       console.log(error);
@@ -56,13 +66,12 @@ module.exports = {
       let userPost = await Post.find({ userID: userID });
       let userPostLength = userPost.length;
       let postData = {};
-      let allUserPost = [];
+      let dataPost = [];
       for (let i = 0; i < userPostLength; i++) {
-        let user = await User.findOne({ _id: userPost[i].userID });
         let userReact = userPost[i].userReact;
         let userReactLength = userReact.length;
+        let likedPost = [];
         if (userReactLength > 0){
-          let likedPost = [];
           for (let j = 0; j < userReactLength; j++) {
             let userReactInfo = await User.findOne({_id: userReact[j]});
             likedPost.push({
@@ -71,26 +80,37 @@ module.exports = {
               userID: userReactInfo._id,
             })
             postData = {
-              postID: userPost[i].postID,
               description: userPost[i].description,
+              numberOfComment: userPost[i].numberOfComment,
               postAttachments: userPost[i].postAttachments,
-              userAvatarPosted: user.userAvatar.url,
+              time: userPost[i].time,
+              userID: userPost[i].userID,
+              userReact: userPost[i].userReact,
+              likedPost: likedPost,
+              __v: userPost[i].__v,
+              _id: userPost[i]._id,
             }
           }
-          allUserPost.push({postData: postData}, {likedPost: likedPost});
+          dataPost.push(postData);
         }
         else{
+          likedPost = [];
           postData = {
-            postID: userPost[i].postID,
             description: userPost[i].description,
-            postAttachments: userPost[i].postAttachments,
-            userAvatarPosted: user.userAvatar.url,
+              numberOfComment: userPost[i].numberOfComment,
+              postAttachments: userPost[i].postAttachments,
+              time: userPost[i].time,
+              userID: userPost[i].userID,
+              userReact: userPost[i].userReact,
+              likedPost: likedPost,
+              __v: userPost[i].__v,
+              _id: userPost[i]._id,
           }
-          allUserPost.push({postData: postData});
+          dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        data: allUserPost
+        dataPost
       });
     } catch (error) {
       console.log(error);
@@ -212,13 +232,11 @@ module.exports = {
       let post = await Post.findById({ _id: id });
       if (!post.userReact.includes(userID)) {
         await post.updateOne({ $push: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike + 1 });
         return res.status(200).json({
           message: "likes successfully",
         });
       } else {
         await post.updateOne({ $pull: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike - 1 });
         return res.status(200).json({
           message: "dislikes successfully",
         });

@@ -139,25 +139,13 @@ module.exports = {
   },
   updateInformation: async (req, res) => {
     try {
-      let { firstName, lastName, biography, gender, DOB, hobbies, intro } =
-        req.body;
-      let { id } = req.params;
-      let user = await User.findOne({ _id: id });
-      if (req.user.id === id) {
+      let { userID } = req.params;
+      let infoUpdate = req.body;
+      let user = await User.findOne({ _id: userID });
+      if (req.user.id === userID) {
         await User.findByIdAndUpdate(
           user._id,
-          {
-            firstName: firstName,
-            lastName: lastName,
-            biography: biography,
-            gender: gender,
-            DOB: DOB,
-            hobbies: hobbies,
-            intro: intro,
-          },
-          {
-            new: true,
-          }
+          infoUpdate
         );
         return res.status(200).json({
           message: "Update successfully!",
