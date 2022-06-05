@@ -3,7 +3,6 @@ import { BsFillCameraVideoFill } from "react-icons/bs";
 import { MdPhotoLibrary, MdTagFaces } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { setIsCreatePost } from "@slices/PostSlice";
-
 import { useNavigate, useParams } from "react-router-dom";
 import "./Upload.scss";
 
