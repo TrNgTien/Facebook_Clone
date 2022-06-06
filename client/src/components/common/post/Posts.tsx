@@ -13,7 +13,7 @@ interface IProps {
 function Post({ postData }: IProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { time, description, postAttachments, numberOfLike, numberOfComment, userID } =
+  const { time, description, postAttachments, likedPost, numberOfComment, userID } =
     postData;
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
@@ -89,7 +89,9 @@ function Post({ postData }: IProps) {
         )}
       </div>
       <div className='container__status'>
-        <p>{numberOfLike > 1 ? `${numberOfLike} likes` : `${numberOfLike} like`}</p>
+        <p>
+          {likedPost.length > 1 ? `${likedPost.length} likes` : `${likedPost.length} like`}
+        </p>
         <p>
           {numberOfComment > 1
             ? `${numberOfComment} comments`

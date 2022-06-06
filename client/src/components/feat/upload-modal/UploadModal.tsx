@@ -6,8 +6,7 @@ import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import "./UploadModal.scss";
-import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
+import { decodedID } from "@utils/DecodeToken";
 
 const UploadModal = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +18,8 @@ const UploadModal = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
-  const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
+  const ownerID = decodedID(currentUser.token);
+
   const inputFileRef = useRef<any>(null);
   const keyPress = useCallback(
     (e) => {
@@ -64,11 +64,11 @@ const UploadModal = () => {
       postAttachments: {
         url: imageBase64,
       },
-      numberOfLike: 0,
+      likedPost: [],
       numberOfComment: 0,
       _v: 0,
       userReact: [],
-      userID: ownerId,
+      userID: ownerID,
     };
     const newListPosts = [...listPosts];
     if (!imageBase64 && !description) {

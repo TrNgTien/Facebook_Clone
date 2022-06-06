@@ -16,7 +16,6 @@ import ViewPost from "@components/feat/view-post/ViewPost";
 import { IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
-import { url } from "inspector";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -57,7 +56,7 @@ export default function ProfilePage() {
       }
       const resPosts = await getPostById(userID);
       if (resPosts.status === 200) {
-        const sortedData = resPosts.data.userPosts.sort((a: any, b: any) => {
+        const sortedData = resPosts.data.dataPost.sort((a: any, b: any) => {
           return new Date(b.time).valueOf() - new Date(a.time).valueOf();
         });
         dispatch(setListPosts(sortedData));

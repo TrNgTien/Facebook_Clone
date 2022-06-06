@@ -7,11 +7,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import FacebookLogo from "@assets/icons/icons8-facebook.svg";
 import "./Header.scss";
 import { useAppSelector } from "@hooks/useStore";
-import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
+import { decodedID } from "@utils/DecodeToken";
+
 const Header = () => {
   const navigate = useNavigate();
-  const [counterNoti] = useState<Number>(12);
   const [searchText, setSearchText] = useState<string>("");
   const [onwIdUser, setOnwIdUser] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);
@@ -20,7 +19,7 @@ const Header = () => {
 
   useEffect(() => {
     if (currentUser) {
-      const onwID = jwtDecode<IJwtDecode>(currentUser.token).id;
+      const onwID = decodedID(currentUser.token);
       setOnwIdUser(onwID);
       if (pathname === `/profile/${onwID}`) {
         document.title = `${currentUser?.fullName} | Facebook Clone`;
@@ -83,7 +82,7 @@ const Header = () => {
           </div>
           <div className='header__option'>
             <AiTwotoneBell className='icon-options' />
-            <div className='notify-counter'>{counterNoti > 9 ? "9+" : counterNoti}</div>
+            {/* <div className='notify-counter'>{counterNoti > 9 ? "9+" : counterNoti}</div> */}
           </div>
           <div className='header__option'>
             <TiArrowSortedDown className='icon-options' />

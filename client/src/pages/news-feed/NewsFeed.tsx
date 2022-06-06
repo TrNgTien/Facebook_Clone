@@ -33,7 +33,7 @@ export default function NewsFeed() {
       setIsLoading(true);
       const dataPost = await getAllFeed(userToken);
       if (dataPost.status === 200) {
-        const sortedData = dataPost.data.data.sort((a: any, b: any) => {
+        const sortedData = dataPost.data.dataPost.sort((a: any, b: any) => {
           return new Date(b.time).valueOf() - new Date(a.time).valueOf();
         });
         dispatch(setListPosts(sortedData));

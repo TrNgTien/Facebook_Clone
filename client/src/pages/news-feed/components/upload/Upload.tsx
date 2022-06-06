@@ -6,13 +6,13 @@ import { setIsCreatePost } from "@slices/PostSlice";
 
 import { useNavigate } from "react-router-dom";
 import "./Upload.scss";
-import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
+import { decodedID } from "@utils/DecodeToken";
+
 const Upload = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  const ownID = jwtDecode<IJwtDecode>(currentUser.token).id;
+  const ownID = decodedID(currentUser.token);
 
   return (
     <div className='upload-container'>

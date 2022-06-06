@@ -193,8 +193,8 @@ const ViewPost = () => {
             )}
           </div>
           <div className='wrapper-interaction'>
-            <p>{`${dataPost.numberOfLike} ${
-              dataPost.numberOfLike > 1 ? "likes" : "like"
+            <p>{`${dataPost.likedPost.length} ${
+              dataPost.likedPost.length > 1 ? "likes" : "like"
             }`}</p>
             <p>{`${dataPost.numberOfComment} ${
               dataPost.numberOfComment > 1 ? "comments" : "comment"
