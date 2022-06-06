@@ -54,6 +54,7 @@ export default function NewsFeed() {
       }
     }
   };
+  console.log(postData)
   return (
     <MainLayout>
       <div className='feeds-container'>

@@ -10,6 +10,7 @@ router.post("/login", userHandler.login);
 router.get("/getAllUser", Authentication, adminVerify, userHandler.getAllUser);
 router.get("/getAUser/:id", userHandler.getUserInformation);
 router.delete("/deleteUser/:userID", Authentication, userHandler.deleteUser);
+router.put("/updateInfo/:userID", Authentication, userHandler.updateInformation);
 
 
 module.exports = router;

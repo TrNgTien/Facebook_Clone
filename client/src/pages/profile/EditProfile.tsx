@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import "./styles/EditProfile.scss";
 import Icons from "@theme/Icons";
 import {
@@ -10,14 +10,15 @@ import {
   IoSchoolSharp,
 } from "react-icons/io5";
 import { Divider } from "@mui/material";
+import jwtDecode from "jwt-decode";
+import { IJwtDecode } from "@constants/InterfaceModel";
+import { updateAvatar, updateCover, updateUserInfo } from "@services/ProfileService";
 
 interface EditProfileProps {
   currentUser: any;
 }
 
 const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
-  // const initialIntro = { ...props.currentUser.intro };
-  // const hobbies = [...props.currentUser.hobbies];
   const inputAvatarRef = useRef<any>(null);
   const inputCoverRef = useRef<any>(null);
   const initialProfile = {
@@ -29,8 +30,12 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
   };
   const [openAddBio, setOpenAddBio] = useState(false);
   const [editIntro, setEditIntro] = useState(false);
-  useEffect(() => {}, []);
   const [userProfile, setUserProfile] = useState(initialProfile);
+  const [profileChange, setProfileChange] = useState({});
+  const [enterHobby, setEnterHobby] = useState("");
+  const [avatarChange, setAvatarChange] = useState<string | ArrayBuffer | null>("");
+  const [coverChange, setCoverChange] = useState<string | ArrayBuffer | null>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -38,10 +43,70 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setUserProfile({ ...userProfile, [e.target.name]: reader.result });
-      console.log(userProfile);
+      if (e.target.name === "userAvatar") {
+        setAvatarChange(reader.result);
+      }
+      if (e.target.name === "coverPhoto") {
+        setCoverChange(reader.result);
+      }
     };
   };
 
+  const handleAddHobbies = () => {
+    setUserProfile({ ...userProfile, hobbies: [...userProfile.hobbies, enterHobby] });
+    setProfileChange({
+      hobbies: [...userProfile.hobbies, enterHobby],
+    });
+  };
+  // const handleIntroOnChange = (e: ChangeEvent<any>) => {
+  //   const initIntro = {
+  //     currentJob: "",
+  //     currentEducation: "",
+  //     currentCity: "",
+  //     hometown: "",
+  //     relationship: "",
+  //   };
+  //   setProfileChange({
+  //     intro: { prev =>...initIntro, [e.target.name]: e.target.value },
+  //   });
+  //   console.log(profileChange);
+  // };
+
+  const handleEditProfile = async () => {
+    const currentUserId = jwtDecode<IJwtDecode>(props.currentUser.token).id;
+    setIsLoading(true);
+    console.log({
+      userProfile: profileChange,
+      userId: currentUserId,
+      token: props.currentUser.token,
+      avatar: avatarChange,
+      cover: coverChange,
+    });
+
+    const resUpdateInfo = await updateUserInfo({
+      userProfile: profileChange,
+      userId: currentUserId,
+      token: props.currentUser.token,
+    });
+    if (avatarChange) {
+      const resUpdateAvatar = await updateAvatar({
+        imageBase64: avatarChange,
+        token: props.currentUser.token,
+        userId: currentUserId,
+      });
+    }
+    if (coverChange) {
+      const resUpdateCover = await updateCover({
+        imageBase64: coverChange,
+        token: props.currentUser.token,
+        userId: currentUserId,
+      });
+    }
+
+    if (resUpdateInfo.status === 200) {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className='edit-profile-page'>
       <div className='edit-profile-background'>
@@ -74,7 +139,6 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                     accept='image/x-png,image/gif,image/jpeg'
                     onChange={handlePreviewFile}
                     multiple={false}
-                    // value={fileInputState}
                     hidden
                   />
                 </button>
@@ -106,7 +170,6 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                     accept='image/x-png,image/gif,image/jpeg'
                     onChange={handlePreviewFile}
                     multiple={false}
-                    // value={fileInputState}
                     hidden
                   />
                 </button>
@@ -179,6 +242,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                         type='text'
                         className='intro_info-input'
                         placeholder='Your current city'
+                        name='currentCity'
                       />
                     ) : (
                       <p className='intro-info-tag'>Current City</p>
@@ -191,6 +255,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                         type='text'
                         className='intro_info-input'
                         placeholder='Your workplace'
+                        name='currentJob'
                       />
                     ) : (
                       <p className='intro-info-tag'>Workplace</p>
@@ -203,6 +268,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                         type='text'
                         className='intro_info-input'
                         placeholder='Your school'
+                        name='currentEducation'
                       />
                     ) : (
                       <p className='intro-info-tag'>School</p>
@@ -215,6 +281,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                         type='text'
                         className='intro_info-input'
                         placeholder='Your hometown'
+                        name='hometown'
                       />
                     ) : (
                       <p className='intro-info-tag'>Hometown</p>
@@ -227,6 +294,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                         type='text'
                         className='intro_info-input'
                         placeholder='Your relationship'
+                        name='relationship'
                       />
                     ) : (
                       <p className='intro-info-tag'>Relationship Status</p>
@@ -237,20 +305,21 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
             </div>
             <div className='body__container-profile-field'>
               <div className='profile-field__container-title'>
-                {/* {hobbies.map((hobby) => (
-                  <p>{hobby}</p>
-                ))} */}
                 <p className='profile-field__title-tag'>Hobbies</p>
                 <button className='profile-field__functional-btn'>Edit</button>
               </div>
               <div className='profile-field__container-content'>
                 <div className='profile-field__content profile-field__content--container-hobbies'>
+                  {userProfile.hobbies.map((hobby, index) => (
+                    <p key={index}>{hobby}</p>
+                  ))}
                   <input
                     className='input-hobbies'
                     type='text'
                     placeholder='Enter your hobbies'
+                    onChange={(e) => setEnterHobby(e.target.value)}
                   />
-                  <button className='add-hobbies'>
+                  <button className='add-hobbies' onClick={handleAddHobbies}>
                     <IoAdd />
                   </button>
                 </div>
@@ -277,7 +346,9 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
             </div>
           </div>
           <div className='edit-profile-container__footer'>
-            <button className='footer-accept-btn'>Edit your about info</button>
+            <button className='footer-accept-btn' onClick={handleEditProfile}>
+              Edit your about info
+            </button>
           </div>
         </div>
       </div>

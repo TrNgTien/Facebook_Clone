@@ -7,8 +7,53 @@ module.exports = {
   getPost: async (req, res) => {
     try {
       let allPost = await Post.find();
+      let allPostLength = allPost.length;
+      let postData = {};
+      let dataPost = [];
+      for (let i = 0; i < allPostLength; i++) {
+        let userReact = allPost[i].userReact;
+        let userReactLength = userReact.length;
+        let likedPost = [];
+        if (userReactLength > 0) {
+          for (let j = 0; j < userReactLength; j++) {
+            let userReactInfo = await User.findOne({_id: userReact[j]});
+            likedPost.push({
+              userAvatarLiked: userReactInfo.userAvatar.url,
+              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userID: userReactInfo._id,
+            });
+            postData = {
+              description: allPost[i].description,
+              numberOfComment: allPost[i].numberOfComment,
+              postAttachments: allPost[i].postAttachments,
+              time: allPost[i].time,
+              userID: allPost[i].userID,
+              userReact: allPost[i].userReact,
+              likedPost: likedPost,
+              __v: allPost[i].__v,
+              _id: allPost[i]._id,
+            }
+          }
+          dataPost.push(postData);
+        }
+        else {
+          likedPost = [];
+          postData = {
+            description: allPost[i].description,
+            numberOfComment: allPost[i].numberOfComment,
+            postAttachments: allPost[i].postAttachments,
+            time: allPost[i].time,
+            userID: allPost[i].userID,
+            userReact: allPost[i].userReact,
+            likedPost: likedPost,
+            __v: allPost[i].__v,
+            _id: allPost[i]._id,
+          }
+          dataPost.push(postData);
+        }
+      }
       return res.status(200).json({
-        data: allPost,
+        dataPost
       });
     } catch (error) {
       console.log(error);
@@ -19,10 +64,53 @@ module.exports = {
     const userID = req.query.id;
     try {
       let userPost = await Post.find({ userID: userID });
-      let userReact = userPost[0].userReact;
-      console.log(userReact[0]);
+      let userPostLength = userPost.length;
+      let postData = {};
+      let dataPost = [];
+      for (let i = 0; i < userPostLength; i++) {
+        let userReact = userPost[i].userReact;
+        let userReactLength = userReact.length;
+        let likedPost = [];
+        if (userReactLength > 0){
+          for (let j = 0; j < userReactLength; j++) {
+            let userReactInfo = await User.findOne({_id: userReact[j]});
+            likedPost.push({
+              userAvatarLiked: userReactInfo.userAvatar.url,
+              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userID: userReactInfo._id,
+            })
+            postData = {
+              description: userPost[i].description,
+              numberOfComment: userPost[i].numberOfComment,
+              postAttachments: userPost[i].postAttachments,
+              time: userPost[i].time,
+              userID: userPost[i].userID,
+              userReact: userPost[i].userReact,
+              likedPost: likedPost,
+              __v: userPost[i].__v,
+              _id: userPost[i]._id,
+            }
+          }
+          dataPost.push(postData);
+        }
+        else{
+          likedPost = [];
+          postData = {
+            description: userPost[i].description,
+              numberOfComment: userPost[i].numberOfComment,
+              postAttachments: userPost[i].postAttachments,
+              time: userPost[i].time,
+              userID: userPost[i].userID,
+              userReact: userPost[i].userReact,
+              likedPost: likedPost,
+              __v: userPost[i].__v,
+              _id: userPost[i]._id,
+          }
+          dataPost.push(postData);
+        }
+      }
       return res.status(200).json({
-        userPosts: userPost,
+        dataPost
       });
     } catch (error) {
       console.log(error);
@@ -35,7 +123,7 @@ module.exports = {
       let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
       let key = `post/${req.user.id}-${suffixes}`
-      if (postAttachments === "") {
+      if (typeof(postAttachments) === "undefined") {
         let newPost = new Post({
           description: description,
           postAttachments: {
@@ -50,7 +138,7 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      } else if (description === "") {
+      } else if (typeof(description) === "undefined") {
         let uploadResponse = await uploadS3(key, postAttachments);
         let newPost = new Post({
           description: "",
@@ -144,13 +232,11 @@ module.exports = {
       let post = await Post.findById({ _id: id });
       if (!post.userReact.includes(userID)) {
         await post.updateOne({ $push: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike + 1 });
         return res.status(200).json({
           message: "likes successfully",
         });
       } else {
         await post.updateOne({ $pull: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike - 1 });
         return res.status(200).json({
           message: "dislikes successfully",
         });
@@ -168,7 +254,7 @@ module.exports = {
       let suffixes = uuidv4();
       let key = `comment/${req.user.id}-${suffixes}`;
       let post = await Post.findOne({"_id": id});
-      if (commentAttachments === "") {
+      if (typeof(commentAttachments) === "undefined") {
         let comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
@@ -184,7 +270,7 @@ module.exports = {
           message: "Comment successfully",
           id: comment._id,
         });
-      } else if (commentContent === "") {
+      } else if (typeof(commentContent) === "undefined") {
         let uploadResponse = await uploadS3(key, commentAttachments);
         let comment = new Comment({
           commentContent: "",

@@ -6,19 +6,56 @@ const getProfileID = (id: string | undefined) => {
 const getPostById = (userID: string | undefined) => {
   return axiosInstance.get(`${API_PATH.POST_GET_ID}?id=${userID}`);
 };
-interface IUserProfile {
-  biography: string;
-  hobbies: Array<string>;
-  intro: IIntro | null;
+interface IReqBody {
+  userProfile: any;
+  token: string | null;
+  userId: string;
 }
-interface IIntro {
-  currentJob: string;
-  currentEducation: string;
-  currentCity: string;
-  hometown: string;
-  relationship: string;
+interface IUpdateImg {
+  token: string | null;
+  imageBase64: string | ArrayBuffer | null;
+  userId: string;
 }
-const updateUserInfo = (userProfile: IIntro | undefined, userID: string | undefined) => {
-  return axiosInstance.put(`${API_PATH.USER_PROFILE_UPDATE}?id=${userID}`);
+
+const updateUserInfo = (reqBody: IReqBody) => {
+  const { userProfile, token, userId } = reqBody;
+  console.log("token: ", token);
+
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.put(
+    `${API_PATH.USER_PROFILE_UPDATE}/${userId}`,
+    userProfile,
+    configHeader
+  );
 };
-export { getProfileID, getPostById };
+const updateAvatar = (reqBody: IUpdateImg) => {
+  const { token, imageBase64, userId } = reqBody;
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.put(
+    `${API_PATH.USER_AVATAR_UPDATE}/${userId}`,
+    { userAvatar: imageBase64 },
+    configHeader
+  );
+};
+const updateCover = (reqBody: IUpdateImg) => {
+  const { token, imageBase64, userId } = reqBody;
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.put(
+    `${API_PATH.USER_COVER_UPDATE}/${userId}`,
+    { userCover: imageBase64 },
+    configHeader
+  );
+};
+export { getProfileID, getPostById, updateUserInfo, updateAvatar, updateCover };
