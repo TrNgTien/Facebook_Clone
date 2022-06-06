@@ -16,14 +16,14 @@ const userSchema = new mongoose.Schema({
         type: Object,
         default: {
             url: picture.BLANK_AVATAR,
-            publicID: "",
+            publicID: picture.BLANK_AVATAR_KEY,
         },
     },
     userCover: {
         type: Object,
         default: {
             url: picture.BLANK_COVER,
-            publicID: "",
+            publicID: picture.BLANK_COVER_KEY,
         },
     },
     biography: {
