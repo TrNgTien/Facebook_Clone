@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useRef } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
@@ -9,14 +9,23 @@ import "./Header.scss";
 import { useAppSelector } from "@hooks/useStore";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
+import { MdLogout } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { setLogout } from "@slices/AuthenSlice";
+import { deleteLocalStorage } from "@utils/LocalStorageUtil";
+import useClickOutSide from "@hooks/useClickOutSide";
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const headerRef = useRef(null);
+  const isClickOutSide = useClickOutSide(headerRef);
   const [counterNoti] = useState<Number>(12);
   const [searchText, setSearchText] = useState<string>("");
   const [onwIdUser, setOnwIdUser] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);
   const { pathname } = useLocation();
   const { userID } = useParams();
+  const [openDropdown, setOpenDropdown] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -29,6 +38,14 @@ const Header = () => {
       }
     }
   }, [pathname, userID, currentUser]);
+
+  const handleLogout = () => {
+    console.log("click");
+
+    dispatch(setLogout());
+    deleteLocalStorage("token");
+    deleteLocalStorage("refreshToken");
+  };
 
   return (
     <nav className='header'>
@@ -85,9 +102,25 @@ const Header = () => {
             <AiTwotoneBell className='icon-options' />
             <div className='notify-counter'>{counterNoti > 9 ? "9+" : counterNoti}</div>
           </div>
-          <div className='header__option'>
+          <div
+            className='header__option'
+            ref={headerRef}
+            onClick={() => setOpenDropdown((prev) => !prev)}
+          >
             <TiArrowSortedDown className='icon-options' />
           </div>
+          {!isClickOutSide && openDropdown && (
+            <div className='dropdown-window'>
+              <div className='user-functional-button'>
+                <div className='user-functional__icons' onClick={() => handleLogout()}>
+                  <div className='user-functional__icon-container'>
+                    <MdLogout />
+                  </div>
+                  <p className='user-functional__tag'>Log Out</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </nav>

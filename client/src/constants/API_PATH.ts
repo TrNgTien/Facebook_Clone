@@ -10,5 +10,8 @@ const PATH_API = {
   POST_UPDATE: "post/updatePost",
   GET_USER_PROFILE: "auth/getAUser",
 
+  USER_PROFILE_UPDATE: "profile/updateInfor",
+  USER_AVATAR_UPDATE: "profile/updateAvatar",
+  USER_COVER_UPDATE: "profile/updateCover",
 };
 export default PATH_API;
