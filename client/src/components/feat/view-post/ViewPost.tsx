@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Comments from "@components/common/comment-bubble/Comments";
 import { useAppDispatch, useAppSelector } from "@hooks/useStore";
@@ -7,12 +7,16 @@ import { MdEdit } from "react-icons/md";
 import InteractionPost from "../post-features/InteractionPost";
 import { BsThreeDots } from "react-icons/bs";
 import { updatePost } from "@services/NewsFeedService";
-import "./ViewPost.scss";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { setListPosts } from "@slices/PostSlice";
+import useClickOutSide from "@hooks/useClickOutSide";
+import { useNavigate } from "react-router-dom";
 
+import "./ViewPost.scss";
 const ViewPost = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const { dataPost, isViewPost } = viewPostData;
@@ -21,6 +25,8 @@ const ViewPost = () => {
   const [caption, setCaption] = useState(dataPost?.description);
   const [isLoading, setIsLoading] = useState(false);
   const idPost = dataPost?._id;
+  const editPostRef = useRef(null);
+  const isClickOutSide = useClickOutSide(editPostRef);
   const closeModal = () => {
     dispatch(setViewPost({ ...viewPostData, isViewPost: false }));
   };
@@ -123,19 +129,41 @@ const ViewPost = () => {
         >
           <div className='container__content'>
             <div className='container__info'>
-              <img className='avatar-img' src={dataPost.userAvatar} alt='avatar' />
+              <img
+                className='avatar-img'
+                onClick={() => {
+                  closeModal();
+                  navigate(`/profile/${dataPost.userID}`);
+                }}
+                src={dataPost.userAvatar.url}
+                alt='avatar'
+              />
               <div className='content__info'>
-                <p className='content__info__username'>{dataPost.userName}</p>
+                <p
+                  className='content__info__username'
+                  onClick={() => {
+                    closeModal();
+                    navigate(`/profile/${dataPost.userID}`);
+                  }}
+                >
+                  {dataPost.fullName}
+                </p>
                 <p className='content__info__timestamp'>{convertedTime}</p>
               </div>
-              <div className='edit-post__wrapper'>
+              <div className='edit-post__wrapper' ref={editPostRef}>
                 <BsThreeDots
                   className='three-dots__icon'
-                  onClick={() => setIsOpenEditPost(!isOpenEditPost)}
+                  onClick={() => setIsOpenEditPost(true)}
                 />
-                {isOpenEditPost && (
+                {!isClickOutSide && isOpenEditPost && (
                   <div className='edit-modal' onClick={() => setIsOpenEditPost(false)}>
-                    <div className='edit-option' onClick={() => setIsEditPost(true)}>
+                    <div
+                      className='edit-option'
+                      onClick={() => {
+                        setIsOpenEditPost(false);
+                        setIsEditPost(true);
+                      }}
+                    >
                       <MdEdit className='edit-option__icon-edit' />
                       <p>Edit Post</p>
                     </div>

@@ -36,6 +36,7 @@ const UploadModal = () => {
   }, [keyPress]);
 
   const triggerOpenInputFile = () => {
+    // `current` points to the mounted file input element
     inputFileRef.current.click();
   };
 
@@ -126,7 +127,7 @@ const UploadModal = () => {
             <div className='upload-form__user'>
               <img
                 className='upload-form__user-avatar'
-                src={currentUser.userAvatar}
+                src={currentUser.userAvatar.url}
                 alt='avatar'
               />
               <p className='upload-form__username'>{currentUser.fullName}</p>
@@ -166,9 +167,9 @@ const UploadModal = () => {
               </label>
               <input
                 className='file-input__input'
+                ref={inputFileRef}
                 type='file'
                 name='input-file'
-                ref={inputFileRef}
                 id='inputFile'
                 accept='image/x-png,image/gif,image/jpeg'
                 onChange={handlePreviewFile}
