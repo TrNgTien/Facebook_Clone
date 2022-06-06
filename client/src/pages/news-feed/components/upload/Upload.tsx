@@ -4,22 +4,23 @@ import { MdPhotoLibrary, MdTagFaces } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { setIsCreatePost } from "@slices/PostSlice";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Upload.scss";
-
+import jwtDecode from "jwt-decode";
+import { IJwtDecode } from "@constants/InterfaceModel";
 const Upload = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const ownID = jwtDecode<IJwtDecode>(currentUser.token).id;
 
   return (
     <div className='upload-container'>
       <div className='upload__header'>
         <img
-          onClick={() => navigate(`/profile/${id}`)}
+          onClick={() => navigate(`/profile/${ownID}`)}
           className='img-avatar'
-          src={currentUser.userAvatar}
+          src={currentUser.userAvatar.url}
           alt='avatar'
         />
         <div className='upload-input'>

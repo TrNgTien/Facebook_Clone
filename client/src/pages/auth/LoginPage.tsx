@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useState, useEffect } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
@@ -19,7 +19,13 @@ export default function LoginPage() {
   const [isFocusUser, setIsFocusUser] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+  const { pathname } = useLocation();
 
+  useEffect(() => {
+    if (pathname === `/`) {
+      document.title = `Facebook Clone`;
+    }
+  }, [pathname]);
   const RenderIcon = ({ showPassword }: IShowPass) => {
     if (!showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
@@ -33,14 +39,14 @@ export default function LoginPage() {
         password: password,
       };
       await LoginReq(userData)
-        .then((loginRes) => {
-          setLocalStorage("token", loginRes.data.dataUser.token);
-          setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
-          dispatch(setLoginSuccess(loginRes.data.dataUser));
+        .then((res) => {
+          setLocalStorage("token", res.data.dataUser.token);
+          setLocalStorage("refreshToken", res.data.dataUser.refreshToken);
+          dispatch(setLoginSuccess(res.data.dataUser));
           setIsLoadingLogin(false);
           navigate("/feeds");
         })
-        .catch((err) => {
+        .catch(() => {
           setIsLoadingLogin(false);
           alert("Wrong username or password!");
         });
@@ -53,14 +59,14 @@ export default function LoginPage() {
       password: password,
     };
     await LoginReq(userData)
-      .then((loginRes) => {
-        setLocalStorage("token", loginRes.data.dataUser.token);
-        setLocalStorage("refreshToken", loginRes.data.dataUser.refreshToken);
-        dispatch(setLoginSuccess(loginRes.data.dataUser));
+      .then((res) => {
+        setLocalStorage("token", res.data.dataUser.token);
+        setLocalStorage("refreshToken", res.data.dataUser.refreshToken);
+        dispatch(setLoginSuccess(res.data.dataUser));
         setIsLoadingLogin(false);
         navigate("/feeds");
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingLogin(false);
         alert("Wrong username or password!");
       });

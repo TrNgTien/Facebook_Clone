@@ -31,18 +31,15 @@ export default function NewsFeed() {
     const userToken = getLocalStorage("token");
     const getPostData = async () => {
       setIsLoading(true);
-      await getAllFeed(userToken)
-        .then((dataPost) => {
-          const sortedData = dataPost.data.data.sort((a: any, b: any) => {
-            return new Date(b.time).valueOf() - new Date(a.time).valueOf();
-          });
-          dispatch(setListPosts(sortedData));
-          setPostData(sortedData);
-          setIsLoading(false);
-        })
-        .catch(() => {
-          setIsLoading(false);
+      const dataPost = await getAllFeed(userToken);
+      if (dataPost.status === 200) {
+        const sortedData = dataPost.data.data.sort((a: any, b: any) => {
+          return new Date(b.time).valueOf() - new Date(a.time).valueOf();
         });
+        dispatch(setListPosts(sortedData));
+        setPostData(sortedData);
+        setIsLoading(false);
+      }
     };
     getPostData();
   }, [dispatch]);
@@ -54,7 +51,6 @@ export default function NewsFeed() {
       }
     }
   };
-  console.log(postData)
   return (
     <MainLayout>
       <div className='feeds-container'>
@@ -64,12 +60,10 @@ export default function NewsFeed() {
           <Sidebar />
           <div className='body-feeds' onScroll={onScroll} ref={listInnerRef}>
             {currentUser && <Upload />}
-            {isLoading ? (
+            {isLoading && currentUser ? (
               <Post.PostLoading />
-            ) : postData.length > 0 ? (
-              postData.map((post, index: number) => <Post key={index} postData={post} />)
             ) : (
-              <h1 style={{ marginTop: "5%" }}>No Post Yet</h1>
+              postData.map((post, index: number) => <Post key={index} postData={post} />)
             )}
           </div>
           <div className='list-friends'>
