@@ -17,9 +17,7 @@ import "./styles/NewsFeed.scss";
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
   const listInnerRef = useRef<HTMLDivElement>(null);
-  const { isCreatePost, viewPostData, listPosts, idPostNeedDelete } = useAppSelector(
-    (state) => state.post
-  );
+  const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,14 +43,12 @@ export default function NewsFeed() {
     getPostData();
   }, [dispatch]);
   const handleDeletePost = async (dataDeleteID: any) => {
-    setIsLoading(true);
     const newListPosts = [...postData];
     const resDelete = await deletePost(dataDeleteID, currentUser.token);
     if (resDelete.status === 200) {
       const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
       dispatch(setListPosts(afterDeletePost));
       setPostData(afterDeletePost);
-      setIsLoading(false);
     }
   };
   const onScroll = () => {

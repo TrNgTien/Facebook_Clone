@@ -27,8 +27,8 @@ export default function ProfilePage() {
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
+  const [ownID, setOwnID] = useState<string>();
   const profileRef = useRef<any>(null);
-  const ownID = decodedID(currentUser?.token);
 
   useEffect(() => {
     profileRef.current.scrollIntoView({
@@ -49,8 +49,11 @@ export default function ProfilePage() {
     } else {
       document.title = `Facebook Clone`;
     }
-  }, [pathname, userID, userData]);
+  }, [pathname, userID, userData, currentUser]);
   useEffect(() => {
+    if (currentUser) {
+      setOwnID(decodedID(currentUser?.token));
+    }
     const getOwnPosts = async () => {
       setIsLoading(true);
       const resProfile = await getProfileID(userID);
@@ -72,7 +75,7 @@ export default function ProfilePage() {
   const handleDeletePost = async (dataDeleteID: any) => {
     setIsLoading(true);
     const newListPosts = [...ownPosts];
-    const resDelete = await deletePost(dataDeleteID, currentUser.token);
+    const resDelete = await deletePost(dataDeleteID, currentUser?.token);
     if (resDelete.status === 200) {
       const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
       dispatch(setListPosts(afterDeletePost));
@@ -226,7 +229,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              {ownID === userData?._id && <Upload />}
+              {currentUser && ownID === userData?._id && <Upload />}
               {isLoading ? (
                 <Post.PostLoading />
               ) : (

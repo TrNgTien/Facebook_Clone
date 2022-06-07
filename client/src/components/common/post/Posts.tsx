@@ -20,11 +20,15 @@ function Post({ postData, handleDeletePost }: IProps) {
   const { currentUser } = useAppSelector((state) => state.auth);
   const { time, description, postAttachments, likedPost, numberOfComment, userID } =
     postData;
-  const ownID = decodedID(currentUser.token);
+  const [ownID, setOwnID] = useState<string>();
+
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
   const convertedTime = new Date(time).toLocaleString();
   useEffect(() => {
+    if (currentUser) {
+      setOwnID(decodedID(currentUser?.token));
+    }
     const getProfileData = async () => {
       const profileRes = await getProfileID(userID);
       if (profileRes.status === 200) {
@@ -32,7 +36,7 @@ function Post({ postData, handleDeletePost }: IProps) {
       }
     };
     getProfileData();
-  }, [userID]);
+  }, [userID, currentUser]);
   const reqDeletePost = () => {
     handleDeletePost(postData._id);
   };
@@ -51,7 +55,7 @@ function Post({ postData, handleDeletePost }: IProps) {
           </h4>
           <p className='container__top-timestamp'>{convertedTime}</p>
         </div>
-        {postData?.userID === ownID && (
+        {currentUser && postData?.userID === ownID && (
           <i className='three-dot__icon'>
             <AiOutlineClose onClick={reqDeletePost} />
           </i>
@@ -60,17 +64,19 @@ function Post({ postData, handleDeletePost }: IProps) {
       <div className='container__content'>
         <p
           onClick={() =>
-            dispatch(
-              setViewPost({
-                ...viewPostData,
-                isViewPost: true,
-                dataPost: {
-                  ...postData,
-                  fullName: posterData?.firstName + " " + posterData?.lastName,
-                  userAvatar: posterData?.userAvatar,
-                },
-              })
-            )
+            currentUser
+              ? dispatch(
+                  setViewPost({
+                    ...viewPostData,
+                    isViewPost: true,
+                    dataPost: {
+                      ...postData,
+                      fullName: posterData?.firstName + " " + posterData?.lastName,
+                      userAvatar: posterData?.userAvatar,
+                    },
+                  })
+                )
+              : navigate("/")
           }
           className='caption-post'
         >
@@ -82,17 +88,19 @@ function Post({ postData, handleDeletePost }: IProps) {
           <img
             className='img-content'
             onClick={() =>
-              dispatch(
-                setViewPost({
-                  ...viewPostData,
-                  isViewPost: true,
-                  dataPost: {
-                    ...postData,
-                    fullName: posterData?.firstName + " " + posterData?.lastName,
-                    userAvatar: posterData?.userAvatar,
-                  },
-                })
-              )
+              currentUser
+                ? dispatch(
+                    setViewPost({
+                      ...viewPostData,
+                      isViewPost: true,
+                      dataPost: {
+                        ...postData,
+                        fullName: posterData?.firstName + " " + posterData?.lastName,
+                        userAvatar: posterData?.userAvatar,
+                      },
+                    })
+                  )
+                : navigate("/")
             }
             src={postAttachments.url}
             alt='img'
@@ -100,10 +108,10 @@ function Post({ postData, handleDeletePost }: IProps) {
         )}
       </div>
       <div className='container__status'>
-        <p>
+        <p onClick={() => (currentUser ? console.log("like") : navigate("/"))}>
           {likedPost.length > 1 ? `${likedPost.length} likes` : `${likedPost.length} like`}
         </p>
-        <p>
+        <p onClick={() => (currentUser ? console.log("cmt") : navigate("/"))}>
           {numberOfComment > 1
             ? `${numberOfComment} comments`
             : `${numberOfComment} comment`}

@@ -4,7 +4,6 @@ export interface PostState {
   isCreatePost: boolean;
   viewPostData: any;
   listPosts: Array<any>;
-  idPostNeedDelete: string;
 }
 const initialState: PostState = {
   isCreatePost: false,
@@ -13,7 +12,6 @@ const initialState: PostState = {
     dataPost: {},
   },
   listPosts: [],
-  idPostNeedDelete: "",
 };
 const PostSlice = createSlice({
   name: "PostSlice",
