@@ -1,4 +1,4 @@
-const {generateRefreshToken} = require("../middleware/Authentication");
+const {generateAccessToken} = require("../middleware/Authentication");
 
 const JWT = require("jsonwebtoken");
 module.exports = {
