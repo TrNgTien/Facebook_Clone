@@ -33,7 +33,6 @@ const Header = () => {
       }
     }
   }, [pathname, userID, currentUser]);
-
   const handleLogout = () => {
     dispatch(setLogout());
     dispatch(setListPosts([]));
@@ -86,7 +85,7 @@ const Header = () => {
             }
             onClick={() => navigate(`/profile/${onwIdUser}`)}
           >
-            <img className='img-avatar' src={currentUser.userAvatar.url} alt='avatar' />
+            <img className='img-avatar' src={currentUser?.userAvatar.url} alt='avatar' />
             <p className='header__user-name'>{currentUser.fullName}</p>
           </div>
           <div className='header__option'>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MainLayout } from "@components/common/layout/index";
 import Post from "@components/common/post/Posts";
@@ -11,11 +11,9 @@ import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
 import { deletePost } from "@services/NewsFeedService";
-
-import "./styles/NewsFeed.scss";
-import { getProfileID } from "@services/ProfileService";
-// import { getAllUser } from "@services/FriendsService";
+import { getAllUser } from "@services/FriendsService";
 import { useNavigate } from "react-router-dom";
+import "./styles/NewsFeed.scss";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
@@ -27,17 +25,17 @@ export default function NewsFeed() {
   const [isLoading, setIsLoading] = useState(false);
   const [friends, setFriends] = useState<Array<any>>([]);
 
-  // useEffect(() => {
-  //    = getAllUser(currentUser.token).then((res) => {
-  //     if (res.status === 200) {
-  //       const listUser: Array<any> = res.data.data;
+  useEffect(() => {
+    getAllUser(currentUser.token).then((res) => {
+      if (res.status === 200) {
+        const listUser: Array<any> = res.data.data;
 
-  //       setFriends([
-  //         ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
-  //       ]);
-  //     }
-  //   });
-  // }, []);
+        setFriends([
+          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+        ]);
+      }
+    });
+  }, [currentUser]);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     setPostData(listPosts);
@@ -55,7 +53,7 @@ export default function NewsFeed() {
         setPostData(sortedData);
         setIsLoading(false);
       }
-    }
+    };
     getPostData();
   }, [dispatch]);
   const handleDeletePost = async (dataDeleteID: any) => {
@@ -112,7 +110,7 @@ export default function NewsFeed() {
               >
                 <div className='wrapper-avatar'>
                   <img src={friend.userAvatar.url} alt='avatar' className='avatar-friend' />
-                  <p className='active-point'>&nbsp;</p>
+                  {/* <p className='active-point'>&nbsp;</p> */}
                 </div>
                 <p>{friend.firstName + " " + friend.lastName}</p>
               </div>

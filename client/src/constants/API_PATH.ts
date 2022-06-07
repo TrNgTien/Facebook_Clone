@@ -4,7 +4,8 @@ const PATH_API = {
   REFRESH_TOKEN: "/auth/token",
   REGISTER: "auth/register",
   GET_USER_PROFILE: "auth/getAUser",
-
+  GET_ALL_USER: "auth/getAllUser",
+  
   POST_ADD: "post/addPost",
   POST_GET: "post/getAllPost",
   POST_GET_ID: "post/search",

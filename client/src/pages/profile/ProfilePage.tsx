@@ -14,28 +14,26 @@ import UploadPost from "@components/feat/upload-modal/UploadModal";
 import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
 import { IUserData } from "@constants/InterfaceModel";
-import "./styles/ProfilePage.scss";
+import { useNavigate } from "react-router-dom";
 import EditProfile from "./EditProfile";
 import { decodedID } from "@utils/DecodeToken";
-// import { getAllUser } from "@services/FriendsService";
+import "./styles/ProfilePage.scss";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { currentUser } = useAppSelector((state) => state.auth);
   const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentUserId, setCurrentUserId] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
   const [ownID, setOwnID] = useState<string>();
   const profileRef = useRef<any>(null);
-
   const [friends, setFriends] = useState<Array<any>>([]);
-  console.log(friends);
-
   useEffect(() => {
     profileRef.current.scrollIntoView({
       behavior: "smooth",
@@ -49,7 +47,6 @@ export default function ProfilePage() {
       }
     });
   }, [currentUser]);
-  // console.log("friends: ", friends);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
@@ -102,31 +99,53 @@ export default function ProfilePage() {
     const otherButtons = ["Add friend", "Message"];
     return (
       <div className='more-functions'>
-        {currentUser &&
-          ownID === userData?._id &&
-          ownerButtons.map((items, index) => {
-            return (
-              <button
-                key={index}
-                className={items === "Add to story" ? "add-story" : "edit-profile"}
-                onClick={() => {
-                  items === "Add to story" ? console.log("s") : setOpenEdit(true);
-                }}
-              >
-                {items === "Add to story" ? (
-                  <>
-                    <IoAddCircleSharp className='add-story-icon' />
-                    <p>{items}</p>
-                  </>
-                ) : (
-                  <>
-                    <FaPen className='edit-profile-icon' />
-                    <p>{items}</p>
-                  </>
-                )}
-              </button>
-            );
-          })}
+        {currentUser && ownID === userData?._id
+          ? ownerButtons.map((items, index) => {
+              return (
+                <button
+                  key={index}
+                  className={items === "Add to story" ? "add-story" : "edit-profile"}
+                  onClick={() => {
+                    items === "Add to story" ? console.log("s") : setOpenEdit(true);
+                  }}
+                >
+                  {items === "Add to story" ? (
+                    <>
+                      <IoAddCircleSharp className='add-story-icon' />
+                      <p>{items}</p>
+                    </>
+                  ) : (
+                    <>
+                      <FaPen className='edit-profile-icon' />
+                      <p>{items}</p>
+                    </>
+                  )}
+                </button>
+              );
+            })
+          : otherButtons.map((items, index) => {
+              return (
+                <button
+                  key={index}
+                  className={items === "Add friend" ? "add-story" : "edit-profile"}
+                  onClick={() => {
+                    items === "Add friend" ? console.log("s") : setOpenEdit(true);
+                  }}
+                >
+                  {items === "Add friend" ? (
+                    <>
+                      <IoAddCircleSharp className='add-story-icon' />
+                      <p>{items}</p>
+                    </>
+                  ) : (
+                    <>
+                      <FaPen className='edit-profile-icon' />
+                      <p>{items}</p>
+                    </>
+                  )}
+                </button>
+              );
+            })}
       </div>
     );
   };
@@ -171,42 +190,43 @@ export default function ProfilePage() {
               <div className='container-info__left'>
                 <div className='container-avatar'>
                   {userData && (
-                    <>
-                      <img
-                        src={userData?.userAvatar.url}
-                        alt='avatar'
-                        className='avatar-img'
-                      />
-                      <button className='add-avatar'>
-                        <BsFillCameraFill className='add-avatar-icon' />
-                      </button>
-                    </>
+                    <img
+                      src={userData?.userAvatar.url}
+                      alt='avatar'
+                      className='avatar-img'
+                    />
                   )}
+                  <button className='add-avatar'>
+                    <BsFillCameraFill className='add-avatar-icon' />
+                  </button>
                 </div>
                 <div className='container-side-info'>
                   <div className='container-user-info'>
                     <h1 className='username'>
-                      {userData && userData?.firstName + " " + userData?.lastName}
+                      {userData
+                        ? userData?.firstName + " " + userData?.lastName
+                        : "Loading..."}
                     </h1>
-                    {userData && (
-                      <>
-                        <h4 className='friends-number'>
-                          {currentUser.friends.length} friends
-                        </h4>
-                        <div style={{ width: "fit-content" }}>
-                          <AvatarGroup max={5} total={friends.length}>
-                            {/* {friends &&
-                            friends.map((friend) => (
+                    <h4 className='friends-number'>
+                      {userData ? currentUser.friends.length : "Loading..."} friends
+                    </h4>
+                    {userData ? (
+                      <div style={{ width: "fit-content" }}>
+                        <AvatarGroup max={5} total={friends.length}>
+                          {friends &&
+                            friends.map((friend, index) => (
                               <Avatar
-                                src={friend.userAvatar.url}
-                                key={friend._id}
+                                onClick={() => navigate(`/profile/${friend.userID}`)}
+                                src={friend.avatar}
+                                key={index}
                                 alt=''
-                              sx={{ width: 40, height: 40 }}
+                                sx={{ width: 40, height: 40 }}
                               />
-                            ))} */}
-                          </AvatarGroup>
-                        </div>
-                      </>
+                            ))}
+                        </AvatarGroup>
+                      </div>
+                    ) : (
+                      <h2>Loading...</h2>
                     )}
                   </div>
                 </div>
@@ -230,9 +250,9 @@ export default function ProfilePage() {
                 <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
                   Add Bio
                 </button>
-                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                {/* <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
                   Edit details
-                </button>
+                </button> */}
                 <div className='hobbies-content'>
                   {currentUser.hobbies.map((hobby: string, index: any) => (
                     <div className='container-hobbies' key={index}>

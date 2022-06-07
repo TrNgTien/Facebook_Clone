@@ -20,7 +20,6 @@ import {
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@hooks/useStore";
 import { setUpdateUser } from "@slices/AuthenSlice";
-import CircleLoading from "@components/common/loading-delay/CircleLoading";
 
 interface EditProfileProps {
   currentUser: any;
@@ -49,7 +48,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
   const [coverChange, setCoverChange] = useState<string | ArrayBuffer | null>("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
-  const FEATURE_IMG = "https://static.xx.fbcdn.net/rsrc.php/v3/yN/r/gL1slwup025.png";
+
   useEffect(() => {
     const decodedID = jwtDecode<IJwtDecode>(props.currentUser.token).id;
     setCurrentUserId(decodedID);
@@ -81,11 +80,11 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
     setBioChange({ biography: e.target.value });
   };
   const handleBioChange = async () => {
-    await updateUserInfo({
+    const resUpdateInfo = await updateUserInfo({
       userProfile: bioChange,
       userId: currentUserId,
       token: props.currentUser.token,
-    }).then(() => setOpenAddBio(false));
+    });
   };
   // const handleIntroOnChange = (e: ChangeEvent<any>) => {
   //   const initIntro = {
@@ -103,20 +102,21 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
 
   const handleEditProfile = async () => {
     setIsLoading(true);
+
     const resUpdateInfo = await updateUserInfo({
       userProfile: profileChange,
       userId: currentUserId,
       token: props.currentUser.token,
     });
     if (avatarChange) {
-      await updateAvatar({
+      const resUpdateAvatar = await updateAvatar({
         imageBase64: avatarChange,
         token: props.currentUser.token,
         userId: currentUserId,
       });
     }
     if (coverChange) {
-      await updateCover({
+      const resUpdateCover = await updateCover({
         imageBase64: coverChange,
         token: props.currentUser.token,
         userId: currentUserId,
@@ -125,17 +125,15 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
 
     if (resUpdateInfo.status === 200) {
       setIsLoading(false);
-      // getProfileID(currentUserId).then((res) => {
-      //   dispatch(setUpdateUser({ ...currentUser, ...res.data.data }));
-      // });
+      const newUser = getProfileID(currentUserId).then((res) => {
+        dispatch(setUpdateUser({ ...currentUser, ...res.data.data }));
+      });
       props.setOpenEdit(false);
     }
   };
-  console.log(currentUser);
   return (
     <div className='edit-profile-page'>
       <div className='edit-profile-background'>
-        {isLoading && <CircleLoading />}
         <div className='edit-profile-container'>
           <div className='edit-profile-container__header'>
             <div className='header__container-title'>
@@ -235,12 +233,12 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
               <div className='profile-field__container-content'>
                 {openAddBio ? (
                   <div className='profile-field__content profile-field__content--container-bio'>
-                    <input
+                    <textarea
                       className='bio-description'
                       name='bio-description'
                       placeholder='Describe who you are'
                       onChange={bioOnChange}
-                    />
+                    ></textarea>
                     <div className='bio-btns'>
                       <button
                         className='bio__button--cancel'
@@ -263,7 +261,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                 )}
               </div>
             </div>
-            <div className='body__container-profile-field'>
+            {/* <div className='body__container-profile-field'>
               <div className='profile-field__container-title'>
                 <p className='profile-field__title-tag'>Customize your intro</p>
                 <button
@@ -342,7 +340,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className='body__container-profile-field'>
               <div className='profile-field__container-title'>
                 <p className='profile-field__title-tag'>Hobbies</p>
@@ -374,7 +372,11 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
               </div>
               <div className='profile-field__container-content'>
                 <div className='profile-field__content profile-field__content--container-feature-img'>
-                  <img className='feature-img' src={FEATURE_IMG} alt='' />
+                  <img
+                    className='feature-img'
+                    src='https://static.xx.fbcdn.net/rsrc.php/v3/yN/r/gL1slwup025.png'
+                    alt=''
+                  />
                   <p className='feature-desc'>
                     Feature your favorite photos and stories here for all your friends to
                     see.

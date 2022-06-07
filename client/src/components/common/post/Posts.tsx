@@ -88,54 +88,35 @@ function Post({ postData, handleDeletePost }: IProps) {
         .catch((err) => console.log(err));
     }
   };
-  return (
-    <div className='container' id='container-post'>
-      <div className='container__top'>
-        <img
-          className='img-avatar'
-          src={posterData.userAvatar?.url}
-          alt='avatar'
-          onClick={() => navigate(`/profile/${postData?.userID}`)}
-        />
-        <div className='container__top-info'>
-          <h4 className='container__top-username'>
-            {posterData?.firstName + " " + posterData?.lastName}
-          </h4>
-          <p className='container__top-timestamp'>{convertedTime}</p>
+  if (!posterData) {
+    return <PostLoading />;
+  } else {
+    return (
+      <div className='container' id='container-post'>
+        <div className='container__top'>
+          {posterData.userAvatar && (
+            <img
+              className='img-avatar'
+              src={posterData.userAvatar?.url}
+              alt='avatar'
+              onClick={() => navigate(`/profile/${postData?.userID}`)}
+            />
+          )}
+
+          <div className='container__top-info'>
+            <h4 className='container__top-username'>
+              {posterData && posterData?.firstName + " " + posterData?.lastName}
+            </h4>
+            <p className='container__top-timestamp'>{convertedTime}</p>
+          </div>
+          {currentUser && postData?.userID === ownID && (
+            <i className='three-dot__icon'>
+              <AiOutlineClose onClick={reqDeletePost} />
+            </i>
+          )}
         </div>
-        {currentUser && postData?.userID === ownID && (
-          <i className='three-dot__icon'>
-            <AiOutlineClose onClick={reqDeletePost} />
-          </i>
-        )}
-      </div>
-      <div className='container__content'>
-        <p
-          onClick={() =>
-            currentUser
-              ? dispatch(
-                  setViewPost({
-                    ...viewPostData,
-                    isViewPost: true,
-                    dataPost: {
-                      ...postData,
-                      fullName: posterData?.firstName + " " + posterData?.lastName,
-                      userAvatar: posterData?.userAvatar,
-                      comments: commentData,
-                    },
-                  })
-                )
-              : navigate("/")
-          }
-          className='caption-post'
-        >
-          {description}
-        </p>
-      </div>
-      <div className='container__img' id='content-img'>
-        {postAttachments.url && (
-          <img
-            className='img-content'
+        <div className='container__content'>
+          <p
             onClick={() =>
               currentUser
                 ? dispatch(
@@ -152,67 +133,93 @@ function Post({ postData, handleDeletePost }: IProps) {
                   )
                 : navigate("/")
             }
-            src={postAttachments.url}
-            alt='img'
+            className='caption-post'
+          >
+            {description}
+          </p>
+        </div>
+        <div className='container__img' id='content-img'>
+          {postAttachments.url && (
+            <img
+              className='img-content'
+              onClick={() =>
+                currentUser
+                  ? dispatch(
+                      setViewPost({
+                        ...viewPostData,
+                        isViewPost: true,
+                        dataPost: {
+                          ...postData,
+                          fullName: posterData?.firstName + " " + posterData?.lastName,
+                          userAvatar: posterData?.userAvatar,
+                          comments: commentData,
+                        },
+                      })
+                    )
+                  : navigate("/")
+              }
+              src={postAttachments.url}
+              alt='img'
+            />
+          )}
+        </div>
+        <div className='container__status'>
+          <p onClick={() => (currentUser ? console.log("like") : navigate("/"))}>
+            {likedPost && likedPost.length > 1
+              ? `${likedPost.length} likes`
+              : `${likedPost.length} like`}
+          </p>
+          <p onClick={() => !currentUser && navigate("/")}>
+            {numberOfComment > 1
+              ? `${numberOfComment} comments`
+              : `${numberOfComment} comment`}
+          </p>
+        </div>
+        <hr className='divider' />
+        <InteractionPost postID={_id} />
+        {currentUser &&
+          commentData.length > 0 &&
+          viewCommentPost.isView &&
+          viewCommentPost.idPost === _id && (
+            <>
+              <hr className='divider' />
+              <div className='wrapper-comment__list'>
+                <ListComments />
+              </div>
+            </>
+          )}
+        <hr className='divider' />
+        {currentUser && (
+          <CommentInput
+            postID={_id}
+            ownID={ownID}
+            value={comment}
+            handleSubmit={(e: any) => handleSubmit(e)}
+            handleChangeComment={(e: any) => setComment(e.target.value)}
           />
         )}
       </div>
-      <div className='container__status'>
-        <p onClick={() => (currentUser ? console.log("like") : navigate("/"))}>
-          {likedPost && likedPost.length > 1
-            ? `${likedPost.length} likes`
-            : `${likedPost.length} like`}
-        </p>
-        <p onClick={() => !currentUser && navigate("/")}>
-          {numberOfComment > 1
-            ? `${numberOfComment} comments`
-            : `${numberOfComment} comment`}
-        </p>
-      </div>
-      <hr className='divider' />
-      <InteractionPost postID={_id} />
-      {currentUser &&
-        commentData.length > 0 &&
-        viewCommentPost.isView &&
-        viewCommentPost.idPost === _id && (
-          <>
-            <hr className='divider' />
-            <div className='wrapper-comment__list'>
-              <ListComments />
-            </div>
-          </>
-        )}
-      <hr className='divider' />
-      {currentUser && (
-        <CommentInput
-          postID={_id}
-          ownID={ownID}
-          value={comment}
-          handleSubmit={(e: any) => handleSubmit(e)}
-          handleChangeComment={(e: any) => setComment(e.target.value)}
-        />
-      )}
-    </div>
-  );
+    );
+  }
 }
 
 const PostLoading = () => {
   return (
     <div className='container' id='container-post'>
       <div className='container__top'>
-        <div className='img-avatar skeleton'></div>
+        <div className='skeleton img-avatar '></div>
         <div className='container__top-info '>
-          <div className='container__top-username skeleton'></div>
-          <div className='container__top-timestamp skeleton'></div>
+          <div className='skeleton container__top-username '></div>
+          <div className='skeleton container__top-timestamp '></div>
         </div>
         <i className='three-dot__icon'>
           <BsThreeDots />
         </i>
       </div>
       <div className='container__content'>
-        <p className='caption-post skeleton'></p>
+        <p className='skeleton caption-post '></p>
       </div>
-      <div className='container__img skeleton' id='content-img'></div>
+      <div className='skeleton container__img ' id='content-img'></div>
       <div className='container__status'>
         <p></p>
         <p></p>

@@ -19,7 +19,6 @@ interface IUpdateImg {
 
 const updateUserInfo = (reqBody: IReqBody) => {
   const { userProfile, token, userId } = reqBody;
-  console.log("token: ", token);
 
   let configHeader = {
     headers: {
