@@ -16,9 +16,8 @@ const AuthenSlice = createSlice({
       const { payload } = action;
       return { ...state, currentUser: payload, isLogged: true };
     },
-    setLogout(state, action: PayloadAction<any>) {
-      const { payload } = action;
-      return { ...state, currentUser: payload, isLogged: false };
+    setLogout(state) {
+      return { ...state, currentUser: null, isLogged: false };
     },
   },
 });

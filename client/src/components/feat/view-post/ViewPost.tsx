@@ -11,6 +11,7 @@ import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { setListPosts } from "@slices/PostSlice";
 import useClickOutSide from "@hooks/useClickOutSide";
 import { useNavigate } from "react-router-dom";
+import { decodedID } from "@utils/DecodeToken";
 
 import "./ViewPost.scss";
 const ViewPost = () => {
@@ -30,6 +31,7 @@ const ViewPost = () => {
   const closeModal = () => {
     dispatch(setViewPost({ ...viewPostData, isViewPost: false }));
   };
+  const ownID = decodedID(currentUser.token);
   const convertedTime = new Date(dataPost.time).toLocaleString();
 
   const keyPress = useCallback(
@@ -150,26 +152,63 @@ const ViewPost = () => {
                 </p>
                 <p className='content__info__timestamp'>{convertedTime}</p>
               </div>
-              <div className='edit-post__wrapper' ref={editPostRef}>
-                <BsThreeDots
-                  className='three-dots__icon'
-                  onClick={() => setIsOpenEditPost(true)}
-                />
-                {!isClickOutSide && isOpenEditPost && (
-                  <div className='edit-modal' onClick={() => setIsOpenEditPost(false)}>
-                    <div
-                      className='edit-option'
-                      onClick={() => {
-                        setIsOpenEditPost(false);
-                        setIsEditPost(true);
-                      }}
-                    >
-                      <MdEdit className='edit-option__icon-edit' />
-                      <p>Edit Post</p>
-                    </div>
+              {dataPost?.userID === ownID ? (
+                <>
+                  <div className='edit-post__wrapper'>
+                    <BsThreeDots
+                      className='three-dots__icon'
+                      onClick={() => setIsOpenEditPost(true)}
+                    />
+                    {!dataPost.postAttachments.url && (
+                      
+                        <AiOutlineClose
+                          className='close__icon'
+                          onClick={() =>
+                            dispatch(
+                              setViewPost({
+                                ...viewPostData,
+                                isViewPost: false,
+                              })
+                            )
+                          }
+                        />
+                    )}
+                    {!isClickOutSide && isOpenEditPost && (
+                      <div
+                        className='edit-modal'
+                        onClick={() => isClickOutSide && setIsOpenEditPost(false)}
+                      >
+                        <div
+                          className='edit-option'
+                          onClick={() => {
+                            setIsOpenEditPost(false);
+                            setIsEditPost(true);
+                          }}
+                          ref={editPostRef}
+                        >
+                          <MdEdit className='edit-option__icon-edit' />
+                          <p>Edit Post</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div
+                  className='edit-post__wrapper'
+                  onClick={() =>
+                    dispatch(
+                      setViewPost({
+                        ...viewPostData,
+                        isViewPost: false,
+                      })
+                    )
+                  }
+                >
+                  <AiOutlineClose className='close__icon' />
+                  hi2
+                </div>
+              )}
             </div>
             {isEditPost ? (
               <div className='edit-caption__zone'>

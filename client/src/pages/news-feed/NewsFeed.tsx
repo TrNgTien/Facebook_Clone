@@ -7,9 +7,10 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Upload from "./components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
-import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
+import { setIsCreatePost, setListPosts, setDeletePost } from "@slices/PostSlice";
 import ViewPost from "@components/feat/view-post/ViewPost";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
+import { deletePost } from "@services/NewsFeedService";
 
 import "./styles/NewsFeed.scss";
 
@@ -23,9 +24,7 @@ export default function NewsFeed() {
 
   useEffect(() => {
     dispatch(setIsCreatePost(false));
-    if (listPosts) {
-      setPostData(listPosts);
-    }
+    setPostData(listPosts);
   }, [dispatch, listPosts]);
   useEffect(() => {
     const userToken = getLocalStorage("token");
@@ -51,6 +50,19 @@ export default function NewsFeed() {
       }
     }
   };
+  const handleDeletePost = async () => {
+    const postID = postData.find((post) => post._id === viewPostData._id);
+    const resDelete = await deletePost(viewPostData._id, currentUser.token);
+    // const resDelete = await deletePost(postData._id, currentUser.token);
+    const newListPosts = [...listPosts];
+
+    if (resDelete.status === 200) {
+      newListPosts.filter((post) => post._id !== viewPostData._id);
+      dispatch(setListPosts(newListPosts));
+      setPostData(newListPosts);
+    }
+  };
+  console.log(postData)
   return (
     <MainLayout>
       <div className='feeds-container'>

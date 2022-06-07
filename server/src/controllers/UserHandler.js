@@ -94,6 +94,7 @@ module.exports = {
             DOB: user.DOB,
             hobbies: user.hobbies,
             intro: user.intro,
+            friends: user.friends
           },
         });
       }

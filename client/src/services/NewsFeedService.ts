@@ -51,5 +51,13 @@ const updatePost = (reqBody: IUpdatePost) => {
     configHeader
   );
 };
+const deletePost = (idPost: string, token: string | null) => {
+  let configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.delete(`${API_PATH.POST_DELETE}/${idPost}`, configHeader);
+};
 
-export { AddPost, getAllFeed, updatePost };
+export { AddPost, getAllFeed, updatePost, deletePost };

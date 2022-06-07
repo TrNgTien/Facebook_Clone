@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import { getProfileID } from "@services/ProfileService";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { BsThreeDots } from "react-icons/bs";
-import { setViewPost } from "@slices/PostSlice";
-import "./Posts.scss";
+import { setDeletePost, setViewPost } from "@slices/PostSlice";
 import InteractionPost from "@components/feat/post-features/InteractionPost";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineClose } from "react-icons/ai";
+import { decodedID } from "@utils/DecodeToken";
+import { deletePost } from "@services/NewsFeedService";
+import { setListPosts } from "@slices/PostSlice";
+
+import "./Posts.scss";
 interface IProps {
   postData: any;
 }
@@ -13,8 +18,12 @@ interface IProps {
 function Post({ postData }: IProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { currentUser } = useAppSelector((state) => state.auth);
+  // const { listPosts } = useAppSelector((state) => state.post);
+
   const { time, description, postAttachments, likedPost, numberOfComment, userID } =
     postData;
+  const ownID = decodedID(currentUser.token);
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
   const convertedTime = new Date(time).toLocaleString();
@@ -27,6 +36,9 @@ function Post({ postData }: IProps) {
     };
     getProfileData();
   }, [userID]);
+  const handleDeletePost = () => {
+    dispatch(setDeletePost(postData._id));
+  };
   return (
     <div className='container' id='container-post'>
       <div className='container__top'>
@@ -42,9 +54,11 @@ function Post({ postData }: IProps) {
           </h4>
           <p className='container__top-timestamp'>{convertedTime}</p>
         </div>
-        <i className='three-dot__icon'>
-          <BsThreeDots />
-        </i>
+        {postData?.userID === ownID && (
+          <i className='three-dot__icon'>
+            <AiOutlineClose onClick={handleDeletePost} />
+          </i>
+        )}
       </div>
       <div className='container__content'>
         <p
