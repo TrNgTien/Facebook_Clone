@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
 const { v4: uuidv4 } = require("uuid");
+const Post = require("../model/Post");
 
 module.exports = {
   register: async (req, res) => {
@@ -81,6 +82,8 @@ module.exports = {
           message: "Incorrect UserName or Password",
         });
       } else {
+        let postLiked = await Post.find({userReact: {$in: [userID]}});
+        let postLikedID = postLiked.map(post => post._id);
         return res.status(200).json({
           message: "Login successfully",
           dataUser: {
@@ -94,7 +97,8 @@ module.exports = {
             DOB: user.DOB,
             hobbies: user.hobbies,
             intro: user.intro,
-            friends: user.friends
+            friends: user.friends,
+            likedPost: postLikedID
           },
         });
       }
