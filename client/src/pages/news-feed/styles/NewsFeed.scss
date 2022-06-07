@@ -14,6 +14,7 @@
 			width: 20%;
 			height: 100vh;
 			.list-friends__header {
+				margin-bottom: 1rem;
 				display: flex;
 				justify-content: space-between;
 			}
@@ -21,9 +22,15 @@
 				display: flex;
 			}
 			.list-friends__body-item {
-				margin-top: 1rem;
+				margin: 0.1rem;
+				padding: 0.5rem;
 				display: flex;
 				align-items: center;
+				border-radius: 10px;
+				cursor: pointer;
+				&:hover{
+					background-color: var(--background-color-btn);
+				}
 				.wrapper-avatar {
 					position: relative;
 					.avatar-friend {

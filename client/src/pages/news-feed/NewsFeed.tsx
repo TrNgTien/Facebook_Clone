@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MainLayout } from "@components/common/layout/index";
 import Post from "@components/common/post/Posts";
@@ -13,15 +13,31 @@ import { getLocalStorage } from "@utils/LocalStorageUtil";
 import { deletePost } from "@services/NewsFeedService";
 
 import "./styles/NewsFeed.scss";
+import { getProfileID } from "@services/ProfileService";
+import { getAllUser } from "@services/FriendsService";
+import { useNavigate } from "react-router-dom";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const listInnerRef = useRef<HTMLDivElement>(null);
   const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [friends, setFriends] = useState<Array<any>>([]);
 
+  useEffect(() => {
+    const queryAllUser = getAllUser(currentUser.token).then((res) => {
+      if (res.status === 200) {
+        const listUser: Array<any> = res.data.data;
+
+        setFriends([
+          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+        ]);
+      }
+    });
+  }, []);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     setPostData(listPosts);
@@ -86,32 +102,21 @@ export default function NewsFeed() {
               <p>Contacts</p>
               <div className='list-friends__funtion-btn'>
                 <AiOutlineSearch />
-                <AiOutlineSearch />
-                <AiOutlineSearch />
               </div>
             </div>
-            <div className='list-friends__body-item'>
-              <div className='wrapper-avatar'>
-                <img
-                  src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
-                  alt='avatar'
-                  className='avatar-friend'
-                />
-                <p className='active-point'>&nbsp;</p>
+            {friends.map((friend: any, index: any) => (
+              <div
+                className='list-friends__body-item'
+                key={index}
+                onClick={() => navigate(`/profile/${friend._id}`)}
+              >
+                <div className='wrapper-avatar'>
+                  <img src={friend.userAvatar.url} alt='avatar' className='avatar-friend' />
+                  <p className='active-point'>&nbsp;</p>
+                </div>
+                <p>{friend.firstName + " " + friend.lastName}</p>
               </div>
-              <p>Bạn của tôi</p>
-            </div>
-            <div className='list-friends__body-item'>
-              <div className='wrapper-avatar'>
-                <img
-                  src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
-                  alt='avatar'
-                  className='avatar-friend'
-                />
-                <p className='active-point'>&nbsp;</p>
-              </div>
-              <p>Bạn của tôi</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>

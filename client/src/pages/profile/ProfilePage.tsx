@@ -13,10 +13,11 @@ import Upload from "../news-feed/components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
-import { IUserData } from "@constants/InterfaceModel";
+import { IJwtDecode, IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
 import { decodedID } from "@utils/DecodeToken";
+import { getAllUser } from "@services/FriendsService";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -24,18 +25,33 @@ export default function ProfilePage() {
   const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [openEdit, setOpenEdit] = useState(false);
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
   const [ownID, setOwnID] = useState<string>();
   const profileRef = useRef<any>(null);
 
+  const [friends, setFriends] = useState<Array<any>>([]);
+
   useEffect(() => {
+    const queryAllUser = getAllUser(currentUser.token).then((res) => {
+      if (res.status === 200) {
+        const listUser: Array<any> = res.data.data;
+
+        setFriends([
+          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+        ]);
+      }
+    });
+
     profileRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }, []);
+  console.log("friends: ", friends);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
@@ -84,29 +100,35 @@ export default function ProfilePage() {
     }
   };
   const CustomButton = (): JSX.Element => {
-    const buttons = ["Add to story", "Edit profile"];
+    const ownerButtons = ["Add to story", "Edit profile"];
+    const otherButtons = ["Add friend", "Message"];
     return (
       <div className='more-functions'>
-        {buttons.map((items, index) => {
-          return (
-            <button
-              key={index}
-              className={items === "Add to story" ? "add-story" : "edit-profile"}
-            >
-              {items === "Add to story" ? (
-                <>
-                  <IoAddCircleSharp className='add-story-icon' />
-                  <p>{items}</p>
-                </>
-              ) : (
-                <>
-                  <FaPen className='edit-profile-icon' />
-                  <p>{items}</p>
-                </>
-              )}
-            </button>
-          );
-        })}
+        {currentUser &&
+          ownID === userData?._id &&
+          ownerButtons.map((items, index) => {
+            return (
+              <button
+                key={index}
+                className={items === "Add to story" ? "add-story" : "edit-profile"}
+                onClick={() => {
+                  items === "Add to story" ? console.log("s") : setOpenEdit(true);
+                }}
+              >
+                {items === "Add to story" ? (
+                  <>
+                    <IoAddCircleSharp className='add-story-icon' />
+                    <p>{items}</p>
+                  </>
+                ) : (
+                  <>
+                    <FaPen className='edit-profile-icon' />
+                    <p>{items}</p>
+                  </>
+                )}
+              </button>
+            );
+          })}
       </div>
     );
   };
@@ -160,37 +182,17 @@ export default function ProfilePage() {
                     <h1 className='username'>
                       {userData?.firstName + " " + userData?.lastName}
                     </h1>
-                    <h4 className='friends-number'>176 friends</h4>
+                    <h4 className='friends-number'>{currentUser.friends.length} friends</h4>
                     <div style={{ width: "fit-content" }}>
-                      <AvatarGroup max={5} total={175}>
-                        <Avatar
-                          src={userData?.userAvatar.url}
-                          alt='friend avatar'
-                          sx={{ width: 40, height: 40 }}
-                        />
-                        <Avatar
-                          src={userData?.userAvatar.url}
-                          alt='friend avatar'
-                          sx={{ width: 40, height: 40 }}
-                        />
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          B
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          E
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
+                      <AvatarGroup max={5} total={friends.length - 5}>
+                        {friends.map((friend) => (
+                          <Avatar
+                            src={friend.userAvatar.url}
+                            key={friend._id}
+                            alt=''
+                            sx={{ width: 40, height: 40 }}
+                          />
+                        ))}
                       </AvatarGroup>
                     </div>
                   </div>
@@ -209,10 +211,28 @@ export default function ProfilePage() {
             <div className='profile-body__left'>
               <div className='container-intro'>
                 <h3>Intro</h3>
-                <button className='add-intro-btn'>Add Bio</button>
-                <button className='add-intro-btn'>Edit details</button>
-                <button className='add-intro-btn'>Add Hobbies</button>
-                <button className='add-intro-btn'>Add Featured</button>
+                {currentUser.biography && (
+                  <div className='bio-content'>{currentUser.biography}</div>
+                )}
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Bio
+                </button>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Edit details
+                </button>
+                <div className='hobbies-content'>
+                  {currentUser.hobbies.map((hobby: string, index: any) => (
+                    <div className='container-hobbies' key={index}>
+                      <p className='hobby-tag-name'>{hobby}</p>
+                    </div>
+                  ))}
+                </div>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Hobbies
+                </button>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Featured
+                </button>
               </div>
               <div className='container-photos'>
                 <div className='container-photos__header'>
@@ -223,7 +243,7 @@ export default function ProfilePage() {
               <div className='container-friends'>
                 <div className='friends-tags'>
                   <h3>Friends</h3>
-                  <p className='num-of-friend'>300 friends</p>
+                  <p className='num-of-friend'>{currentUser.friends.length} friends</p>
                 </div>
                 <p className='see-all-friends'>See all friends</p>
               </div>
@@ -245,7 +265,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {/* {true && <EditProfile />} */}
+      {openEdit && <EditProfile currentUser={currentUser} setOpenEdit={setOpenEdit} />}
     </MainLayout>
   );
 }
