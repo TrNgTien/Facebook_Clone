@@ -178,7 +178,8 @@ function Post({ postData, handleDeletePost }: IProps) {
         <hr className='divider' />
         <InteractionPost postID={_id} />
         {currentUser &&
-          commentData.length > 0 &&
+          commentData &&
+          commentData?.length > 0 &&
           viewCommentPost.isView &&
           viewCommentPost.idPost === _id && (
             <>
