@@ -6,8 +6,10 @@ import { addFriend, getAllUser } from "@services/FriendsService";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
 import jwtDecode from "jwt-decode";
 import React, { memo, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./FindFriends.scss";
 function FindFriends() {
+  const navigate = useNavigate();
   const { currentUser } = useAppSelector((state) => state.auth);
   const [users, setUsers] = useState<Array<any>>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +51,11 @@ function FindFriends() {
           ) : (
             <div className='find-friends__list'>
               {users.map((user) => (
-                <div className='friend__card' key={user._id}>
+                <div
+                  className='friend__card'
+                  key={user._id}
+                  onClick={() => navigate(`/profile/${user._id}`)}
+                >
                   <div className='friend__img-container'>
                     <img src={user.userAvatar.url} alt='' className='friend-avatar' />
                   </div>

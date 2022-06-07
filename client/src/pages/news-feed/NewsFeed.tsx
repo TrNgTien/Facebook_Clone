@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MainLayout } from "@components/common/layout/index";
 import Post from "@components/common/post/Posts";
@@ -13,6 +13,7 @@ import { getLocalStorage } from "@utils/LocalStorageUtil";
 import { deletePost } from "@services/NewsFeedService";
 
 import "./styles/NewsFeed.scss";
+import { getProfileID } from "@services/ProfileService";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export default function NewsFeed() {
   const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [friend, setFriend] = useState(null);
 
   useEffect(() => {
     dispatch(setIsCreatePost(false));
@@ -62,7 +64,32 @@ export default function NewsFeed() {
       setPostData(newListPosts);
     }
   };
-  console.log(postData)
+
+  const FriendsList: FC<{ friendId: string }> = (props): JSX.Element => {
+    // useEffect(() => {
+    //   getProfileID(props.friendId).then((res) => {
+    //     if (res.status === 200) {
+    //       setFriend(res.data);
+    //       console.log("res.data: ", res.data);
+    //     }
+    //   });
+    // }, []);
+    console.log("Friend: ", props.friendId);
+
+    return (
+      <div className='list-friends__body-item'>
+        <div className='wrapper-avatar'>
+          <img
+            src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
+            alt='avatar'
+            className='avatar-friend'
+          />
+          <p className='active-point'>&nbsp;</p>
+        </div>
+        <p>Bạn của tôi</p>
+      </div>
+    );
+  };
   return (
     <MainLayout>
       <div className='feeds-container'>
@@ -83,32 +110,11 @@ export default function NewsFeed() {
               <p>Contacts</p>
               <div className='list-friends__funtion-btn'>
                 <AiOutlineSearch />
-                <AiOutlineSearch />
-                <AiOutlineSearch />
               </div>
             </div>
-            <div className='list-friends__body-item'>
-              <div className='wrapper-avatar'>
-                <img
-                  src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
-                  alt='avatar'
-                  className='avatar-friend'
-                />
-                <p className='active-point'>&nbsp;</p>
-              </div>
-              <p>Bạn của tôi</p>
-            </div>
-            <div className='list-friends__body-item'>
-              <div className='wrapper-avatar'>
-                <img
-                  src='https://br.atsit.in/vi/wp-content/uploads/2022/01/boruto-co-thuc-su-da-chet-trong-manga-khong.jpg'
-                  alt='avatar'
-                  className='avatar-friend'
-                />
-                <p className='active-point'>&nbsp;</p>
-              </div>
-              <p>Bạn của tôi</p>
-            </div>
+            {currentUser.friends.map((friend: string, index: any) => (
+              <FriendsList friendId={friend} key={index} />
+            ))}
           </div>
         </div>
       </div>

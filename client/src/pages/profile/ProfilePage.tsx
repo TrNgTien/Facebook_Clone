@@ -13,9 +13,10 @@ import Upload from "../news-feed/components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
-import { IUserData } from "@constants/InterfaceModel";
+import { IJwtDecode, IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
+import jwtDecode from "jwt-decode";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -23,11 +24,14 @@ export default function ProfilePage() {
   const { isCreatePost, listPosts, viewPostData } = useAppSelector((state) => state.post);
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentUserId, setCurrentUserId] = useState("");
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
   const profileRef = useRef<any>(null);
   useEffect(() => {
+    const currentUserIdDecoded = jwtDecode<IJwtDecode>(currentUser.token).id;
+    setCurrentUserId(currentUserIdDecoded);
     profileRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -63,33 +67,39 @@ export default function ProfilePage() {
         setOwnPosts(sortedData);
         setIsLoading(false);
       }
+      console.log("userId: ", userID);
     };
     getOwnPosts();
   }, [dispatch, currentUser, userID]);
   const CustomButton = (): JSX.Element => {
-    const buttons = ["Add to story", "Edit profile"];
+    const ownerButtons = ["Add to story", "Edit profile"];
+    const otherButtons = ["Add friend", "Message"];
     return (
       <div className='more-functions'>
-        {buttons.map((items, index) => {
-          return (
-            <button
-              key={index}
-              className={items === "Add to story" ? "add-story" : "edit-profile"}
-            >
-              {items === "Add to story" ? (
-                <>
-                  <IoAddCircleSharp className='add-story-icon' />
-                  <p>{items}</p>
-                </>
-              ) : (
-                <>
-                  <FaPen className='edit-profile-icon' />
-                  <p>{items}</p>
-                </>
-              )}
-            </button>
-          );
-        })}
+        {currentUserId === userData?._id &&
+          ownerButtons.map((items, index) => {
+            return (
+              <button
+                key={index}
+                className={items === "Add to story" ? "add-story" : "edit-profile"}
+                onClick={() => {
+                  items === "Add to story" ? console.log("s") : console.log("2");
+                }}
+              >
+                {items === "Add to story" ? (
+                  <>
+                    <IoAddCircleSharp className='add-story-icon' />
+                    <p>{items}</p>
+                  </>
+                ) : (
+                  <>
+                    <FaPen className='edit-profile-icon' />
+                    <p>{items}</p>
+                  </>
+                )}
+              </button>
+            );
+          })}
       </div>
     );
   };
@@ -212,7 +222,7 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              {currentUser === userData?._id && <Upload />}
+              {currentUserId === userData?._id && <Upload />}
               {isLoading ? (
                 <Post.PostLoading />
               ) : (
@@ -222,7 +232,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {/* {true && <EditProfile />} */}
+      {true && <EditProfile currentUser={undefined} />}
     </MainLayout>
   );
 }
