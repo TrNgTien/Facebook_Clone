@@ -50,6 +50,7 @@ export default function NewsFeed() {
     const resDelete = await deletePost(dataDeleteID, currentUser.token);
     if (resDelete.status === 200) {
       const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
+      dispatch(setListPosts(afterDeletePost));
       setPostData(afterDeletePost);
       setIsLoading(false);
     }

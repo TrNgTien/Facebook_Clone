@@ -75,6 +75,7 @@ export default function ProfilePage() {
     const resDelete = await deletePost(dataDeleteID, currentUser.token);
     if (resDelete.status === 200) {
       const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
+      dispatch(setListPosts(afterDeletePost));
       setOwnPosts(afterDeletePost);
       setIsLoading(false);
     }

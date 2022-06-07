@@ -1,5 +1,5 @@
 const Post = require("../model/Post");
-const User =  require("../model/User");
+const User = require("../model/User");
 const Comment = require("../model/Comment");
 const { v4: uuidv4 } = require("uuid");
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
@@ -16,10 +16,10 @@ module.exports = {
         let likedPost = [];
         if (userReactLength > 0) {
           for (let j = 0; j < userReactLength; j++) {
-            let userReactInfo = await User.findOne({_id: userReact[j]});
+            let userReactInfo = await User.findOne({ _id: userReact[j] });
             likedPost.push({
               userAvatarLiked: userReactInfo.userAvatar.url,
-              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userFullName: userReactInfo.firstName + " " + userReactInfo.lastName,
               userID: userReactInfo._id,
             });
             postData = {
@@ -32,11 +32,10 @@ module.exports = {
               likedPost: likedPost,
               __v: allPost[i].__v,
               _id: allPost[i]._id,
-            }
+            };
           }
           dataPost.push(postData);
-        }
-        else {
+        } else {
           likedPost = [];
           postData = {
             description: allPost[i].description,
@@ -48,12 +47,12 @@ module.exports = {
             likedPost: likedPost,
             __v: allPost[i].__v,
             _id: allPost[i]._id,
-          }
+          };
           dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        dataPost
+        dataPost,
       });
     } catch (error) {
       console.log(error);
@@ -71,14 +70,14 @@ module.exports = {
         let userReact = userPost[i].userReact;
         let userReactLength = userReact.length;
         let likedPost = [];
-        if (userReactLength > 0){
+        if (userReactLength > 0) {
           for (let j = 0; j < userReactLength; j++) {
-            let userReactInfo = await User.findOne({_id: userReact[j]});
+            let userReactInfo = await User.findOne({ _id: userReact[j] });
             likedPost.push({
               userAvatarLiked: userReactInfo.userAvatar.url,
-              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userFullName: userReactInfo.firstName + " " + userReactInfo.lastName,
               userID: userReactInfo._id,
-            })
+            });
             postData = {
               description: userPost[i].description,
               numberOfComment: userPost[i].numberOfComment,
@@ -89,28 +88,27 @@ module.exports = {
               likedPost: likedPost,
               __v: userPost[i].__v,
               _id: userPost[i]._id,
-            }
+            };
           }
           dataPost.push(postData);
-        }
-        else{
+        } else {
           likedPost = [];
           postData = {
             description: userPost[i].description,
-              numberOfComment: userPost[i].numberOfComment,
-              postAttachments: userPost[i].postAttachments,
-              time: userPost[i].time,
-              userID: userPost[i].userID,
-              userReact: userPost[i].userReact,
-              likedPost: likedPost,
-              __v: userPost[i].__v,
-              _id: userPost[i]._id,
-          }
+            numberOfComment: userPost[i].numberOfComment,
+            postAttachments: userPost[i].postAttachments,
+            time: userPost[i].time,
+            userID: userPost[i].userID,
+            userReact: userPost[i].userReact,
+            likedPost: likedPost,
+            __v: userPost[i].__v,
+            _id: userPost[i]._id,
+          };
           dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        dataPost
+        dataPost,
       });
     } catch (error) {
       console.log(error);
@@ -119,11 +117,11 @@ module.exports = {
   },
 
   addPost: async (req, res) => {
+    const { description, postAttachments } = req.body;
     try {
-      let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
-      let key = `post/${req.user.id}-${suffixes}`
-      if (typeof(postAttachments) === "undefined") {
+      let key = `post/${req.user.id}-${suffixes}`;
+      if (!postAttachments) {
         let newPost = new Post({
           description: description,
           postAttachments: {
@@ -138,7 +136,7 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      } else if (typeof(description) === "undefined") {
+      } else if (!description) {
         let uploadResponse = await uploadS3(key, postAttachments);
         let newPost = new Post({
           description: "",
@@ -192,8 +190,7 @@ module.exports = {
             message: "You can only delete your own feed",
           });
         }
-      }
-      else if (post.description === ""){
+      } else if (post.description === "") {
         if (post.userID.toString() === id) {
           await post.remove();
           await deleteS3(post.postAttachments.publicID);
@@ -205,8 +202,7 @@ module.exports = {
             message: "You can only delete your own feed",
           });
         }
-      } 
-      else {
+      } else {
         if (post.userID.toString() === id) {
           await post.remove();
           await deleteS3(post.postAttachments.publicID);
@@ -253,8 +249,8 @@ module.exports = {
       let userID = req.user.id;
       let suffixes = uuidv4();
       let key = `comment/${req.user.id}-${suffixes}`;
-      let post = await Post.findOne({"_id": id});
-      if (typeof(commentAttachments) === "undefined") {
+      let post = await Post.findOne({ _id: id });
+      if (typeof commentAttachments === "undefined") {
         let comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
@@ -270,7 +266,7 @@ module.exports = {
           message: "Comment successfully",
           id: comment._id,
         });
-      } else if (typeof(commentContent) === "undefined") {
+      } else if (typeof commentContent === "undefined") {
         let uploadResponse = await uploadS3(key, commentAttachments);
         let comment = new Comment({
           commentContent: "",
@@ -317,22 +313,23 @@ module.exports = {
       let comment = await Comment.findOne({ _id: commentID });
       let post = await Post.findById({ _id: postID });
       if (comment.userID.toString() === userID || post.userID.toString() === userID) {
-        if (comment.commentAttachments.url === "" && comment.commentAttachments.publicID === "") {
+        if (
+          comment.commentAttachments.url === "" &&
+          comment.commentAttachments.publicID === ""
+        ) {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           return res.status(200).json({
             message: "Delete successfully",
           });
-        }
-        else if (comment.commentContent === ""){
+        } else if (comment.commentContent === "") {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           await deleteS3(comment.commentAttachments.publicID);
           return res.status(200).json({
             message: "Delete successfully",
           });
-        }
-        else{
+        } else {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           await deleteS3(comment.commentAttachments.publicID);
@@ -358,18 +355,18 @@ module.exports = {
       let commentData = [];
       for (let i = 0; i < commentLength; i++) {
         let id = comment[i].userID;
-        let user = await User.find({ "_id": id});
+        let user = await User.find({ _id: id });
         console.log(user);
         commentData.push({
           commentID: comment[i]._id,
           commentContent: comment[i].commentContent,
           userAvatarCommented: user[0].userAvatar.url,
-          userFullName: user[0].firstName+" "+user[0].lastName,
-        })
+          userFullName: user[0].firstName + " " + user[0].lastName,
+        });
       }
       return res.status(200).json({
         commentData: commentData,
-      })
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");
