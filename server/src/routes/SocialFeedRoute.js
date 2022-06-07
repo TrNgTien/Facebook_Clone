@@ -6,13 +6,9 @@ const { Authentication } = require("../middleware/Authentication");
 router.post("/addPost", Authentication, feedHandler.addPost);
 router.get("/getAllPost", Authentication, feedHandler.getPost);
 router.get("/search", feedHandler.getPostById);
-router.get("/getCommentOfPost/:id", Authentication, feedHandler.getCommentOfPost);
+router.get("/getCommentOfPost/:id", feedHandler.getCommentOfPost);
 router.put("/reactPost/:id", Authentication, feedHandler.reactPost);
-router.post(
-  "/commentPost/:id",
-  Authentication,
-  feedHandler.commentPost
-);
+router.post("/addComment/:id", Authentication, feedHandler.commentPost);
 router.delete(
   "/deleteComment/:commentID/:postID",
   Authentication,

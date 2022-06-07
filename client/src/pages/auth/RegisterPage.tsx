@@ -25,8 +25,10 @@ export default function RegisterPage(props: any) {
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [form, setForm] = useState<any>(initial_form);
 
-  const onChangeForm = (e: ChangeEvent<any>) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const onChangeForm = (e: ChangeEvent<any>) => {
+    const valueInput = e.target.value;
+    setForm({ ...form, [e.target.name]: valueInput });
+  };
   const RenderIcon = ({ showPassword }: IShowPass) => {
     if (!showPassword) return <AiFillEyeInvisible />;
     else return <AiFillEye />;
@@ -35,24 +37,27 @@ export default function RegisterPage(props: any) {
     e.preventDefault();
     setIsRegistering(true);
     if (
-      form.firstName === "" ||
-      form.lastName === "" ||
-      form.userName === "" ||
-      form.password === "" ||
-      form.gender === ""
+      !form.firstName ||
+      !form.lastName ||
+      !form.userName ||
+      !form.password ||
+      !form.gender
     ) {
       setIsRegistering(false);
       alert("Please fill all the information!");
-      return;
+    } else if (form.password.length < 6) {
+      setIsRegistering(false);
+      alert("Please input password at least 6 characters!");
     } else {
-      const resRegister = await RegisterReq(form);
-      if (resRegister.status === 200) {
-        setIsRegistering(false);
-        navigate(-1);
-      } else {
-        setIsRegistering(false);
-        alert("Something went wrong!");
-      }
+      await RegisterReq(form)
+        .then(() => {
+          setIsRegistering(false);
+          navigate(-1);
+        })
+        .catch(() => {
+          setIsRegistering(false);
+          alert("Something went wrong!");
+        });
     }
   };
 
@@ -61,7 +66,7 @@ export default function RegisterPage(props: any) {
   }
   return (
     <div className='register-page'>
-      {isRegistering ? <CircleLoading /> : null}
+      {isRegistering && <CircleLoading />}
       <div className='container-form'>
         <form onSubmit={finishSignUp}>
           <div className='register-form__header'>
@@ -112,7 +117,6 @@ export default function RegisterPage(props: any) {
                 onChange={onChangeForm}
                 placeholder='New password'
                 className='register-input__password'
-                size={8}
               />
               <i
                 className='icon-password--hidden'

@@ -48,7 +48,7 @@
 		.modal-wrapper__left--hidden {
 			display: none;
 		}
-		.modal-wrapper__right--only{
+		.modal-wrapper__right--only {
 			width: 100%;
 			display: flex;
 			flex-direction: column;
@@ -113,11 +113,17 @@
 						width: 40px;
 						border-radius: 50%;
 						margin-right: 10px;
+						&:hover {
+							cursor: pointer;
+						}
 					}
 					.content__info {
 						.content__info__username {
 							padding-bottom: 3px;
 							font-weight: bold;
+							&:hover {
+								cursor: pointer;
+							}
 						}
 						.content__info__timestamp {
 							font-size: small;
@@ -139,14 +145,28 @@
 								font-size: 30px;
 							}
 						}
+						.close__icon {
+							border-radius: 50%;
+							padding: 5px;
+							font-size: 30px;
+							margin-left: 10px;
+							&:hover {
+								cursor: pointer;
+								background-color: var(--hover-color);
+								border-radius: 50%;
+								padding: 5px;
+								font-size: 30px;
+							}
+						}
 						.edit-modal {
 							position: absolute;
 							top: 30px;
-							right: 10px;
+							right: 45px;
 							border: 1px solid;
 							border-radius: 6px;
 							width: 8rem;
 							padding: 8px;
+							background-color: var(--white);
 							&:hover {
 								cursor: pointer;
 								background-color: var(--hover-color);
@@ -186,6 +206,7 @@
 				margin-top: 20px;
 				height: 100%;
 				overflow: auto;
+				padding-left: 6px;
 				&::-webkit-scrollbar {
 					width: 10px;
 				}
@@ -260,11 +281,23 @@
 						width: 40px;
 						border-radius: 50%;
 						margin-right: 10px;
+						&:hover {
+							cursor: pointer;
+							height: 40px;
+							width: 40px;
+							border-radius: 50%;
+							margin-right: 10px;
+						}
 					}
 					.content__info {
 						.content__info__username {
 							padding-bottom: 3px;
 							font-weight: bold;
+							&:hover {
+								cursor: pointer;
+								padding-bottom: 3px;
+								font-weight: bold;
+							}
 						}
 						.content__info__timestamp {
 							font-size: small;
@@ -294,6 +327,7 @@
 							border-radius: 6px;
 							width: 8rem;
 							padding: 8px;
+							background-color: var(--white);
 							&:hover {
 								cursor: pointer;
 								background-color: var(--hover-color);

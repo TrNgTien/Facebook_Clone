@@ -13,7 +13,7 @@ interface IUpdatePost {
 }
 const AddPost = (reqBody: IAddFeed) => {
   const { ownerToken, imageBase64, description } = reqBody;
-  let configHeader = {
+  const configHeader = {
     headers: {
       Authorization: `Bearer ${ownerToken}`,
     },
@@ -25,7 +25,7 @@ const AddPost = (reqBody: IAddFeed) => {
   );
 };
 const getAllFeed = (token: string | null) => {
-  let configHeader = {
+  const configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -33,14 +33,9 @@ const getAllFeed = (token: string | null) => {
   return axiosInstance.get(API_PATH.POST_GET, configHeader);
 };
 
-interface IUpdatePost {
-  idPost: string;
-  description: string;
-  token: string | null;
-}
 const updatePost = (reqBody: IUpdatePost) => {
   const { idPost, description, token } = reqBody;
-  let configHeader = {
+  const configHeader = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -51,5 +46,44 @@ const updatePost = (reqBody: IUpdatePost) => {
     configHeader
   );
 };
-
-export { AddPost, getAllFeed, updatePost };
+const deletePost = (idPost: string, token: string | null) => {
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.delete(`${API_PATH.POST_DELETE}/${idPost}`, configHeader);
+};
+const reactPost = (idPost: string, token: string | null) => {
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.put(`${API_PATH.POST_LIKE}/${idPost}`, configHeader);
+};
+const getCommentByPostID = (idPost: string) => {
+  return axiosInstance.get(`${API_PATH.POST_GET_COMMENT}/${idPost}`);
+};
+const addComment = (reqBody: any) => {
+  const { idPost, token, commentContent } = reqBody;
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.post(
+    `${API_PATH.POST_ADD_COMMENT}/${idPost}`,
+    { commentContent },
+    configHeader
+  );
+};
+export {
+  AddPost,
+  getAllFeed,
+  updatePost,
+  deletePost,
+  reactPost,
+  getCommentByPostID,
+  addComment,
+};

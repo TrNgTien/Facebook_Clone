@@ -6,8 +6,7 @@ import { AddPost } from "@services/NewsFeedService";
 import Icons from "@theme/Icons";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import "./UploadModal.scss";
-import jwtDecode from "jwt-decode";
-import { IJwtDecode } from "@constants/InterfaceModel";
+import { decodedID } from "@utils/DecodeToken";
 
 const UploadModal = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +18,8 @@ const UploadModal = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isUpLoading, setIsUpLoading] = useState<boolean>(false);
   const ownerToken: string = currentUser.token;
-  const ownerId = jwtDecode<IJwtDecode>(currentUser.token).id;
+  const ownerID = decodedID(currentUser.token);
+
   const inputFileRef = useRef<any>(null);
   const keyPress = useCallback(
     (e) => {
@@ -36,6 +36,7 @@ const UploadModal = () => {
   }, [keyPress]);
 
   const triggerOpenInputFile = () => {
+    // `current` points to the mounted file input element
     inputFileRef.current.click();
   };
 
@@ -63,11 +64,11 @@ const UploadModal = () => {
       postAttachments: {
         url: imageBase64,
       },
-      numberOfLike: 0,
+      likedPost: [],
       numberOfComment: 0,
       _v: 0,
       userReact: [],
-      userID: ownerId,
+      userID: ownerID,
     };
     const newListPosts = [...listPosts];
     if (!imageBase64 && !description) {
@@ -126,7 +127,7 @@ const UploadModal = () => {
             <div className='upload-form__user'>
               <img
                 className='upload-form__user-avatar'
-                src={currentUser.userAvatar}
+                src={currentUser.userAvatar.url}
                 alt='avatar'
               />
               <p className='upload-form__username'>{currentUser.fullName}</p>
@@ -166,9 +167,9 @@ const UploadModal = () => {
               </label>
               <input
                 className='file-input__input'
+                ref={inputFileRef}
                 type='file'
                 name='input-file'
-                ref={inputFileRef}
                 id='inputFile'
                 accept='image/x-png,image/gif,image/jpeg'
                 onChange={handlePreviewFile}

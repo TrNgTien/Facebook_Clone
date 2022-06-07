@@ -1,24 +1,56 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { BsThreeDots } from "react-icons/bs";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
+import { setViewPost } from "@slices/PostSlice";
 import "./Comments.scss";
 
-const Comments = () => {
+interface IProps {
+  itemComment: any;
+}
+const Comments = ({ itemComment }: IProps) => {
+  const { userAvatarCommented, userID, commentContent, userFullName } = itemComment;
+  const navigate = useNavigate();
+  const { viewPostData } = useAppSelector((state) => state.post);
+  const dispatch = useAppDispatch();
+
   return (
-    <div className='comment__container'>
-      <img alt='avatar' className='comment__avatar-img' />
-      <div className='comment__container__right'>
-        <div className='comment__content'>
-          <p className='comment__username'>Duongw Thieen Phuc</p>
-          <p className='comment__para'>
-            src/app/pages/main-feeds/components/header/Header.tsx Line 4:10: 'SiMessenger'
-            is defined but never used @typescript-eslint/no-unused-vars Line 11:23:
-            'setCounterNoti' is assigned a value but never used
-          </p>
-        </div>
-        <div className='comment-features'>
-          <button className='like-comment'>Like</button>
-          <button className='reply-comment'>Reply</button>
-          <p className='timestamp-text'>12 hours ago</p>
-        </div>
+    <div className='comments-zone'>
+      <img
+        className='comments-zone__img-avatar'
+        src={userAvatarCommented}
+        alt='avatar'
+        onClick={() => {
+          viewPostData.isViewPost &&
+            dispatch(
+              setViewPost({
+                ...viewPostData,
+                isViewPost: false,
+              })
+            );
+          navigate(`/profile/${userID}`);
+        }}
+      />
+      <div className='wrapper-comment__bubble'>
+        <p
+          onClick={() => {
+            viewPostData.isViewPost &&
+              dispatch(
+                setViewPost({
+                  ...viewPostData,
+                  isViewPost: false,
+                })
+              );
+            navigate(`/profile/${userID}`);
+          }}
+        >
+          {userFullName}
+        </p>
+        <p>{commentContent}</p>
+      </div>
+
+      <div className='comments-zone__edit-comment'>
+        <BsThreeDots />
       </div>
     </div>
   );

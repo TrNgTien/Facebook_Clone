@@ -1,5 +1,5 @@
 const Post = require("../model/Post");
-const User =  require("../model/User");
+const User = require("../model/User");
 const Comment = require("../model/Comment");
 const { v4: uuidv4 } = require("uuid");
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
@@ -9,41 +9,50 @@ module.exports = {
       let allPost = await Post.find();
       let allPostLength = allPost.length;
       let postData = {};
-      let allPostData = [];
+      let dataPost = [];
       for (let i = 0; i < allPostLength; i++) {
-        let user = await User.findOne({ _id: allPost[i].userID });
         let userReact = allPost[i].userReact;
         let userReactLength = userReact.length;
+        let likedPost = [];
         if (userReactLength > 0) {
-          let likedPost = [];
           for (let j = 0; j < userReactLength; j++) {
-            let userReactInfo = await User.findOne({_id: userReact[j]});
+            let userReactInfo = await User.findOne({ _id: userReact[j] });
             likedPost.push({
               userAvatarLiked: userReactInfo.userAvatar.url,
-              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userFullName: userReactInfo.firstName + " " + userReactInfo.lastName,
               userID: userReactInfo._id,
             });
             postData = {
-              postID: allPost[i].postID,
               description: allPost[i].description,
+              numberOfComment: allPost[i].numberOfComment,
               postAttachments: allPost[i].postAttachments,
-              userAvatarPosted: user.userAvatar.url,
-            }
+              time: allPost[i].time,
+              userID: allPost[i].userID,
+              userReact: allPost[i].userReact,
+              likedPost: likedPost,
+              __v: allPost[i].__v,
+              _id: allPost[i]._id,
+            };
           }
-          allPostData.push({postData: postData}, {likedPost: likedPost});
-        }
-        else {
+          dataPost.push(postData);
+        } else {
+          likedPost = [];
           postData = {
-            postID: allPost[i].postID,
             description: allPost[i].description,
+            numberOfComment: allPost[i].numberOfComment,
             postAttachments: allPost[i].postAttachments,
-            userAvatarPosted: user.userAvatar.url,
-         }
-         allPostData.push({postData: postData});
+            time: allPost[i].time,
+            userID: allPost[i].userID,
+            userReact: allPost[i].userReact,
+            likedPost: likedPost,
+            __v: allPost[i].__v,
+            _id: allPost[i]._id,
+          };
+          dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        data: allPostData
+        dataPost,
       });
     } catch (error) {
       console.log(error);
@@ -56,41 +65,50 @@ module.exports = {
       let userPost = await Post.find({ userID: userID });
       let userPostLength = userPost.length;
       let postData = {};
-      let allUserPost = [];
+      let dataPost = [];
       for (let i = 0; i < userPostLength; i++) {
-        let user = await User.findOne({ _id: userPost[i].userID });
         let userReact = userPost[i].userReact;
         let userReactLength = userReact.length;
-        if (userReactLength > 0){
-          let likedPost = [];
+        let likedPost = [];
+        if (userReactLength > 0) {
           for (let j = 0; j < userReactLength; j++) {
-            let userReactInfo = await User.findOne({_id: userReact[j]});
+            let userReactInfo = await User.findOne({ _id: userReact[j] });
             likedPost.push({
               userAvatarLiked: userReactInfo.userAvatar.url,
-              userFullName: userReactInfo.firstName+" "+userReactInfo.lastName,
+              userFullName: userReactInfo.firstName + " " + userReactInfo.lastName,
               userID: userReactInfo._id,
-            })
+            });
             postData = {
-              postID: userPost[i].postID,
               description: userPost[i].description,
+              numberOfComment: userPost[i].numberOfComment,
               postAttachments: userPost[i].postAttachments,
-              userAvatarPosted: user.userAvatar.url,
-            }
+              time: userPost[i].time,
+              userID: userPost[i].userID,
+              userReact: userPost[i].userReact,
+              likedPost: likedPost,
+              __v: userPost[i].__v,
+              _id: userPost[i]._id,
+            };
           }
-          allUserPost.push({postData: postData}, {likedPost: likedPost});
-        }
-        else{
+          dataPost.push(postData);
+        } else {
+          likedPost = [];
           postData = {
-            postID: userPost[i].postID,
             description: userPost[i].description,
+            numberOfComment: userPost[i].numberOfComment,
             postAttachments: userPost[i].postAttachments,
-            userAvatarPosted: user.userAvatar.url,
-          }
-          allUserPost.push({postData: postData});
+            time: userPost[i].time,
+            userID: userPost[i].userID,
+            userReact: userPost[i].userReact,
+            likedPost: likedPost,
+            __v: userPost[i].__v,
+            _id: userPost[i]._id,
+          };
+          dataPost.push(postData);
         }
       }
       return res.status(200).json({
-        data: allUserPost
+        dataPost,
       });
     } catch (error) {
       console.log(error);
@@ -99,11 +117,11 @@ module.exports = {
   },
 
   addPost: async (req, res) => {
+    const { description, postAttachments } = req.body;
     try {
-      let { description, postAttachments } = req.body;
       let suffixes = uuidv4();
-      let key = `post/${req.user.id}-${suffixes}`
-      if (typeof(postAttachments) === "undefined") {
+      let key = `post/${req.user.id}-${suffixes}`;
+      if (!postAttachments) {
         let newPost = new Post({
           description: description,
           postAttachments: {
@@ -118,7 +136,7 @@ module.exports = {
           message: "Post Successfully!",
           id: id,
         });
-      } else if (typeof(description) === "undefined") {
+      } else if (!description) {
         let uploadResponse = await uploadS3(key, postAttachments);
         let newPost = new Post({
           description: "",
@@ -172,8 +190,7 @@ module.exports = {
             message: "You can only delete your own feed",
           });
         }
-      }
-      else if (post.description === ""){
+      } else if (post.description === "") {
         if (post.userID.toString() === id) {
           await post.remove();
           await deleteS3(post.postAttachments.publicID);
@@ -185,8 +202,7 @@ module.exports = {
             message: "You can only delete your own feed",
           });
         }
-      } 
-      else {
+      } else {
         if (post.userID.toString() === id) {
           await post.remove();
           await deleteS3(post.postAttachments.publicID);
@@ -212,13 +228,11 @@ module.exports = {
       let post = await Post.findById({ _id: id });
       if (!post.userReact.includes(userID)) {
         await post.updateOne({ $push: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike + 1 });
         return res.status(200).json({
           message: "likes successfully",
         });
       } else {
         await post.updateOne({ $pull: { userReact: userID } });
-        await post.updateOne({ numberOfLike: post.numberOfLike - 1 });
         return res.status(200).json({
           message: "dislikes successfully",
         });
@@ -230,14 +244,14 @@ module.exports = {
   },
   commentPost: async (req, res) => {
     try {
-      let { id } = req.params;
-      let { commentContent, commentAttachments } = req.body;
-      let userID = req.user.id;
-      let suffixes = uuidv4();
-      let key = `comment/${req.user.id}-${suffixes}`;
-      let post = await Post.findOne({"_id": id});
-      if (typeof(commentAttachments) === "undefined") {
-        let comment = new Comment({
+      const { id } = req.params;
+      const { commentContent, commentAttachments } = req.body;
+      const userID = req.user.id;
+      const suffixes = uuidv4();
+      const key = `comment/${req.user.id}-${suffixes}`;
+      const post = await Post.findOne({ _id: id });
+      if (!commentAttachments) {
+        const comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
             url: "",
@@ -252,9 +266,9 @@ module.exports = {
           message: "Comment successfully",
           id: comment._id,
         });
-      } else if (typeof(commentContent) === "undefined") {
-        let uploadResponse = await uploadS3(key, commentAttachments);
-        let comment = new Comment({
+      } else if (!commentContent) {
+        const uploadResponse = await uploadS3(key, commentAttachments);
+        const comment = new Comment({
           commentContent: "",
           commentAttachments: {
             url: uploadResponse.locationS3,
@@ -270,8 +284,8 @@ module.exports = {
           id: comment._id,
         });
       } else {
-        let uploadResponse = await uploadS3(key, commentAttachments);
-        let comment = new Comment({
+        const uploadResponse = await uploadS3(key, commentAttachments);
+        const comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
             url: uploadResponse.locationS3,
@@ -299,22 +313,23 @@ module.exports = {
       let comment = await Comment.findOne({ _id: commentID });
       let post = await Post.findById({ _id: postID });
       if (comment.userID.toString() === userID || post.userID.toString() === userID) {
-        if (comment.commentAttachments.url === "" && comment.commentAttachments.publicID === "") {
+        if (
+          comment.commentAttachments.url === "" &&
+          comment.commentAttachments.publicID === ""
+        ) {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           return res.status(200).json({
             message: "Delete successfully",
           });
-        }
-        else if (comment.commentContent === ""){
+        } else if (comment.commentContent === "") {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           await deleteS3(comment.commentAttachments.publicID);
           return res.status(200).json({
             message: "Delete successfully",
           });
-        }
-        else{
+        } else {
           await comment.remove();
           await Post.updateOne({ _id: comment.feedID }, { $inc: { numberOfComment: -1 } });
           await deleteS3(comment.commentAttachments.publicID);
@@ -340,18 +355,18 @@ module.exports = {
       let commentData = [];
       for (let i = 0; i < commentLength; i++) {
         let id = comment[i].userID;
-        let user = await User.find({ "_id": id});
-        console.log(user);
+        let user = await User.find({ _id: id });
         commentData.push({
           commentID: comment[i]._id,
           commentContent: comment[i].commentContent,
           userAvatarCommented: user[0].userAvatar.url,
-          userFullName: user[0].firstName+" "+user[0].lastName,
-        })
+          userFullName: user[0].firstName + " " + user[0].lastName,
+          userID: comment[i].userID,
+        });
       }
       return res.status(200).json({
         commentData: commentData,
-      })
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json("Internal server error");

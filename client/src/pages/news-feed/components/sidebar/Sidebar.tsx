@@ -3,14 +3,12 @@ import "./Sidebar.scss";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useAppSelector } from "@hooks/useStore";
 import { useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 import Icons from "@theme/Icons";
-import { IJwtDecode } from "@constants/InterfaceModel";
-
+import { decodedID } from "@utils/DecodeToken";
 const Sidebar = () => {
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  const ownID = jwtDecode<IJwtDecode>(currentUser.token).id;
+  const ownID = decodedID(currentUser.token);
   return (
     <div className='sidebar'>
       <div className='sidebar-row' onClick={() => navigate(`/profile/${ownID}`)}>

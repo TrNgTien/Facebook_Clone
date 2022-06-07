@@ -16,15 +16,18 @@ const AuthenSlice = createSlice({
       const { payload } = action;
       return { ...state, currentUser: payload, isLogged: true };
     },
-    setLogout(state, action: PayloadAction<any>) {
-      const { payload } = action;
-      return { ...state, currentUser: payload, isLogged: false };
+    setUpdateUser(state, action: PayloadAction<any>){
+      const {payload} = action;
+      return {...state, currentUser: payload};
+    },
+    setLogout(state) {
+      return { ...state, currentUser: null, isLogged: false };
     },
   },
 });
 
 //Actions
-export const { setLoginSuccess, setLogout } = AuthenSlice.actions;
+export const { setLoginSuccess, setUpdateUser, setLogout } = AuthenSlice.actions;
 
 //Reducer
 const authReducer = AuthenSlice.reducer;

@@ -27,10 +27,9 @@ axiosInstance.interceptors.request.use(
         const refreshToken = getLocalStorage("refreshToken");
         const date = new Date();
         if (tokenDecoded.exp < date.getTime() / 1000) {
-          const refreshTokenValue = refreshToken;
           const configHeader = {
             headers: {
-              refreshToken: `${refreshTokenValue}`,
+              refreshToken: `${refreshToken}`,
             },
           };
           const res = await axiosInstance.get(`${API_PATH.REFRESH_TOKEN}`, configHeader);

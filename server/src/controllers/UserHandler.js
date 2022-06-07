@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { uploadS3, deleteS3 } = require("../middleware/s3Services");
 const { v4: uuidv4 } = require("uuid");
+const Post = require("../model/Post");
 
 module.exports = {
   register: async (req, res) => {
@@ -81,6 +82,12 @@ module.exports = {
           message: "Incorrect UserName or Password",
         });
       } else {
+        let postLiked = await Post.find({userReact: {$in: [userID]}});
+        let postLikedLength = postLiked.length;
+        let postLikedID = [];
+        for (let i = 0; i < postLikedLength; i++) {
+          postLikedID.push(postLiked[i]._id);
+        }
         return res.status(200).json({
           message: "Login successfully",
           dataUser: {
@@ -94,6 +101,8 @@ module.exports = {
             DOB: user.DOB,
             hobbies: user.hobbies,
             intro: user.intro,
+            friends: user.friends,
+            likedPost: postLikedID
           },
         });
       }
@@ -115,8 +124,8 @@ module.exports = {
   },
   getUserInformation: async (req, res) => {
     try {
-      let { id } = req.params;
-      let userInfo = await User.findOne({ _id: id });
+      const { id } = req.params;
+      const userInfo = await User.findOne({ _id: id });
       return res.status(200).json({
         data: {
           _id: userInfo._id,
@@ -139,31 +148,18 @@ module.exports = {
   },
   updateInformation: async (req, res) => {
     try {
-      let { firstName, lastName, biography, gender, DOB, hobbies, intro } =
-        req.body;
-      let { id } = req.params;
-      let user = await User.findOne({ _id: id });
-      if (req.user.id === id) {
+      let { userID } = req.params;
+      let infoUpdate = req.body;
+      let user = await User.findOne({ _id: userID });
+      if (req.user.id === userID) {
         await User.findByIdAndUpdate(
           user._id,
-          {
-            firstName: firstName,
-            lastName: lastName,
-            biography: biography,
-            gender: gender,
-            DOB: DOB,
-            hobbies: hobbies,
-            intro: intro,
-          },
-          {
-            new: true,
-          }
+          infoUpdate
         );
         return res.status(200).json({
           message: "Update successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "Only edit personal profiles",
         });
@@ -230,7 +226,6 @@ module.exports = {
           message: "Update successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "Only edit personal profiles",
         });
@@ -252,7 +247,6 @@ module.exports = {
           message: "Delete successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "You are not allowed",
         });
@@ -282,8 +276,17 @@ module.exports = {
       let id = req.user.id;
       let user = await User.findOne({ _id: id });
       let friendList = user.friends;
+      let listFriend = [];
+      for (let i = 0; i < friendList.length; i++) {
+        let friend = await User.findOne({ _id: friendList[i] });
+        listFriend.push({
+          userID: friend._id,
+          fullName: friend.firstName+" "+friend.lastName,
+          avatar: friend.userAvatar.url,
+        });
+      }
       return res.status(200).json({
-        friends: friendList,
+        friends: listFriend,
       })
     } 
     catch(error){
@@ -295,9 +298,18 @@ module.exports = {
     let { ownId } = req.params;
     let user = await User.findOne({ _id: ownId });
     let friendList = user.friends;
-    return res.status(200).json({
-      friends: friendList,
-    });
+    let listFriend = [];
+    for (let i = 0; i < friendList.length; i++) {
+      let friend = await User.findOne({ _id: friendList[i] });
+      listFriend.push({
+        userID: friend._id,
+        fullName: friend.firstName+" "+friend.lastName,
+          avatar: friend.userAvatar.url,
+        });
+      }
+      return res.status(200).json({
+        friends: listFriend,
+      });
   },
   deleteFriends: async (req, res) => {
     try{

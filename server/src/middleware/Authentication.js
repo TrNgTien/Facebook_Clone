@@ -6,7 +6,6 @@ dotenv.config();
 const Authentication = (req, res, next) => {
 	try {
 		let token = req.get("Authorization");
-
 		if (!token) {
 			return res.status(401).json("UnAuthorized");
 		} else {

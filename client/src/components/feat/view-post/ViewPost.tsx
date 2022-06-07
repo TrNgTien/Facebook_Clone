@@ -7,12 +7,16 @@ import { MdEdit } from "react-icons/md";
 import InteractionPost from "../post-features/InteractionPost";
 import { BsThreeDots } from "react-icons/bs";
 import { updatePost } from "@services/NewsFeedService";
-import "./ViewPost.scss";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { setListPosts } from "@slices/PostSlice";
-
+import { useNavigate } from "react-router-dom";
+import { decodedID } from "@utils/DecodeToken";
+import CommentInput from "../comment-input/CommentInput";
+import { addComment } from "@services/NewsFeedService";
+import "./ViewPost.scss";
 const ViewPost = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const { dataPost, isViewPost } = viewPostData;
@@ -20,12 +24,13 @@ const ViewPost = () => {
   const [isOpenEditPost, setIsOpenEditPost] = useState(false);
   const [caption, setCaption] = useState(dataPost?.description);
   const [isLoading, setIsLoading] = useState(false);
+  const [comment, setComment] = useState("");
   const idPost = dataPost?._id;
   const closeModal = () => {
     dispatch(setViewPost({ ...viewPostData, isViewPost: false }));
   };
+  const ownID = decodedID(currentUser.token);
   const convertedTime = new Date(dataPost.time).toLocaleString();
-
   const keyPress = useCallback(
     (e) => {
       if (e.key === "Escape" && isViewPost) {
@@ -34,6 +39,35 @@ const ViewPost = () => {
     },
     [viewPostData, dispatch, isViewPost]
   );
+  const handleSubmit = (e: any) => {
+    if (e.key === "Enter") {
+      const data = {
+        idPost: idPost,
+        commentContent: comment,
+        token: currentUser.token,
+      };
+      addComment(data).then(() => {
+        dispatch(
+          setViewPost({
+            ...viewPostData,
+            dataPost: {
+              ...viewPostData.dataPost,
+              comments: [
+                ...viewPostData.dataPost.comments,
+                {
+                  ...data,
+                  userAvatarCommented: currentUser.userAvatar.url,
+                  userFullName: currentUser.fullName,
+                  userID: ownID,
+                },
+              ],
+            },
+          })
+        );
+        setComment("");
+      });
+    }
+  };
   const confirmEditPost = async (e: any) => {
     if (e.key === "Enter") {
       if (caption.length > 0) {
@@ -95,6 +129,11 @@ const ViewPost = () => {
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
 
+  const ListComments = () => {
+    return dataPost.comments.map((itemComment: any, index: number) => {
+      return <Comments key={index} itemComment={itemComment} />;
+    });
+  };
   return (
     <div className='view-post__wrapper'>
       <div className='modal-wrapper'>
@@ -120,28 +159,82 @@ const ViewPost = () => {
               ? "modal-wrapper__right"
               : "modal-wrapper__right--only"
           }
+          // onClick={() => setIsOpenEditPost(false)}
         >
           <div className='container__content'>
             <div className='container__info'>
-              <img className='avatar-img' src={dataPost.userAvatar} alt='avatar' />
+              <img
+                className='avatar-img'
+                onClick={() => {
+                  closeModal();
+                  navigate(`/profile/${dataPost.userID}`);
+                }}
+                src={dataPost.userAvatar.url}
+                alt='avatar'
+              />
               <div className='content__info'>
-                <p className='content__info__username'>{dataPost.userName}</p>
+                <p
+                  className='content__info__username'
+                  onClick={() => {
+                    closeModal();
+                    navigate(`/profile/${dataPost.userID}`);
+                  }}
+                >
+                  {dataPost.fullName}
+                </p>
                 <p className='content__info__timestamp'>{convertedTime}</p>
               </div>
-              <div className='edit-post__wrapper'>
-                <BsThreeDots
-                  className='three-dots__icon'
-                  onClick={() => setIsOpenEditPost(!isOpenEditPost)}
-                />
-                {isOpenEditPost && (
-                  <div className='edit-modal' onClick={() => setIsOpenEditPost(false)}>
-                    <div className='edit-option' onClick={() => setIsEditPost(true)}>
-                      <MdEdit className='edit-option__icon-edit' />
-                      <p>Edit Post</p>
-                    </div>
+              {dataPost?.userID === ownID ? (
+                <>
+                  <div className='edit-post__wrapper'>
+                    <BsThreeDots
+                      className='three-dots__icon'
+                      onClick={() => setIsOpenEditPost(!isOpenEditPost)}
+                    />
+                    {!dataPost.postAttachments.url && (
+                      <AiOutlineClose
+                        className='close__icon'
+                        onClick={() =>
+                          dispatch(
+                            setViewPost({
+                              ...viewPostData,
+                              isViewPost: false,
+                            })
+                          )
+                        }
+                      />
+                    )}
+                    {isOpenEditPost && (
+                      <div className='edit-modal' onClick={() => setIsOpenEditPost(false)}>
+                        <div
+                          className='edit-option'
+                          onClick={() => {
+                            setIsOpenEditPost(false);
+                            setIsEditPost(true);
+                          }}
+                        >
+                          <MdEdit className='edit-option__icon-edit' />
+                          <p>Edit Post</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div
+                  className='edit-post__wrapper'
+                  onClick={() =>
+                    dispatch(
+                      setViewPost({
+                        ...viewPostData,
+                        isViewPost: false,
+                      })
+                    )
+                  }
+                >
+                  <AiOutlineClose className='close__icon' />
+                </div>
+              )}
             </div>
             {isEditPost ? (
               <div className='edit-caption__zone'>
@@ -165,8 +258,8 @@ const ViewPost = () => {
             )}
           </div>
           <div className='wrapper-interaction'>
-            <p>{`${dataPost.numberOfLike} ${
-              dataPost.numberOfLike > 1 ? "likes" : "like"
+            <p>{`${dataPost.likedPost.length} ${
+              dataPost.likedPost.length > 1 ? "likes" : "like"
             }`}</p>
             <p>{`${dataPost.numberOfComment} ${
               dataPost.numberOfComment > 1 ? "comments" : "comment"
@@ -176,13 +269,15 @@ const ViewPost = () => {
           <InteractionPost />
           <hr className='divider' />
           <div className='container__comments'>
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
+            {dataPost.comments.length > 0 ? <ListComments /> : <h2>No Comment Yet...</h2>}
           </div>
+          <CommentInput
+            postID={idPost}
+            ownID={ownID}
+            value={comment}
+            handleSubmit={(e: any) => handleSubmit(e)}
+            handleChangeComment={(e: any) => setComment(e.target.value)}
+          />
         </div>
       </div>
     </div>
