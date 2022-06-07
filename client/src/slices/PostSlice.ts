@@ -4,7 +4,6 @@ export interface PostState {
   isCreatePost: boolean;
   viewPostData: any;
   listPosts: Array<any>;
-  idPostNeedDelete: string;
 }
 const initialState: PostState = {
   isCreatePost: false,
@@ -13,7 +12,6 @@ const initialState: PostState = {
     dataPost: {},
   },
   listPosts: [],
-  idPostNeedDelete: "",
 };
 const PostSlice = createSlice({
   name: "PostSlice",
@@ -31,16 +29,11 @@ const PostSlice = createSlice({
       const { payload } = action;
       return { ...state, listPosts: payload };
     },
-    setDeletePost(state, action) {
-      const { payload } = action;
-      return { ...state, idPostNeedDelete: payload };
-    },
   },
 });
 
 //Actions
-export const { setIsCreatePost, setViewPost, setListPosts, setDeletePost } =
-  PostSlice.actions;
+export const { setIsCreatePost, setViewPost, setListPosts } = PostSlice.actions;
 
 //Reducer
 const postReducer = PostSlice.reducer;

@@ -6,17 +6,16 @@ import { TiArrowSortedDown } from "react-icons/ti";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import FacebookLogo from "@assets/icons/icons8-facebook.svg";
 import "./Header.scss";
-import { useAppSelector } from "@hooks/useStore";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { MdLogout } from "react-icons/md";
-import { useDispatch } from "react-redux";
 import { setLogout } from "@slices/AuthenSlice";
+import { setListPosts, setViewPost } from "@slices/PostSlice";
 import { deleteLocalStorage } from "@utils/LocalStorageUtil";
 import useClickOutSide from "@hooks/useClickOutSide";
 import { decodedID } from "@utils/DecodeToken";
-
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const headerRef = useRef(null);
   const isClickOutSide = useClickOutSide(headerRef);
   const [searchText, setSearchText] = useState<string>("");
@@ -40,9 +39,10 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(setLogout());
+    dispatch(setListPosts([]));
+    dispatch(setViewPost({}));
     deleteLocalStorage("token");
     deleteLocalStorage("refreshToken");
-    console.log("run");
     navigate("/");
   };
 

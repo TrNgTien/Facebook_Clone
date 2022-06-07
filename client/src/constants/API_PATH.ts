@@ -10,6 +10,7 @@ const PATH_API = {
   POST_GET_ID: "post/search",
   POST_UPDATE: "post/updatePost",
   POST_DELETE: "post/deletePost",
+  POST_LIKE: "post/reactPost",
 
   USER_PROFILE_UPDATE: "profile/updateInfor",
   USER_AVATAR_UPDATE: "profile/updateAvatar",

@@ -5,7 +5,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useParams, useLocation } from "react-router-dom";
-
+import { deletePost } from "@services/NewsFeedService";
 import { MainLayout } from "@components/common/layout";
 import { getPostById, getProfileID } from "@services/ProfileService";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
@@ -16,7 +16,7 @@ import ViewPost from "@components/feat/view-post/ViewPost";
 import { IJwtDecode, IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
-import jwtDecode from "jwt-decode";
+import { decodedID } from "@utils/DecodeToken";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -28,10 +28,12 @@ export default function ProfilePage() {
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
+  const [ownID, setOwnID] = useState<string>();
   const profileRef = useRef<any>(null);
+
   useEffect(() => {
-    const currentUserIdDecoded = jwtDecode<IJwtDecode>(currentUser.token).id;
-    setCurrentUserId(currentUserIdDecoded);
+    // const currentUserIdDecoded = jwtDecode<IJwtDecode>(currentUser.token).id;
+    // setCurrentUserId(currentUserIdDecoded);
     profileRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -50,8 +52,11 @@ export default function ProfilePage() {
     } else {
       document.title = `Facebook Clone`;
     }
-  }, [pathname, userID, userData]);
+  }, [pathname, userID, userData, currentUser]);
   useEffect(() => {
+    if (currentUser) {
+      setOwnID(decodedID(currentUser?.token));
+    }
     const getOwnPosts = async () => {
       setIsLoading(true);
       const resProfile = await getProfileID(userID);
@@ -71,6 +76,17 @@ export default function ProfilePage() {
     };
     getOwnPosts();
   }, [dispatch, currentUser, userID]);
+  const handleDeletePost = async (dataDeleteID: any) => {
+    setIsLoading(true);
+    const newListPosts = [...ownPosts];
+    const resDelete = await deletePost(dataDeleteID, currentUser?.token);
+    if (resDelete.status === 200) {
+      const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
+      dispatch(setListPosts(afterDeletePost));
+      setOwnPosts(afterDeletePost);
+      setIsLoading(false);
+    }
+  };
   const CustomButton = (): JSX.Element => {
     const ownerButtons = ["Add to story", "Edit profile"];
     const otherButtons = ["Add friend", "Message"];
@@ -222,11 +238,17 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              {currentUserId === userData?._id && <Upload />}
+              {currentUser && ownID === userData?._id && <Upload />}
               {isLoading ? (
                 <Post.PostLoading />
               ) : (
-                ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
+                ownPosts.map((post, index: number) => (
+                  <Post
+                    handleDeletePost={(dataDelete: any) => handleDeletePost(dataDelete)}
+                    key={index}
+                    postData={post}
+                  />
+                ))
               )}
             </div>
           </div>
