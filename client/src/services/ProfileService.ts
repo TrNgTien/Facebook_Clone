@@ -58,4 +58,19 @@ const updateCover = (reqBody: IUpdateImg) => {
     configHeader
   );
 };
-export { getProfileID, getPostById, updateUserInfo, updateAvatar, updateCover };
+const getOwnFriends = (token: string | null) => {
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.get(`${API_PATH.GET_FRIENDS}`, configHeader);
+};
+export {
+  getProfileID,
+  getPostById,
+  updateUserInfo,
+  updateAvatar,
+  updateCover,
+  getOwnFriends,
+};

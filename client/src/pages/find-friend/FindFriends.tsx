@@ -2,7 +2,7 @@ import { MainLayout } from "@components/common/layout";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { IJwtDecode } from "@constants/InterfaceModel";
 import { useAppSelector } from "@hooks/useStore";
-import { addFriend, getAllUser } from "@services/FriendsService";
+import { addFriend } from "@services/FriendsService";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
 import jwtDecode from "jwt-decode";
 import React, { memo, useEffect, useState } from "react";
@@ -16,18 +16,17 @@ function FindFriends() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAddFriendLoading, setIsAddFriendLoading] = useState(false);
   useEffect(() => {
-    console.log("currentUSer: ", currentUser);
     const currentUserId = jwtDecode<IJwtDecode>(currentUser.token).id;
     setIsLoading(true);
-    const queryAllUser = getAllUser(currentUser.token).then((res) => {
-      if (res.status === 200) {
-        const listUser: Array<any> = res.data.data;
+    // const queryAllUser = getAllUser(currentUser.token).then((res) => {
+    //   if (res.status === 200) {
+    //     const listUser: Array<any> = res.data.data;
 
-        setUsers([...listUser.filter((user) => user._id !== currentUserId)]);
-        setIsLoading(false);
-        console.log("users: ", users);
-      }
-    });
+    //     setUsers([...listUser.filter((user) => user._id !== currentUserId)]);
+    //     setIsLoading(false);
+    //     console.log("users: ", users);
+    //   }
+    // });
   }, []);
   const handleAddFriend = async (friendId: string) => {
     const reqBody = {

@@ -1,19 +1,19 @@
 @import "@styles/mixin.scss";
 
-.edit-profile-page{
+.edit-profile-page {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     background-color: rgba(225, 225, 225, 0.7);
-    
-    .edit-profile-background{
+
+    .edit-profile-background {
         width: 100vw;
         max-height: 100vh;
         overflow-y: auto;
-        
-        .edit-profile-container{
+
+        .edit-profile-container {
             margin-bottom: 50px;
             position: relative;
             margin-top: 5%;
@@ -23,20 +23,20 @@
             border-radius: 5px;
             width: 630px;
             padding: 5px 0px;
-            
-            .edit-profile-container__header{
+
+            .edit-profile-container__header {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 padding: 8px 0px;
 
-                .header__container-title{
-                    .header__title-tag{
+                .header__container-title {
+                    .header__title-tag {
                         font-size: 18px;
                         font-weight: 600;
                     }
                 }
-                .header__container-close-btn{
+                .header__container-close-btn {
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -55,20 +55,20 @@
             .divider {
                 @include divider;
             }
-            .edit-profile-container__body{
+            .edit-profile-container__body {
                 width: 100%;
                 padding: 0px 10px;
-                .body__container-profile-field{
-                    .profile-field__container-title{
+                .body__container-profile-field {
+                    .profile-field__container-title {
                         display: flex;
                         justify-content: space-between;
                         margin-top: 16px;
 
-                        .profile-field__title-tag{
+                        .profile-field__title-tag {
                             font-size: 18px;
                             font-weight: 600;
                         }
-                        .profile-field__functional-btn{
+                        .profile-field__functional-btn {
                             color: var(--primary-color);
                             border-radius: 5px;
                             padding: 5px;
@@ -77,60 +77,59 @@
                             outline: none;
                             border: none;
                             cursor: pointer;
-                            &:hover{
+                            &:hover {
                                 background-color: var(--secondary-bubble-chat);
                             }
                         }
                     }
-                    .profile-field__container-content{
+                    .profile-field__container-content {
                         display: flex;
-                            justify-content: center;
-                            align-items: center;
-                        
-                        .profile-field__content{
+                        justify-content: center;
+                        align-items: center;
+
+                        .profile-field__content {
                             margin-top: 16px;
 
-                            .profile-field__avatar-img{
+                            .profile-field__avatar-img {
                                 height: 100%;
                                 width: 100%;
                                 border-radius: 50%;
                             }
-                            .profile-field__background-img{
+                            .profile-field__background-img {
                                 height: 100%;
                                 width: 100%;
                                 border-radius: 5px;
                             }
-                            
 
-                            &.profile-field__content--container-avatar-img{
+                            &.profile-field__content--container-avatar-img {
                                 width: 150px;
                                 height: 150px;
-                                
                             }
-                            &.profile-field__content--container-background-img{
+                            &.profile-field__content--container-background-img {
                                 background-color: var(--secondary-bubble-chat);
                                 width: 440px;
                                 height: 160px;
                                 border-radius: 5px;
                             }
-                            &.profile-field__content--container-bio{
+                            &.profile-field__content--container-bio {
                                 display: flex;
                                 flex-direction: column;
                                 align-items: flex-end;
-                                
-                                .bio-description{
-                                    overflow: auto;
-                                    resize: none;
+                                width: 100%;
+                                .bio-description {
                                     border-radius: 5px;
-                                    width: 12rem;
+                                    width: 80%;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    outline: none;
+                                    padding: 1rem;
                                     height: 4rem;
                                     border: 1px solid var(--divider-color);
                                     background-color: var(--comment-background);
-                                    text-align: center;
                                 }
-                                .bio-btns{
+                                .bio-btns {
                                     margin: 10px 0px;
-                                    .bio__button--cancel{
+                                    .bio__button--cancel {
                                         font-weight: 600;
                                         padding: 10px;
                                         border-radius: 5px;
@@ -140,7 +139,7 @@
                                         margin-right: 5px;
                                         cursor: pointer;
                                     }
-                                    .bio__button--save{
+                                    .bio__button--save {
                                         color: var(--white);
                                         font-weight: 600;
                                         padding: 10px;
@@ -150,59 +149,58 @@
                                         background-color: var(--primary-color);
                                         cursor: pointer;
                                     }
-                                    
                                 }
                             }
-                            &.profile-field__content--container-intro{
+                            &.profile-field__content--container-intro {
                                 width: 100%;
                                 font-size: 20px;
                                 color: var(--secondary-text);
-                                
-                                .container-intro__intro-info{
+
+                                .container-intro__intro-info {
                                     display: flex;
                                     align-items: center;
                                     padding: 5px 0px;
                                 }
-                                .intro_info-input{
+                                .intro_info-input {
                                     border: none;
                                     padding: 4px;
                                     border-radius: 5px;
                                     background-color: var(--secondary-bubble-chat);
                                     margin-left: 10px;
                                     width: 40%;
-                                    &::placeholder{
+                                    &::placeholder {
                                         font-size: 12px;
                                     }
                                 }
-                                .intro-info-tag{
+                                .intro-info-tag {
                                     margin-left: 10px;
                                     font-size: 14px;
                                 }
                             }
-                            &.profile-field__content--container-hobbies{
+                            &.profile-field__content--container-hobbies {
                                 width: 100%;
                                 display: flex;
                                 flex-flow: row wrap;
                                 align-items: center;
-                                .container-hobbies{
+                                .container-hobbies {
                                     border-radius: 25px;
                                     border: 1px solid var(--divider-color);
                                     padding: 5px 10px;
                                     margin: 5px 5px;
-                                    .hobby-tag-name{
+                                    .hobby-tag-name {
                                         font-size: 13px;
                                         color: var(--secondary-text);
                                         font-weight: 600;
                                     }
                                 }
-                                .input-hobbies{
-                                    padding: 10px ;
+                                .input-hobbies {
+                                    padding: 10px;
                                     border: none;
                                     border-radius: 25px;
                                     background-color: var(--secondary-bubble-chat);
                                     outline: none;
                                 }
-                                .add-hobbies{
+                                .add-hobbies {
                                     margin-left: 10px;
                                     display: flex;
                                     justify-content: center;
@@ -212,31 +210,30 @@
                                     font-size: 20px;
                                     color: var(--primary-color);
                                     border: 2px solid var(--primary-color);
-                                    
+
                                     border-radius: 50%;
                                     cursor: pointer;
                                 }
                             }
-                            &.profile-field__content--container-feature-img{
+                            &.profile-field__content--container-feature-img {
                                 display: flex;
                                 flex-direction: column;
                                 align-items: center;
                                 margin-bottom: 10px;
-                                .feature-desc{
+                                .feature-desc {
                                     font-size: 12px;
                                     color: var(--secondary-text);
                                 }
                             }
-                            
                         }
-                        .bio__describe-yourself{
+                        .bio__describe-yourself {
                             font-size: 15px;
                             color: var(--secondary-text);
                         }
                     }
                 }
             }
-            .edit-profile-container__footer{
+            .edit-profile-container__footer {
                 margin-bottom: 10px;
                 height: 35px;
                 position: relative;
@@ -244,8 +241,8 @@
                 margin-right: auto;
                 display: flex;
                 justify-content: center;
-                
-                .footer-accept-btn{
+
+                .footer-accept-btn {
                     padding: 10px;
                     width: 95%;
                     color: var(--primary-color);
@@ -255,7 +252,7 @@
                     border-radius: 5px;
                     background-color: var(--blue-30);
                     cursor: pointer;
-                    &:hover{
+                    &:hover {
                         background-color: var(--blue-40);
                     }
                 }

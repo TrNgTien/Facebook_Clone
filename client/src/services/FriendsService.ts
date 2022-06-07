@@ -6,14 +6,14 @@ interface IAddFriend {
   friendId: string;
 }
 
-const getAllUser = (token: string | null) => {
-  let configHeader = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  return axiosInstance.get(API_PATH.GET_ALL_USER, configHeader);
-};
+// const getAllUser = (token: string | null) => {
+//   let configHeader = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   return axiosInstance.get(API_PATH.GET_ALL_USER, configHeader);
+// };
 const addFriend = (reqBody: IAddFriend) => {
   const { token, friendId } = reqBody;
 
@@ -27,4 +27,4 @@ const addFriend = (reqBody: IAddFriend) => {
   return axiosInstance.put(`${API_PATH.ADD_FRIEND}/${friendId}`, {}, configHeader);
 };
 
-export { getAllUser, addFriend };
+export { addFriend };

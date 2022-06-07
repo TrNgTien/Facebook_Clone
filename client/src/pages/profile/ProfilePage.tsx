@@ -7,17 +7,17 @@ import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useParams, useLocation } from "react-router-dom";
 import { deletePost } from "@services/NewsFeedService";
 import { MainLayout } from "@components/common/layout";
-import { getPostById, getProfileID } from "@services/ProfileService";
+import { getOwnFriends, getPostById, getProfileID } from "@services/ProfileService";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
 import Upload from "../news-feed/components/upload/Upload";
 import UploadPost from "@components/feat/upload-modal/UploadModal";
 import Post from "@components/common/post/Posts";
 import ViewPost from "@components/feat/view-post/ViewPost";
-import { IJwtDecode, IUserData } from "@constants/InterfaceModel";
+import { IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
 import { decodedID } from "@utils/DecodeToken";
-import { getAllUser } from "@services/FriendsService";
+// import { getAllUser } from "@services/FriendsService";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -34,24 +34,22 @@ export default function ProfilePage() {
   const profileRef = useRef<any>(null);
 
   const [friends, setFriends] = useState<Array<any>>([]);
+  console.log(friends);
 
   useEffect(() => {
-    const queryAllUser = getAllUser(currentUser.token).then((res) => {
-      if (res.status === 200) {
-        const listUser: Array<any> = res.data.data;
-
-        setFriends([
-          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
-        ]);
-      }
-    });
-
     profileRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }, []);
-  console.log("friends: ", friends);
+  useEffect(() => {
+    getOwnFriends(currentUser?.token).then((res) => {
+      if (res.status === 200) {
+        setFriends(res.data.friends);
+      }
+    });
+  }, [currentUser]);
+  // console.log("friends: ", friends);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
@@ -172,29 +170,44 @@ export default function ProfilePage() {
             <div className='container-info'>
               <div className='container-info__left'>
                 <div className='container-avatar'>
-                  <img src={userData?.userAvatar.url} alt='avatar' className='avatar-img' />
-                  <button className='add-avatar'>
-                    <BsFillCameraFill className='add-avatar-icon' />
-                  </button>
+                  {userData && (
+                    <>
+                      <img
+                        src={userData?.userAvatar.url}
+                        alt='avatar'
+                        className='avatar-img'
+                      />
+                      <button className='add-avatar'>
+                        <BsFillCameraFill className='add-avatar-icon' />
+                      </button>
+                    </>
+                  )}
                 </div>
                 <div className='container-side-info'>
                   <div className='container-user-info'>
                     <h1 className='username'>
-                      {userData?.firstName + " " + userData?.lastName}
+                      {userData && userData?.firstName + " " + userData?.lastName}
                     </h1>
-                    <h4 className='friends-number'>{currentUser.friends.length} friends</h4>
-                    <div style={{ width: "fit-content" }}>
-                      <AvatarGroup max={5} total={friends.length - 5}>
-                        {friends.map((friend) => (
-                          <Avatar
-                            src={friend.userAvatar.url}
-                            key={friend._id}
-                            alt=''
-                            sx={{ width: 40, height: 40 }}
-                          />
-                        ))}
-                      </AvatarGroup>
-                    </div>
+                    {userData && (
+                      <>
+                        <h4 className='friends-number'>
+                          {currentUser.friends.length} friends
+                        </h4>
+                        <div style={{ width: "fit-content" }}>
+                          <AvatarGroup max={5} total={friends.length}>
+                            {/* {friends &&
+                            friends.map((friend) => (
+                              <Avatar
+                                src={friend.userAvatar.url}
+                                key={friend._id}
+                                alt=''
+                              sx={{ width: 40, height: 40 }}
+                              />
+                            ))} */}
+                          </AvatarGroup>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

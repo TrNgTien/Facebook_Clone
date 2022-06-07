@@ -14,7 +14,7 @@ import { deletePost } from "@services/NewsFeedService";
 
 import "./styles/NewsFeed.scss";
 import { getProfileID } from "@services/ProfileService";
-import { getAllUser } from "@services/FriendsService";
+// import { getAllUser } from "@services/FriendsService";
 import { useNavigate } from "react-router-dom";
 
 export default function NewsFeed() {
@@ -27,17 +27,17 @@ export default function NewsFeed() {
   const [isLoading, setIsLoading] = useState(false);
   const [friends, setFriends] = useState<Array<any>>([]);
 
-  useEffect(() => {
-    const queryAllUser = getAllUser(currentUser.token).then((res) => {
-      if (res.status === 200) {
-        const listUser: Array<any> = res.data.data;
+  // useEffect(() => {
+  //    = getAllUser(currentUser.token).then((res) => {
+  //     if (res.status === 200) {
+  //       const listUser: Array<any> = res.data.data;
 
-        setFriends([
-          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
-        ]);
-      }
-    });
-  }, []);
+  //       setFriends([
+  //         ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+  //       ]);
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     setPostData(listPosts);
