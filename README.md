@@ -65,15 +65,24 @@ Here is our team, you can connect us through our Linkedin:
                 
     2. System Design Specification:
         •	Use-cases Diagram:
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477355-6ef606cd-6b2c-4103-af70-d4b1f802047e.png)
+        
+![This is an image](https://user-images.githubusercontent.com/69331659/172477355-6ef606cd-6b2c-4103-af70-d4b1f802047e.png)
+
         •	Sequence Diagram: 
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477414-9327aecf-2a86-4a89-af78-e458d8c5a70b.png)
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477440-4fc9aca1-b406-4cd0-aeb3-f29e7d23bfc9.png)
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477479-b98afb42-a80a-4143-a7c0-b65d3025caed.png)
+        
+![This is an image](https://user-images.githubusercontent.com/69331659/172477414-9327aecf-2a86-4a89-af78-e458d8c5a70b.png)
+![This is an image](https://user-images.githubusercontent.com/69331659/172477440-4fc9aca1-b406-4cd0-aeb3-f29e7d23bfc9.png)
+![This is an image](https://user-images.githubusercontent.com/69331659/172477479-b98afb42-a80a-4143-a7c0-b65d3025caed.png)
+
+
         •	Activity Diagram:
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477527-15cd9c73-444b-4d57-99d5-c926fb748a61.png)
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477539-85396c05-0767-4d64-85a5-b9027613953c.png)
-            ![This is an image](https://user-images.githubusercontent.com/69331659/172477552-d372090c-13c7-4c55-a654-13f2bf5e4953.png)
+        
+        
+![This is an image](https://user-images.githubusercontent.com/69331659/172477527-15cd9c73-444b-4d57-99d5-c926fb748a61.png)
+![This is an image](https://user-images.githubusercontent.com/69331659/172477539-85396c05-0767-4d64-85a5-b9027613953c.png)
+![This is an image](https://user-images.githubusercontent.com/69331659/172477552-d372090c-13c7-4c55-a654-13f2bf5e4953.png)
+
+
 ## 🛠 Skills Applied
 Programming Languages: Javascript, Typescript.
 
