@@ -5,33 +5,58 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
 import useClickOutSide from "@hooks/useClickOutSide";
 import CommentInput from "@components/feat/comment-input/CommentInput";
+import { useAppSelector, useAppDispatch } from "@hooks/useStore";
+import { setViewPost } from "@slices/PostSlice";
 
 interface IProps {
   itemComment: any;
-  key: number;
 }
-const Comments = ({ itemComment, key }: IProps) => {
+const Comments = ({ itemComment }: IProps) => {
   const { userAvatarCommented, userID, commentContent, userFullName } = itemComment;
   const navigate = useNavigate();
   const [isOpenEditPost, setIsOpenEditPost] = useState(false);
   const editPostRef = useRef(null);
   const [isEditPost, setIsEditPost] = useState(false);
+  const { viewPostData } = useAppSelector((state) => state.post);
+  const dispatch = useAppDispatch();
 
   const isClickOutSide = useClickOutSide(editPostRef);
 
   return (
-    <div className='comments-zone' key={key}>
+    <div className='comments-zone'>
       <img
         className='comments-zone__img-avatar'
         src={userAvatarCommented}
         alt='avatar'
-        onClick={() => navigate(`/profile/${userID}`)}
+        onClick={() => {
+          viewPostData.isViewPost &&
+            dispatch(
+              setViewPost({
+                ...viewPostData,
+                isViewPost: false,
+              })
+            );
+          navigate(`/profile/${userID}`);
+        }}
       />
       {isEditPost ? (
         <CommentInput />
       ) : (
         <div className='wrapper-comment__bubble'>
-          <p onClick={() => navigate(`/profile/${userID}`)}>{userFullName}</p>
+          <p
+            onClick={() => {
+              viewPostData.isViewPost &&
+                dispatch(
+                  setViewPost({
+                    ...viewPostData,
+                    isViewPost: false,
+                  })
+                );
+              navigate(`/profile/${userID}`);
+            }}
+          >
+            {userFullName}
+          </p>
           <p>{commentContent}</p>
         </div>
       )}

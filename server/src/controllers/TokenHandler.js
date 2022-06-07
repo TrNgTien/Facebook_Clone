@@ -9,7 +9,7 @@ module.exports = {
         return res.status(401).json({ message: "Invalid Token!!" });
       } else {
         let user = await JWT.verify(refreshToken, process.env.REFRESH_JWT_KEY);
-        let newAccessToken = generateRefreshToken(
+        let newAccessToken = generateAccessToken(
           user.id,
           user.role
         );

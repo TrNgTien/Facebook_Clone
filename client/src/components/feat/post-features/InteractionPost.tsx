@@ -3,12 +3,13 @@ import { BiComment, BiShare, BiLike } from "react-icons/bi";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useNavigate } from "react-router-dom";
 import "./InteractionPost.scss";
-
-function InteractionPost() {
+import { setViewCommentPost } from "@slices/PostSlice";
+function InteractionPost({ postID }: any) {
   const { currentUser } = useAppSelector((state) => state.auth);
+  const { viewCommentPost } = useAppSelector((state) => state.post);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  // console.log(currentUser);
   return (
     <div className='container__features'>
       <button
@@ -20,7 +21,17 @@ function InteractionPost() {
       </button>
       <button
         className='container__feature'
-        onClick={() => (currentUser ? console.log("cmt") : navigate("/"))}
+        onClick={() =>
+          currentUser
+            ? dispatch(
+                setViewCommentPost({
+                  ...viewCommentPost,
+                  isView: true,
+                  idPost: postID,
+                })
+              )
+            : navigate("/")
+        }
       >
         <BiComment />
         <p>Comment</p>

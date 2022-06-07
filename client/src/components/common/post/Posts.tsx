@@ -10,7 +10,9 @@ import { decodedID } from "@utils/DecodeToken";
 import { getCommentByPostID } from "@services/NewsFeedService";
 import CommentInput from "@components/feat/comment-input/CommentInput";
 import Comments from "@components/common/comment-bubble/Comments";
+import { addComment } from "@services/NewsFeedService";
 import "./Posts.scss";
+
 interface IProps {
   postData: any;
   handleDeletePost: any;
@@ -20,24 +22,29 @@ function Post({ postData, handleDeletePost }: IProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentUser } = useAppSelector((state) => state.auth);
-  const { time, description, postAttachments, likedPost, numberOfComment, userID, _id } =
+  const { viewPostData, viewCommentPost } = useAppSelector((state) => state.post);
+  const { time, description, postAttachments, likedPost, userID, _id, numberOfComment } =
     postData;
   const [ownID, setOwnID] = useState<string>();
-  const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
   const convertedTime = new Date(time).toLocaleString();
   const [commentData, setCommentData] = useState<any>([]);
+  const [comment, setComment] = useState("");
   useEffect(() => {
     if (currentUser) {
       setOwnID(decodedID(currentUser?.token));
-      getCommentByPostID(_id, currentUser?.token)
-        .then((res) => {
-          if (res.status === 200) {
-            setCommentData(res.data.commentData);
-          }
-        })
-        .catch((err) => {});
     }
+    getCommentByPostID(_id)
+      .then((res) => {
+        if (res.status === 200) {
+          setCommentData(res.data.commentData);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Something went wrong");
+      });
+
     const getProfileData = async () => {
       const profileRes = await getProfileID(userID);
       if (profileRes.status === 200) {
@@ -45,7 +52,12 @@ function Post({ postData, handleDeletePost }: IProps) {
       }
     };
     getProfileData();
-  }, [userID, currentUser, _id]);
+  }, [userID, currentUser, _id, commentData]);
+  useEffect(() => {
+    if (viewPostData?.dataPost) {
+      setCommentData(viewPostData.dataPost.comments);
+    }
+  }, [viewPostData]);
   const reqDeletePost = () => {
     handleDeletePost(postData._id);
   };
@@ -54,6 +66,27 @@ function Post({ postData, handleDeletePost }: IProps) {
       <Comments key={index} itemComment={itemComment} />
     ));
     return listComments;
+  };
+  const handleSubmit = (e: any) => {
+    if (e.key === "Enter") {
+      const data = {
+        idPost: _id,
+        commentContent: comment,
+        token: currentUser.token,
+      };
+      const newComment = {
+        userAvatarCommented: currentUser.userAvatar.url,
+        userID,
+        commentContent: comment,
+        userFullName: currentUser.fullName,
+      };
+      addComment(data)
+        .then(() => {
+          setCommentData([...commentData, newComment]);
+          setComment("");
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div className='container' id='container-post'>
@@ -126,28 +159,39 @@ function Post({ postData, handleDeletePost }: IProps) {
       </div>
       <div className='container__status'>
         <p onClick={() => (currentUser ? console.log("like") : navigate("/"))}>
-          {likedPost.length > 1 ? `${likedPost.length} likes` : `${likedPost.length} like`}
+          {likedPost && likedPost.length > 1
+            ? `${likedPost.length} likes`
+            : `${likedPost.length} like`}
         </p>
-        <p onClick={() => (currentUser ? console.log("cmt") : navigate("/"))}>
+        <p onClick={() => !currentUser && navigate("/")}>
           {numberOfComment > 1
             ? `${numberOfComment} comments`
             : `${numberOfComment} comment`}
         </p>
       </div>
       <hr className='divider' />
-      <InteractionPost />
-      {commentData.length > 0 && (
-        <>
-          <hr className='divider' />
-          <div className='wrapper-comment__list'>
-            <ListComments />
-            <ListComments />
-          </div>
-        </>
-      )}
+      <InteractionPost postID={_id} />
+      {currentUser &&
+        commentData.length > 0 &&
+        viewCommentPost.isView &&
+        viewCommentPost.idPost === _id && (
+          <>
+            <hr className='divider' />
+            <div className='wrapper-comment__list'>
+              <ListComments />
+            </div>
+          </>
+        )}
       <hr className='divider' />
-
-      <CommentInput ownID={ownID} />
+      {currentUser && (
+        <CommentInput
+          postID={_id}
+          ownID={ownID}
+          value={comment}
+          handleSubmit={(e: any) => handleSubmit(e)}
+          handleChangeComment={(e: any) => setComment(e.target.value)}
+        />
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState, useRef } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Comments from "@components/common/comment-bubble/Comments";
 import { useAppDispatch, useAppSelector } from "@hooks/useStore";
@@ -9,15 +9,14 @@ import { BsThreeDots } from "react-icons/bs";
 import { updatePost } from "@services/NewsFeedService";
 import CircleLoading from "@components/common/loading-delay/CircleLoading";
 import { setListPosts } from "@slices/PostSlice";
-import useClickOutSide from "@hooks/useClickOutSide";
 import { useNavigate } from "react-router-dom";
 import { decodedID } from "@utils/DecodeToken";
 import CommentInput from "../comment-input/CommentInput";
+import { addComment } from "@services/NewsFeedService";
 import "./ViewPost.scss";
 const ViewPost = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const { viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const { dataPost, isViewPost } = viewPostData;
@@ -25,9 +24,8 @@ const ViewPost = () => {
   const [isOpenEditPost, setIsOpenEditPost] = useState(false);
   const [caption, setCaption] = useState(dataPost?.description);
   const [isLoading, setIsLoading] = useState(false);
+  const [comment, setComment] = useState("");
   const idPost = dataPost?._id;
-  const editPostRef = useRef(null);
-  const isClickOutSide = useClickOutSide(editPostRef);
   const closeModal = () => {
     dispatch(setViewPost({ ...viewPostData, isViewPost: false }));
   };
@@ -41,6 +39,35 @@ const ViewPost = () => {
     },
     [viewPostData, dispatch, isViewPost]
   );
+  const handleSubmit = (e: any) => {
+    if (e.key === "Enter") {
+      const data = {
+        idPost: idPost,
+        commentContent: comment,
+        token: currentUser.token,
+      };
+      addComment(data).then(() => {
+        dispatch(
+          setViewPost({
+            ...viewPostData,
+            dataPost: {
+              ...viewPostData.dataPost,
+              comments: [
+                ...viewPostData.dataPost.comments,
+                {
+                  ...data,
+                  userAvatarCommented: currentUser.userAvatar.url,
+                  userFullName: currentUser.fullName,
+                  userID: ownID,
+                },
+              ],
+            },
+          })
+        );
+        setComment("");
+      });
+    }
+  };
   const confirmEditPost = async (e: any) => {
     if (e.key === "Enter") {
       if (caption.length > 0) {
@@ -132,6 +159,7 @@ const ViewPost = () => {
               ? "modal-wrapper__right"
               : "modal-wrapper__right--only"
           }
+          // onClick={() => setIsOpenEditPost(false)}
         >
           <div className='container__content'>
             <div className='container__info'>
@@ -161,7 +189,7 @@ const ViewPost = () => {
                   <div className='edit-post__wrapper'>
                     <BsThreeDots
                       className='three-dots__icon'
-                      onClick={() => setIsOpenEditPost(true)}
+                      onClick={() => setIsOpenEditPost(!isOpenEditPost)}
                     />
                     {!dataPost.postAttachments.url && (
                       <AiOutlineClose
@@ -176,18 +204,14 @@ const ViewPost = () => {
                         }
                       />
                     )}
-                    {!isClickOutSide && isOpenEditPost && (
-                      <div
-                        className='edit-modal'
-                        onClick={() => isClickOutSide && setIsOpenEditPost(false)}
-                      >
+                    {isOpenEditPost && (
+                      <div className='edit-modal' onClick={() => setIsOpenEditPost(false)}>
                         <div
                           className='edit-option'
                           onClick={() => {
                             setIsOpenEditPost(false);
                             setIsEditPost(true);
                           }}
-                          ref={editPostRef}
                         >
                           <MdEdit className='edit-option__icon-edit' />
                           <p>Edit Post</p>
@@ -245,16 +269,15 @@ const ViewPost = () => {
           <InteractionPost />
           <hr className='divider' />
           <div className='container__comments'>
-            {dataPost.comments.length > 0 ? (
-              <>
-                <ListComments />
-                <ListComments />
-              </>
-            ) : (
-              <h2>No Comment Yet...</h2>
-            )}
+            {dataPost.comments.length > 0 ? <ListComments /> : <h2>No Comment Yet...</h2>}
           </div>
-          <CommentInput ownID={ownID} />
+          <CommentInput
+            postID={idPost}
+            ownID={ownID}
+            value={comment}
+            handleSubmit={(e: any) => handleSubmit(e)}
+            handleChangeComment={(e: any) => setComment(e.target.value)}
+          />
         </div>
       </div>
     </div>

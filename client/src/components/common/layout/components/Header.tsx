@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useRef } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { AiOutlineSearch, AiTwotoneBell } from "react-icons/ai";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
@@ -9,15 +9,12 @@ import "./Header.scss";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { MdLogout } from "react-icons/md";
 import { setLogout } from "@slices/AuthenSlice";
-import { setListPosts, setViewPost } from "@slices/PostSlice";
+import { setListPosts, setViewCommentPost, setViewPost } from "@slices/PostSlice";
 import { deleteLocalStorage } from "@utils/LocalStorageUtil";
-import useClickOutSide from "@hooks/useClickOutSide";
 import { decodedID } from "@utils/DecodeToken";
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const headerRef = useRef(null);
-  const isClickOutSide = useClickOutSide(headerRef);
   const [searchText, setSearchText] = useState<string>("");
   const [onwIdUser, setOnwIdUser] = useState<string>("");
   const { currentUser } = useAppSelector((state) => state.auth);
@@ -41,6 +38,7 @@ const Header = () => {
     dispatch(setLogout());
     dispatch(setListPosts([]));
     dispatch(setViewPost({}));
+    dispatch(setViewCommentPost({}));
     deleteLocalStorage("token");
     deleteLocalStorage("refreshToken");
     navigate("/");
@@ -99,19 +97,14 @@ const Header = () => {
           </div>
           <div className='header__option'>
             <AiTwotoneBell className='icon-options' />
-            {/* <div className='notify-counter'>{counterNoti > 9 ? "9+" : counterNoti}</div> */}
           </div>
           <div className='header__option' onClick={() => setOpenDropdown(true)}>
             <TiArrowSortedDown className='icon-options' />
           </div>
-          {!isClickOutSide && openDropdown && (
+          {openDropdown && (
             <div className='dropdown-window'>
               <div className='user-functional-button'>
-                <div
-                  className='user-functional__icons'
-                  ref={headerRef}
-                  onClick={() => handleLogout()}
-                >
+                <div className='user-functional__icons' onClick={() => handleLogout()}>
                   <div className='user-functional__icon-container'>
                     <MdLogout />
                   </div>

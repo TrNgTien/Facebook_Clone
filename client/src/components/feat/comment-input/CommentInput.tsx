@@ -1,37 +1,14 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import "./CommentInput.scss";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useNavigate } from "react-router-dom";
 import { setViewPost } from "@slices/PostSlice";
-import { addComment } from "@services/NewsFeedService";
 function CommentInput(props: any) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.auth);
   const { viewPostData } = useAppSelector((state) => state.post);
-  const [comment, setComment] = useState("");
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (e.key === "Enter") {
-      const data = {
-        postId: viewPostData.id,
-        commentContent: comment,
-        userId: currentUser.id,
-      };
-      addComment(data).then(() => {
-        dispatch(
-          setViewPost({
-            ...viewPostData,
-            dataPost: {
-              ...viewPostData.dataPost,
-              comments: [...viewPostData.dataPost.comments, data],
-            },
-          })
-        );
-        setComment("");
-      });
-    }
-  };
+  const { handleSubmit, value, ownID, handleChangeComment } = props;
   return (
     <div className='container-comment'>
       <img
@@ -46,14 +23,14 @@ function CommentInput(props: any) {
                 isViewPost: false,
               })
             );
-          navigate(`/profile/${props.ownID}`);
+          navigate(`/profile/${ownID}`);
         }}
       />
       <input
         type='text'
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={value}
         onKeyDown={(e) => handleSubmit(e)}
+        onChange={(e) => handleChangeComment(e)}
         className='container-comment__comment-input'
         placeholder='Write a comment...'
       />
@@ -61,4 +38,4 @@ function CommentInput(props: any) {
   );
 }
 
-export default CommentInput;
+export default memo(CommentInput);

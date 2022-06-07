@@ -7,7 +7,7 @@ import NewsFeed from "@pages/news-feed/NewsFeed";
 import NotFound from "@pages/not-found/NotFound";
 import PrivateRoute from "./PrivateRoute";
 import FindFriends from "@pages/find-friend/FindFriends";
-import MessagesPage from "@pages/chatting/MessagingArea";
+import MessagesPage from "@pages/chatting/MessagesPage";
 function MainRoutes() {
   let location = useLocation();
   let state = location.state as { backgroundLocation?: Location };

@@ -62,13 +62,8 @@ const reactPost = (idPost: string, token: string | null) => {
   };
   return axiosInstance.put(`${API_PATH.POST_LIKE}/${idPost}`, configHeader);
 };
-const getCommentByPostID = (idPost: string, token: string | null) => {
-  const configHeader = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  return axiosInstance.get(`${API_PATH.POST_GET_COMMENT}/${idPost}`, configHeader);
+const getCommentByPostID = (idPost: string) => {
+  return axiosInstance.get(`${API_PATH.POST_GET_COMMENT}/${idPost}`);
 };
 const addComment = (reqBody: any) => {
   const { idPost, token, commentContent } = reqBody;
