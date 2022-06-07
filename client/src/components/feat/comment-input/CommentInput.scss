@@ -1,5 +1,4 @@
 .container-comment {
-    border-top: 1px solid #e6e6e6;
     padding: 10px;
     display: flex;
     .container-comment__img-avatar {
@@ -21,6 +20,9 @@
             font-weight: 400;
             color: #65676b;
             font-size: 1rem;
+        }
+        &:focus {
+            border: 2px solid var(--primary-color);
         }
     }
 }

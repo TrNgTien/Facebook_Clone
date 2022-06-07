@@ -9,7 +9,7 @@ router.get("/search", feedHandler.getPostById);
 router.get("/getCommentOfPost/:id", Authentication, feedHandler.getCommentOfPost);
 router.put("/reactPost/:id", Authentication, feedHandler.reactPost);
 router.post(
-  "/commentPost/:id",
+  "/addComment/:id",
   Authentication,
   feedHandler.commentPost
 );

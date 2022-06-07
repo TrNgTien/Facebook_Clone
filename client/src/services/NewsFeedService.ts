@@ -70,4 +70,25 @@ const getCommentByPostID = (idPost: string, token: string | null) => {
   };
   return axiosInstance.get(`${API_PATH.POST_GET_COMMENT}/${idPost}`, configHeader);
 };
-export { AddPost, getAllFeed, updatePost, deletePost, reactPost, getCommentByPostID };
+const addComment = (reqBody: any) => {
+  const { idPost, token, commentContent } = reqBody;
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.post(
+    `${API_PATH.POST_ADD_COMMENT}/${idPost}`,
+    { commentContent },
+    configHeader
+  );
+};
+export {
+  AddPost,
+  getAllFeed,
+  updatePost,
+  deletePost,
+  reactPost,
+  getCommentByPostID,
+  addComment,
+};

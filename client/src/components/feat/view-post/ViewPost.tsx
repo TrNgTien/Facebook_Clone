@@ -248,6 +248,7 @@ const ViewPost = () => {
             {dataPost.comments.length > 0 ? (
               <>
                 <ListComments />
+                <ListComments />
               </>
             ) : (
               <h2>No Comment Yet...</h2>

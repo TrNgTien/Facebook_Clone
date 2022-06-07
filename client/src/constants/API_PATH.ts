@@ -12,6 +12,7 @@ const PATH_API = {
   POST_DELETE: "post/deletePost",
   POST_LIKE: "post/reactPost",
   POST_GET_COMMENT: "post/getCommentOfPost",
+  POST_ADD_COMMENT: "post/addComment",
 
   USER_PROFILE_UPDATE: "profile/updateInfor",
   USER_AVATAR_UPDATE: "profile/updateAvatar",

@@ -141,9 +141,11 @@ function Post({ postData, handleDeletePost }: IProps) {
           <hr className='divider' />
           <div className='wrapper-comment__list'>
             <ListComments />
+            <ListComments />
           </div>
         </>
       )}
+      <hr className='divider' />
 
       <CommentInput ownID={ownID} />
     </div>
