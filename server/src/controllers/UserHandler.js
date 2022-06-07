@@ -276,8 +276,17 @@ module.exports = {
       let id = req.user.id;
       let user = await User.findOne({ _id: id });
       let friendList = user.friends;
+      let listFriend = [];
+      for (let i = 0; i < friendList.length; i++) {
+        let friend = await User.findOne({ _id: friendList[i] });
+        listFriend.push({
+          userID: friend._id,
+          fullName: friend.firstName+" "+friend.lastName,
+          avatar: friend.userAvatar.url,
+        });
+      }
       return res.status(200).json({
-        friends: friendList,
+        friends: listFriend,
       })
     } 
     catch(error){
@@ -289,9 +298,18 @@ module.exports = {
     let { ownId } = req.params;
     let user = await User.findOne({ _id: ownId });
     let friendList = user.friends;
-    return res.status(200).json({
-      friends: friendList,
-    });
+    let listFriend = [];
+    for (let i = 0; i < friendList.length; i++) {
+      let friend = await User.findOne({ _id: friendList[i] });
+      listFriend.push({
+        userID: friend._id,
+        fullName: friend.firstName+" "+friend.lastName,
+          avatar: friend.userAvatar.url,
+        });
+      }
+      return res.status(200).json({
+        friends: listFriend,
+      });
   },
   deleteFriends: async (req, res) => {
     try{
