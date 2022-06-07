@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require("uuid");
-const id = uuidv4();
+
 const postSchema = new mongoose.Schema({
     _id: {
         type: String,
