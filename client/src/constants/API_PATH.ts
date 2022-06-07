@@ -14,5 +14,8 @@ const PATH_API = {
   USER_PROFILE_UPDATE: "profile/updateInfor",
   USER_AVATAR_UPDATE: "profile/updateAvatar",
   USER_COVER_UPDATE: "profile/updateCover",
+
+  GET_ALL_USER: "auth/getAllUser",
+  ADD_FRIEND: "friend/addFriend",
 };
 export default PATH_API;

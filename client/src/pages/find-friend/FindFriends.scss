@@ -1,9 +1,85 @@
 .find-friends__wrapper {
     margin-top: 5%;
-    .find-friends__list {
+    .find-friends__container{
+        margin-top: 10px;
+        margin-bottom: 20px;
         margin-left: auto;
         margin-right: auto;
-        width: 80%;
-        border: 1px solid;
+        width: 75%;
+
+        
+        .friend-page-tag{
+            font-weight: 600;
+            font-size: larger;
+            margin: 2rem 0rem;
+        }
+        .find-friends__list {
+            display: grid;
+            grid-template-columns: 13rem 13rem 13rem 13rem 13rem;
+            .friend__card{
+                border: 1px solid var(--comment-background);
+                border-radius: 5px;
+                box-shadow: 1px 1px 3px rgb(164, 164, 164);
+                margin: 0.3rem 0.2rem;
+                width: 12rem;
+                height: 19rem;
+                background-color: var(--white);
+                .friend__img-container{
+                    width: 100%;
+                    height: 55%;
+                    .friend-avatar{
+                        border-top-left-radius: 5px;
+                        border-top-right-radius: 5px;
+                        width: 100%;
+                        height: 100%;
+
+                    }
+                }
+                .friend__body-container{
+                    padding: 0.3rem 0.5rem;
+                    height: 45%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    .friend__name-container{
+                        .friend-name{
+                            font-weight: 600;
+                        }
+                    }
+                    .functional-btns-container{
+                        
+                        .function-btn{
+                            margin: 5px 0px;
+                            max-width: 100%;
+                            height: 2rem;
+                            border-radius: 5px;
+                            
+                            .functional-friend-btn{
+                                background-color: transparent;
+                                width: 100%;
+                                height: 100%;
+                                outline: none;
+                                border: none;
+                                border-radius: 5px;
+                                font-weight: 600;
+                                
+                                &.functional-friend-btn--add{
+                                    background-color: var(--blue-40);
+                                    color: var(--primary-color);
+                                    cursor: pointer;
+                                    &:hover{
+                                        background-color: var(--blue-30);
+                                    }
+                                }
+                                &.functional-friend-btn--remove{
+                                    background-color: var(--comment-background);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+    
 }
