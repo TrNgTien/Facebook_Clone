@@ -83,7 +83,11 @@ module.exports = {
         });
       } else {
         let postLiked = await Post.find({userReact: {$in: [userID]}});
-        let postLikedID = postLiked.map(post => post._id);
+        let postLikedLength = postLiked.length;
+        let postLikedID = [];
+        for (let i = 0; i < postLikedLength; i++) {
+          postLikedID.push(postLiked[i]._id);
+        }
         return res.status(200).json({
           message: "Login successfully",
           dataUser: {
