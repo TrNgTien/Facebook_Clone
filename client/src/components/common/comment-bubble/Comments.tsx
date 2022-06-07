@@ -1,24 +1,61 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import "./Comments.scss";
+import { useNavigate } from "react-router-dom";
+import { BsThreeDots } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
+import useClickOutSide from "@hooks/useClickOutSide";
+import CommentInput from "@components/feat/comment-input/CommentInput";
 
-const Comments = () => {
+interface IProps {
+  itemComment: any;
+  key: number;
+}
+const Comments = ({ itemComment, key }: IProps) => {
+  const { userAvatarCommented, userID, commentContent, userFullName } = itemComment;
+  const navigate = useNavigate();
+  const [isOpenEditPost, setIsOpenEditPost] = useState(false);
+  const editPostRef = useRef(null);
+  const [isEditPost, setIsEditPost] = useState(false);
+
+  const isClickOutSide = useClickOutSide(editPostRef);
+
   return (
-    <div className='comment__container'>
-      <img alt='avatar' className='comment__avatar-img' />
-      <div className='comment__container__right'>
-        <div className='comment__content'>
-          <p className='comment__username'>Duongw Thieen Phuc</p>
-          <p className='comment__para'>
-            src/app/pages/main-feeds/components/header/Header.tsx Line 4:10: 'SiMessenger'
-            is defined but never used @typescript-eslint/no-unused-vars Line 11:23:
-            'setCounterNoti' is assigned a value but never used
-          </p>
+    <div className='comments-zone' key={key}>
+      <img
+        className='comments-zone__img-avatar'
+        src={userAvatarCommented}
+        alt='avatar'
+        onClick={() => navigate(`/profile/${userID}`)}
+      />
+      {isEditPost ? (
+        <CommentInput />
+      ) : (
+        <div className='wrapper-comment__bubble'>
+          <p onClick={() => navigate(`/profile/${userID}`)}>{userFullName}</p>
+          <p>{commentContent}</p>
         </div>
-        <div className='comment-features'>
-          <button className='like-comment'>Like</button>
-          <button className='reply-comment'>Reply</button>
-          <p className='timestamp-text'>12 hours ago</p>
-        </div>
+      )}
+
+      <div className='comments-zone__edit-comment' onClick={() => setIsOpenEditPost(true)}>
+        <BsThreeDots />
+        {!isClickOutSide && isOpenEditPost && (
+          <div
+            className='edit-modal'
+            onClick={() => isClickOutSide && setIsOpenEditPost(false)}
+          >
+            <div
+              className='edit-option'
+              onClick={() => {
+                setIsOpenEditPost(false);
+                setIsEditPost(true);
+              }}
+              ref={editPostRef}
+            >
+              <MdEdit className='edit-option__icon-edit' />
+              <p>Edit Post</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

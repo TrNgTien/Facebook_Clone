@@ -55,7 +55,7 @@ export default function NewsFeed() {
         setPostData(sortedData);
         setIsLoading(false);
       }
-    };
+    }
     getPostData();
   }, [dispatch]);
   const handleDeletePost = async (dataDeleteID: any) => {

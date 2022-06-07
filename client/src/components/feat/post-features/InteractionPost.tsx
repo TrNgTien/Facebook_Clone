@@ -8,6 +8,7 @@ function InteractionPost() {
   const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
+  // console.log(currentUser);
   return (
     <div className='container__features'>
       <button

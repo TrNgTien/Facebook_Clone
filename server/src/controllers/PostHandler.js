@@ -244,14 +244,14 @@ module.exports = {
   },
   commentPost: async (req, res) => {
     try {
-      let { id } = req.params;
-      let { commentContent, commentAttachments } = req.body;
-      let userID = req.user.id;
-      let suffixes = uuidv4();
-      let key = `comment/${req.user.id}-${suffixes}`;
-      let post = await Post.findOne({ _id: id });
-      if (typeof commentAttachments === "undefined") {
-        let comment = new Comment({
+      const { id } = req.params;
+      const { commentContent, commentAttachments } = req.body;
+      const userID = req.user.id;
+      const suffixes = uuidv4();
+      const key = `comment/${req.user.id}-${suffixes}`;
+      const post = await Post.findOne({ _id: id });
+      if (!commentAttachments) {
+        const comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
             url: "",
@@ -266,9 +266,9 @@ module.exports = {
           message: "Comment successfully",
           id: comment._id,
         });
-      } else if (typeof commentContent === "undefined") {
-        let uploadResponse = await uploadS3(key, commentAttachments);
-        let comment = new Comment({
+      } else if (!commentContent) {
+        const uploadResponse = await uploadS3(key, commentAttachments);
+        const comment = new Comment({
           commentContent: "",
           commentAttachments: {
             url: uploadResponse.locationS3,
@@ -284,8 +284,8 @@ module.exports = {
           id: comment._id,
         });
       } else {
-        let uploadResponse = await uploadS3(key, commentAttachments);
-        let comment = new Comment({
+        const uploadResponse = await uploadS3(key, commentAttachments);
+        const comment = new Comment({
           commentContent: commentContent,
           commentAttachments: {
             url: uploadResponse.locationS3,
@@ -356,12 +356,12 @@ module.exports = {
       for (let i = 0; i < commentLength; i++) {
         let id = comment[i].userID;
         let user = await User.find({ _id: id });
-        console.log(user);
         commentData.push({
           commentID: comment[i]._id,
           commentContent: comment[i].commentContent,
           userAvatarCommented: user[0].userAvatar.url,
           userFullName: user[0].firstName + " " + user[0].lastName,
+          userID: comment[i].userID,
         });
       }
       return res.status(200).json({
