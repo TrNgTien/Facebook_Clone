@@ -160,7 +160,6 @@ module.exports = {
           message: "Update successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "Only edit personal profiles",
         });
@@ -227,7 +226,6 @@ module.exports = {
           message: "Update successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "Only edit personal profiles",
         });
@@ -249,7 +247,6 @@ module.exports = {
           message: "Delete successfully!",
         });
       } else {
-        console.log(req.user.toString());
         return res.status(401).json({
           message: "You are not allowed",
         });
