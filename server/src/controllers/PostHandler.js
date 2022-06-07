@@ -356,12 +356,12 @@ module.exports = {
       for (let i = 0; i < commentLength; i++) {
         let id = comment[i].userID;
         let user = await User.find({ _id: id });
-        console.log(user);
         commentData.push({
           commentID: comment[i]._id,
           commentContent: comment[i].commentContent,
           userAvatarCommented: user[0].userAvatar.url,
           userFullName: user[0].firstName + " " + user[0].lastName,
+          userID: comment[i].userID,
         });
       }
       return res.status(200).json({

@@ -116,8 +116,8 @@ module.exports = {
   },
   getUserInformation: async (req, res) => {
     try {
-      let { id } = req.params;
-      let userInfo = await User.findOne({ _id: id });
+      const { id } = req.params;
+      const userInfo = await User.findOne({ _id: id });
       return res.status(200).json({
         data: {
           _id: userInfo._id,

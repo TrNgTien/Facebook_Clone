@@ -113,11 +113,17 @@
 						width: 40px;
 						border-radius: 50%;
 						margin-right: 10px;
+						&:hover {
+							cursor: pointer;
+						}
 					}
 					.content__info {
 						.content__info__username {
 							padding-bottom: 3px;
 							font-weight: bold;
+							&:hover {
+								cursor: pointer;
+							}
 						}
 						.content__info__timestamp {
 							font-size: small;

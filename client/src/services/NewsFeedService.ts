@@ -62,4 +62,12 @@ const reactPost = (idPost: string, token: string | null) => {
   };
   return axiosInstance.put(`${API_PATH.POST_LIKE}/${idPost}`, configHeader);
 };
-export { AddPost, getAllFeed, updatePost, deletePost, reactPost };
+const getCommentByPostID = (idPost: string, token: string | null) => {
+  const configHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axiosInstance.get(`${API_PATH.POST_GET_COMMENT}/${idPost}`, configHeader);
+};
+export { AddPost, getAllFeed, updatePost, deletePost, reactPost, getCommentByPostID };

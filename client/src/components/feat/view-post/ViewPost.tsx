@@ -12,7 +12,7 @@ import { setListPosts } from "@slices/PostSlice";
 import useClickOutSide from "@hooks/useClickOutSide";
 import { useNavigate } from "react-router-dom";
 import { decodedID } from "@utils/DecodeToken";
-
+import CommentInput from "../comment-input/CommentInput";
 import "./ViewPost.scss";
 const ViewPost = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +33,6 @@ const ViewPost = () => {
   };
   const ownID = decodedID(currentUser.token);
   const convertedTime = new Date(dataPost.time).toLocaleString();
-
   const keyPress = useCallback(
     (e) => {
       if (e.key === "Escape" && isViewPost) {
@@ -103,6 +102,11 @@ const ViewPost = () => {
     return () => document.removeEventListener("keydown", keyPress);
   }, [keyPress]);
 
+  const ListComments = () => {
+    return dataPost.comments.map((itemComment: any, index: number) => {
+      return <Comments key={index} itemComment={itemComment} />;
+    });
+  };
   return (
     <div className='view-post__wrapper'>
       <div className='modal-wrapper'>
@@ -160,18 +164,17 @@ const ViewPost = () => {
                       onClick={() => setIsOpenEditPost(true)}
                     />
                     {!dataPost.postAttachments.url && (
-                      
-                        <AiOutlineClose
-                          className='close__icon'
-                          onClick={() =>
-                            dispatch(
-                              setViewPost({
-                                ...viewPostData,
-                                isViewPost: false,
-                              })
-                            )
-                          }
-                        />
+                      <AiOutlineClose
+                        className='close__icon'
+                        onClick={() =>
+                          dispatch(
+                            setViewPost({
+                              ...viewPostData,
+                              isViewPost: false,
+                            })
+                          )
+                        }
+                      />
                     )}
                     {!isClickOutSide && isOpenEditPost && (
                       <div
@@ -206,7 +209,6 @@ const ViewPost = () => {
                   }
                 >
                   <AiOutlineClose className='close__icon' />
-                  hi2
                 </div>
               )}
             </div>
@@ -243,13 +245,15 @@ const ViewPost = () => {
           <InteractionPost />
           <hr className='divider' />
           <div className='container__comments'>
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
-            <Comments />
+            {dataPost.comments.length > 0 ? (
+              <>
+                <ListComments />
+              </>
+            ) : (
+              <h2>No Comment Yet...</h2>
+            )}
           </div>
+          <CommentInput ownID={ownID} />
         </div>
       </div>
     </div>

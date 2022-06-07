@@ -7,7 +7,9 @@ import InteractionPost from "@components/feat/post-features/InteractionPost";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import { decodedID } from "@utils/DecodeToken";
-
+import { getCommentByPostID } from "@services/NewsFeedService";
+import CommentInput from "@components/feat/comment-input/CommentInput";
+import Comments from "@components/common/comment-bubble/Comments";
 import "./Posts.scss";
 interface IProps {
   postData: any;
@@ -18,16 +20,23 @@ function Post({ postData, handleDeletePost }: IProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentUser } = useAppSelector((state) => state.auth);
-  const { time, description, postAttachments, likedPost, numberOfComment, userID } =
+  const { time, description, postAttachments, likedPost, numberOfComment, userID, _id } =
     postData;
   const [ownID, setOwnID] = useState<string>();
-
   const { viewPostData } = useAppSelector((state) => state.post);
   const [posterData, setPosterData] = useState<any>([]);
   const convertedTime = new Date(time).toLocaleString();
+  const [commentData, setCommentData] = useState<any>([]);
   useEffect(() => {
     if (currentUser) {
       setOwnID(decodedID(currentUser?.token));
+      getCommentByPostID(_id, currentUser?.token)
+        .then((res) => {
+          if (res.status === 200) {
+            setCommentData(res.data.commentData);
+          }
+        })
+        .catch((err) => {});
     }
     const getProfileData = async () => {
       const profileRes = await getProfileID(userID);
@@ -36,9 +45,15 @@ function Post({ postData, handleDeletePost }: IProps) {
       }
     };
     getProfileData();
-  }, [userID, currentUser]);
+  }, [userID, currentUser, _id]);
   const reqDeletePost = () => {
     handleDeletePost(postData._id);
+  };
+  const ListComments = () => {
+    const listComments = commentData.map((itemComment: any, index: number) => (
+      <Comments key={index} itemComment={itemComment} />
+    ));
+    return listComments;
   };
   return (
     <div className='container' id='container-post'>
@@ -73,6 +88,7 @@ function Post({ postData, handleDeletePost }: IProps) {
                       ...postData,
                       fullName: posterData?.firstName + " " + posterData?.lastName,
                       userAvatar: posterData?.userAvatar,
+                      comments: commentData,
                     },
                   })
                 )
@@ -97,6 +113,7 @@ function Post({ postData, handleDeletePost }: IProps) {
                         ...postData,
                         fullName: posterData?.firstName + " " + posterData?.lastName,
                         userAvatar: posterData?.userAvatar,
+                        comments: commentData,
                       },
                     })
                   )
@@ -119,6 +136,16 @@ function Post({ postData, handleDeletePost }: IProps) {
       </div>
       <hr className='divider' />
       <InteractionPost />
+      {commentData.length > 0 && (
+        <>
+          <hr className='divider' />
+          <div className='wrapper-comment__list'>
+            <ListComments />
+          </div>
+        </>
+      )}
+
+      <CommentInput ownID={ownID} />
     </div>
   );
 }
