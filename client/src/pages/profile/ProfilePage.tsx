@@ -17,6 +17,7 @@ import { IJwtDecode, IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
 import { decodedID } from "@utils/DecodeToken";
+import { getAllUser } from "@services/FriendsService";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -32,14 +33,25 @@ export default function ProfilePage() {
   const [ownID, setOwnID] = useState<string>();
   const profileRef = useRef<any>(null);
 
+  const [friends, setFriends] = useState<Array<any>>([]);
+
   useEffect(() => {
-    // const currentUserIdDecoded = jwtDecode<IJwtDecode>(currentUser.token).id;
-    // setCurrentUserId(currentUserIdDecoded);
+    const queryAllUser = getAllUser(currentUser.token).then((res) => {
+      if (res.status === 200) {
+        const listUser: Array<any> = res.data.data;
+
+        setFriends([
+          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+        ]);
+      }
+    });
+
     profileRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   }, []);
+  console.log("friends: ", friends);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     if (listPosts) {
@@ -73,7 +85,6 @@ export default function ProfilePage() {
         setOwnPosts(sortedData);
         setIsLoading(false);
       }
-      console.log("userId: ", userID);
     };
     getOwnPosts();
   }, [dispatch, currentUser, userID]);
@@ -171,37 +182,17 @@ export default function ProfilePage() {
                     <h1 className='username'>
                       {userData?.firstName + " " + userData?.lastName}
                     </h1>
-                    <h4 className='friends-number'>176 friends</h4>
+                    <h4 className='friends-number'>{currentUser.friends.length} friends</h4>
                     <div style={{ width: "fit-content" }}>
-                      <AvatarGroup max={5} total={175}>
-                        <Avatar
-                          src={userData?.userAvatar.url}
-                          alt='friend avatar'
-                          sx={{ width: 40, height: 40 }}
-                        />
-                        <Avatar
-                          src={userData?.userAvatar.url}
-                          alt='friend avatar'
-                          sx={{ width: 40, height: 40 }}
-                        />
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          B
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          E
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
-                        <Avatar alt='friend avatar' sx={{ width: 40, height: 40 }}>
-                          F
-                        </Avatar>
+                      <AvatarGroup max={5} total={friends.length - 5}>
+                        {friends.map((friend) => (
+                          <Avatar
+                            src={friend.userAvatar.url}
+                            key={friend._id}
+                            alt=''
+                            sx={{ width: 40, height: 40 }}
+                          />
+                        ))}
                       </AvatarGroup>
                     </div>
                   </div>
@@ -220,10 +211,28 @@ export default function ProfilePage() {
             <div className='profile-body__left'>
               <div className='container-intro'>
                 <h3>Intro</h3>
-                <button className='add-intro-btn'>Add Bio</button>
-                <button className='add-intro-btn'>Edit details</button>
-                <button className='add-intro-btn'>Add Hobbies</button>
-                <button className='add-intro-btn'>Add Featured</button>
+                {currentUser.biography && (
+                  <div className='bio-content'>{currentUser.biography}</div>
+                )}
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Bio
+                </button>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Edit details
+                </button>
+                <div className='hobbies-content'>
+                  {currentUser.hobbies.map((hobby: string, index: any) => (
+                    <div className='container-hobbies' key={index}>
+                      <p className='hobby-tag-name'>{hobby}</p>
+                    </div>
+                  ))}
+                </div>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Hobbies
+                </button>
+                <button className='add-intro-btn' onClick={() => setOpenEdit(true)}>
+                  Add Featured
+                </button>
               </div>
               <div className='container-photos'>
                 <div className='container-photos__header'>
@@ -234,7 +243,7 @@ export default function ProfilePage() {
               <div className='container-friends'>
                 <div className='friends-tags'>
                   <h3>Friends</h3>
-                  <p className='num-of-friend'>300 friends</p>
+                  <p className='num-of-friend'>{currentUser.friends.length} friends</p>
                 </div>
                 <p className='see-all-friends'>See all friends</p>
               </div>

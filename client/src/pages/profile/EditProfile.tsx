@@ -12,7 +12,15 @@ import {
 import { Divider } from "@mui/material";
 import jwtDecode from "jwt-decode";
 import { IJwtDecode } from "@constants/InterfaceModel";
-import { updateAvatar, updateCover, updateUserInfo } from "@services/ProfileService";
+import {
+  getProfileID,
+  updateAvatar,
+  updateCover,
+  updateUserInfo,
+} from "@services/ProfileService";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@hooks/useStore";
+import { setUpdateUser } from "@slices/AuthenSlice";
 
 interface EditProfileProps {
   currentUser: any;
@@ -29,6 +37,8 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
     intro: { ...props.currentUser.intro },
     hobbies: [...props.currentUser.hobbies],
   };
+  const dispatch = useDispatch();
+  const { currentUser } = useAppSelector((state) => state.auth);
   const [openAddBio, setOpenAddBio] = useState(false);
   const [editIntro, setEditIntro] = useState(false);
   const [userProfile, setUserProfile] = useState(initialProfile);
@@ -116,6 +126,9 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
 
     if (resUpdateInfo.status === 200) {
       setIsLoading(false);
+      const newUser = getProfileID(currentUserId).then((res) => {
+        dispatch(setUpdateUser({ ...currentUser, ...res.data.data }));
+      });
       props.setOpenEdit(false);
     }
   };
