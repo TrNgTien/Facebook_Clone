@@ -2,25 +2,22 @@ import React, { useState, useEffect } from "react";
 import { getProfileID } from "@services/ProfileService";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { BsThreeDots } from "react-icons/bs";
-import { setDeletePost, setViewPost } from "@slices/PostSlice";
+import { setViewPost } from "@slices/PostSlice";
 import InteractionPost from "@components/feat/post-features/InteractionPost";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import { decodedID } from "@utils/DecodeToken";
-import { deletePost } from "@services/NewsFeedService";
-import { setListPosts } from "@slices/PostSlice";
 
 import "./Posts.scss";
 interface IProps {
   postData: any;
+  handleDeletePost: any;
 }
 
-function Post({ postData }: IProps) {
+function Post({ postData, handleDeletePost }: IProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentUser } = useAppSelector((state) => state.auth);
-  // const { listPosts } = useAppSelector((state) => state.post);
-
   const { time, description, postAttachments, likedPost, numberOfComment, userID } =
     postData;
   const ownID = decodedID(currentUser.token);
@@ -36,8 +33,8 @@ function Post({ postData }: IProps) {
     };
     getProfileData();
   }, [userID]);
-  const handleDeletePost = () => {
-    dispatch(setDeletePost(postData._id));
+  const reqDeletePost = () => {
+    handleDeletePost(postData._id);
   };
   return (
     <div className='container' id='container-post'>
@@ -56,7 +53,7 @@ function Post({ postData }: IProps) {
         </div>
         {postData?.userID === ownID && (
           <i className='three-dot__icon'>
-            <AiOutlineClose onClick={handleDeletePost} />
+            <AiOutlineClose onClick={reqDeletePost} />
           </i>
         )}
       </div>

@@ -5,7 +5,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "@hooks/useStore";
 import { useParams, useLocation } from "react-router-dom";
-
+import { deletePost } from "@services/NewsFeedService";
 import { MainLayout } from "@components/common/layout";
 import { getPostById, getProfileID } from "@services/ProfileService";
 import { setIsCreatePost, setListPosts } from "@slices/PostSlice";
@@ -16,6 +16,7 @@ import ViewPost from "@components/feat/view-post/ViewPost";
 import { IUserData } from "@constants/InterfaceModel";
 import "./styles/ProfilePage.scss";
 import EditProfile from "./EditProfile";
+import { decodedID } from "@utils/DecodeToken";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,8 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
   const profileRef = useRef<any>(null);
+  const ownID = decodedID(currentUser?.token);
+
   useEffect(() => {
     profileRef.current.scrollIntoView({
       behavior: "smooth",
@@ -66,6 +69,16 @@ export default function ProfilePage() {
     };
     getOwnPosts();
   }, [dispatch, currentUser, userID]);
+  const handleDeletePost = async (dataDeleteID: any) => {
+    setIsLoading(true);
+    const newListPosts = [...ownPosts];
+    const resDelete = await deletePost(dataDeleteID, currentUser.token);
+    if (resDelete.status === 200) {
+      const afterDeletePost = newListPosts.filter((post) => post._id !== dataDeleteID);
+      setOwnPosts(afterDeletePost);
+      setIsLoading(false);
+    }
+  };
   const CustomButton = (): JSX.Element => {
     const buttons = ["Add to story", "Edit profile"];
     return (
@@ -212,11 +225,17 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className='profile-body__right'>
-              {currentUser === userData?._id && <Upload />}
+              {ownID === userData?._id && <Upload />}
               {isLoading ? (
                 <Post.PostLoading />
               ) : (
-                ownPosts.map((post, index: number) => <Post key={index} postData={post} />)
+                ownPosts.map((post, index: number) => (
+                  <Post
+                    handleDeletePost={(dataDelete: any) => handleDeletePost(dataDelete)}
+                    key={index}
+                    postData={post}
+                  />
+                ))
               )}
             </div>
           </div>

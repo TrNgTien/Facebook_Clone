@@ -31,16 +31,11 @@ const PostSlice = createSlice({
       const { payload } = action;
       return { ...state, listPosts: payload };
     },
-    setDeletePost(state, action) {
-      const { payload } = action;
-      return { ...state, idPostNeedDelete: payload };
-    },
   },
 });
 
 //Actions
-export const { setIsCreatePost, setViewPost, setListPosts, setDeletePost } =
-  PostSlice.actions;
+export const { setIsCreatePost, setViewPost, setListPosts } = PostSlice.actions;
 
 //Reducer
 const postReducer = PostSlice.reducer;
