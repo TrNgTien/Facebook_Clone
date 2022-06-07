@@ -138,6 +138,7 @@
                                         outline: none;
                                         background-color: var(--comment-background);
                                         margin-right: 5px;
+                                        cursor: pointer;
                                     }
                                     .bio__button--save{
                                         color: var(--white);
@@ -147,6 +148,7 @@
                                         border: none;
                                         outline: none;
                                         background-color: var(--primary-color);
+                                        cursor: pointer;
                                     }
                                     
                                 }
@@ -181,6 +183,17 @@
                                 width: 100%;
                                 display: flex;
                                 align-items: center;
+                                .container-hobbies{
+                                    border-radius: 25px;
+                                    border: 1px solid var(--divider-color);
+                                    padding: 5px 10px;
+                                    margin: 0px 5px;
+                                    .hobby-tag-name{
+                                        font-size: 13px;
+                                        color: var(--secondary-text);
+                                        font-weight: 600;
+                                    }
+                                }
                                 .input-hobbies{
                                     padding: 10px ;
                                     border: none;

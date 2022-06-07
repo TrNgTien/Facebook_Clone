@@ -14,16 +14,30 @@ import { deletePost } from "@services/NewsFeedService";
 
 import "./styles/NewsFeed.scss";
 import { getProfileID } from "@services/ProfileService";
+import { getAllUser } from "@services/FriendsService";
+import { useNavigate } from "react-router-dom";
 
 export default function NewsFeed() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const listInnerRef = useRef<HTMLDivElement>(null);
   const { isCreatePost, viewPostData, listPosts } = useAppSelector((state) => state.post);
   const { currentUser } = useAppSelector((state) => state.auth);
   const [postData, setPostData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [friend, setFriend] = useState(null);
+  const [friends, setFriends] = useState<Array<any>>([]);
 
+  useEffect(() => {
+    const queryAllUser = getAllUser(currentUser.token).then((res) => {
+      if (res.status === 200) {
+        const listUser: Array<any> = res.data.data;
+
+        setFriends([
+          ...listUser.filter((item) => currentUser.friends.indexOf(item._id) >= 0),
+        ]);
+      }
+    });
+  }, []);
   useEffect(() => {
     dispatch(setIsCreatePost(false));
     setPostData(listPosts);
@@ -90,9 +104,19 @@ export default function NewsFeed() {
                 <AiOutlineSearch />
               </div>
             </div>
-            {/* {currentUser.friends.map((friend: string, index: any) => (
-              <FriendsList friendId={friend} key={index} />
-            ))} */}
+            {friends.map((friend: any, index: any) => (
+              <div
+                className='list-friends__body-item'
+                key={index}
+                onClick={() => navigate(`/profile/${friend._id}`)}
+              >
+                <div className='wrapper-avatar'>
+                  <img src={friend.userAvatar.url} alt='avatar' className='avatar-friend' />
+                  <p className='active-point'>&nbsp;</p>
+                </div>
+                <p>{friend.firstName + " " + friend.lastName}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

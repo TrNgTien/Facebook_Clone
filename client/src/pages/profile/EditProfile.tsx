@@ -16,6 +16,7 @@ import { updateAvatar, updateCover, updateUserInfo } from "@services/ProfileServ
 
 interface EditProfileProps {
   currentUser: any;
+  setOpenEdit: any;
 }
 
 const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
@@ -33,9 +34,16 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
   const [userProfile, setUserProfile] = useState(initialProfile);
   const [profileChange, setProfileChange] = useState({});
   const [enterHobby, setEnterHobby] = useState("");
+  const [bioChange, setBioChange] = useState({});
   const [avatarChange, setAvatarChange] = useState<string | ArrayBuffer | null>("");
   const [coverChange, setCoverChange] = useState<string | ArrayBuffer | null>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+
+  useEffect(() => {
+    const decodedID = jwtDecode<IJwtDecode>(props.currentUser.token).id;
+    setCurrentUserId(decodedID);
+  }, []);
 
   const handlePreviewFile = (e: any) => {
     const reader = new FileReader();
@@ -58,6 +66,17 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
       hobbies: [...userProfile.hobbies, enterHobby],
     });
   };
+  const bioOnChange = (e: ChangeEvent<any>) => {
+    setProfileChange({ ...profileChange, biography: e.target.value });
+    setBioChange({ biography: e.target.value });
+  };
+  const handleBioChange = async () => {
+    const resUpdateInfo = await updateUserInfo({
+      userProfile: bioChange,
+      userId: currentUserId,
+      token: props.currentUser.token,
+    });
+  };
   // const handleIntroOnChange = (e: ChangeEvent<any>) => {
   //   const initIntro = {
   //     currentJob: "",
@@ -73,15 +92,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
   // };
 
   const handleEditProfile = async () => {
-    const currentUserId = jwtDecode<IJwtDecode>(props.currentUser.token).id;
     setIsLoading(true);
-    console.log({
-      userProfile: profileChange,
-      userId: currentUserId,
-      token: props.currentUser.token,
-      avatar: avatarChange,
-      cover: coverChange,
-    });
 
     const resUpdateInfo = await updateUserInfo({
       userProfile: profileChange,
@@ -105,6 +116,7 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
 
     if (resUpdateInfo.status === 200) {
       setIsLoading(false);
+      props.setOpenEdit(false);
     }
   };
   return (
@@ -115,7 +127,10 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
             <div className='header__container-title'>
               <p className='header__title-tag'>Edit profile</p>
             </div>
-            <div className='header__container-close-btn'>
+            <div
+              className='header__container-close-btn'
+              onClick={() => props.setOpenEdit(false)}
+            >
               <img className='header__close-btn' src={Icons.CLOSE_IC} alt='' />
             </div>
           </div>
@@ -210,10 +225,21 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
                       className='bio-description'
                       name='bio-description'
                       placeholder='Describe who you are'
+                      onChange={bioOnChange}
                     ></textarea>
                     <div className='bio-btns'>
-                      <button className='bio__button--cancel'>Cancel</button>
-                      <button className='bio__button--save'>Save</button>
+                      <button
+                        className='bio__button--cancel'
+                        onClick={() => setOpenAddBio(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className='bio__button--save'
+                        onClick={() => handleBioChange()}
+                      >
+                        Save
+                      </button>
                     </div>
                   </div>
                 ) : userProfile.bio ? (
@@ -311,7 +337,9 @@ const EditProfile: FC<EditProfileProps> = (props): JSX.Element => {
               <div className='profile-field__container-content'>
                 <div className='profile-field__content profile-field__content--container-hobbies'>
                   {userProfile.hobbies.map((hobby, index) => (
-                    <p key={index}>{hobby}</p>
+                    <div className='container-hobbies' key={index}>
+                      <p className='hobby-tag-name'>{hobby}</p>
+                    </div>
                   ))}
                   <input
                     className='input-hobbies'

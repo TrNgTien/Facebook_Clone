@@ -6,6 +6,7 @@ import { addFriend, getAllUser } from "@services/FriendsService";
 import { getLocalStorage } from "@utils/LocalStorageUtil";
 import jwtDecode from "jwt-decode";
 import React, { memo, useEffect, useState } from "react";
+import { BsPersonCheckFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import "./FindFriends.scss";
 function FindFriends() {
@@ -19,7 +20,6 @@ function FindFriends() {
     const currentUserId = jwtDecode<IJwtDecode>(currentUser.token).id;
     setIsLoading(true);
     const queryAllUser = getAllUser(currentUser.token).then((res) => {
-      console.log("queryAllUser: ", res);
       if (res.status === 200) {
         const listUser: Array<any> = res.data.data;
 
@@ -63,25 +63,45 @@ function FindFriends() {
                     <div className='friend__name-container'>
                       <p className='friend-name'>{user.firstName + " " + user.lastName}</p>
                     </div>
-                    <div className='functional-btns-container'>
-                      <div className='function-btn'>
-                        {/* {isAddFriendLoading ? (
-                          <p>adding...</p>
-                        ) : ( */}
-                        <button
-                          className='functional-friend-btn functional-friend-btn--add'
-                          onClick={() => handleAddFriend(user._id)}
-                        >
-                          Add Friend
-                        </button>
-                        {/* )} */}
+                    {!currentUser.friends.some((friend: string) => friend === user._id) ? (
+                      <div className='functional-btns-container'>
+                        <div className='function-btn'>
+                          {isAddFriendLoading ? (
+                            <p>adding...</p>
+                          ) : (
+                            <button
+                              className='functional-friend-btn functional-friend-btn--add'
+                              onClick={() => handleAddFriend(user._id)}
+                            >
+                              Add Friend
+                            </button>
+                          )}
+                        </div>
+                        <div className='function-btn'>
+                          <button className='functional-friend-btn functional-friend-btn--remove'>
+                            Message
+                          </button>
+                        </div>
                       </div>
-                      <div className='function-btn'>
-                        <button className='functional-friend-btn functional-friend-btn--remove'>
-                          Remove
-                        </button>
+                    ) : (
+                      <div className='functional-btns-container'>
+                        <div className='function-btn'>
+                          {isAddFriendLoading ? (
+                            <p>adding...</p>
+                          ) : (
+                            <button className='functional-friend-btn functional-friend-btn--add'>
+                              <BsPersonCheckFill />
+                              &nbsp; Friends
+                            </button>
+                          )}
+                        </div>
+                        <div className='function-btn'>
+                          <button className='functional-friend-btn functional-friend-btn--remove'>
+                            Message
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               ))}

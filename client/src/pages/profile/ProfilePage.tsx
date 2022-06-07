@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [ownPosts, setOwnPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentUserId, setCurrentUserId] = useState("");
+  const [openEdit, setOpenEdit] = useState(false);
   const { userID } = useParams<string>();
   const [userData, setUserData] = useState<IUserData>();
   const { pathname } = useLocation();
@@ -92,14 +93,15 @@ export default function ProfilePage() {
     const otherButtons = ["Add friend", "Message"];
     return (
       <div className='more-functions'>
-        {currentUserId === userData?._id &&
+        {currentUser &&
+          ownID === userData?._id &&
           ownerButtons.map((items, index) => {
             return (
               <button
                 key={index}
                 className={items === "Add to story" ? "add-story" : "edit-profile"}
                 onClick={() => {
-                  items === "Add to story" ? console.log("s") : console.log("2");
+                  items === "Add to story" ? console.log("s") : setOpenEdit(true);
                 }}
               >
                 {items === "Add to story" ? (
@@ -254,7 +256,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {true && <EditProfile currentUser={undefined} />}
+      {openEdit && <EditProfile currentUser={currentUser} setOpenEdit={setOpenEdit} />}
     </MainLayout>
   );
 }
