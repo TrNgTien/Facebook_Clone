@@ -130,7 +130,7 @@ IDE Tool: Visual Studio Code.
 
 API Testing: Postman.
 
-## 📷Screenshots
+## 📸Screenshots
 
 ### Login & Register Page
 ![image](https://user-images.githubusercontent.com/66483590/172642395-92f6e09f-4738-4a33-995c-1b1afc047ccd.png)
@@ -141,36 +141,36 @@ API Testing: Postman.
 ![image](https://user-images.githubusercontent.com/66483590/172643298-b92aaa7a-69f4-4591-bbb8-e49a0adb414c.png)
 
 
-<h1>Skeleton Loading</h1>
+<h3>Skeleton Loading</h3>
 
 ![image](https://user-images.githubusercontent.com/66483590/172652293-85c1ece9-07f7-43cf-b80e-cc93b4ca61d2.png)
 
 
 
-### Post Features
+## 🖌️ Post Features
 
-<h1>Create a new post</h1>
-![image](https://user-images.githubusercontent.com/66483590/172657343-1903ba41-d0b3-464d-b673-5f6549167f2b.png)
-
-
-
-<h1> Edit caption's own post</h1>
+<h3> Edit caption's own post</h3>
 
 ![image](https://user-images.githubusercontent.com/66483590/172656819-8d1d49f5-ec03-4f58-b777-e06dd1668a09.png)
 
+<h2>Create Post</h2>
 
-### Profile Page 
-<h1>Own Profile</h1>
+![Create Post](https://user-images.githubusercontent.com/66483590/172658364-7b8419ed-d685-4197-a87a-0103bbdebae0.png)
+
+
+## 🎨 Profile Page 
+
+<h3>Own Profile Page</h3>
 
 ![image](https://user-images.githubusercontent.com/66483590/172651024-aaefee60-42af-4ef6-b205-9d005ae5af18.png)
 
 
-### Find Friends Page
+## 🔎 Find Friends Page
 
 ![image](https://user-images.githubusercontent.com/66483590/172651495-b561ca52-c627-496c-bb62-78d0b9b044b5.png)
 
 
-### Not Found Page
+## 💣 Not Found Page
 ![image](https://user-images.githubusercontent.com/66483590/172646974-5afb1063-e812-4765-a02e-5a83720d531e.png)
 
 
