@@ -88,11 +88,12 @@ o	Transition requirements:
     	An additional group of requirements defines what is needed from an organization to successfully move from its current state to its desired state                       with the new product. They are only necessary for the short period of time while the transition takes place. Examples can be “users must be trained                     to operate the system” or “previous data must be migrated to the cloud storage.”
                 
    2. System Design Specification:
+ 
    •	Use-cases Diagram:
         
-![This is an image](https://user-images.githubusercontent.com/69331659/172477355-6ef606cd-6b2c-4103-af70-d4b1f802047e.png)
-
-   •	Sequence Diagram: 
+![image](https://user-images.githubusercontent.com/69331659/172518855-61278229-3a84-4fd9-be4f-af404f4283f0.png)
+  
+  •	Sequence Diagram: 
         
 ![This is an image](https://user-images.githubusercontent.com/69331659/172477414-9327aecf-2a86-4a89-af78-e458d8c5a70b.png)
 ![This is an image](https://user-images.githubusercontent.com/69331659/172477440-4fc9aca1-b406-4cd0-aeb3-f29e7d23bfc9.png)
