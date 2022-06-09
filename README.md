@@ -1,5 +1,5 @@
 
-# Hi there! We are Clone Team 👋
+# Hi there! We are Clone Team from lab Wednesday morning 👋
 
 You are the ![](https://visitor-badge.glitch.me/badge?page_id=TrNgTien.Facebook_Clone)! Thanks for your visit!
 
