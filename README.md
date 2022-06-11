@@ -83,7 +83,7 @@ DNS management: Cloudflare – help us manage DNS record
                 •	Reduced expenses/errors,
                 •	Improved customer service
     o	User requirements:
-            1. The needs of discrete stakeholder groups (top-level managers, nonmanagement staff, customers, etc.) are specified to define what they expect from a                     particular solution. 
+            1. The needs of discrete stakeholder groups (top-level managers, nonmanagement staff, customers, etc.) are specified to define what they expect from a particular solution. 
             2. This group serves as a bridge between the generalized business requirements and specific solution requirements. 
             3. They are outlined in a User Requirements Specification and can include, for example, ability to create various reports, view order history and status, manage customer databases, etc.
 
