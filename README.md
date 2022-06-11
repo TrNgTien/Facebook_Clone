@@ -50,28 +50,28 @@ DNS management: Cloudflare – help us manage DNS record
         
         •	Functional Requirements:
             
-    o	React.JS: This is the free and open-source front-end JavaScript library for building user interfaces based on UI components. It is maintained by Meta                   and a community of individual developers and companies.
+    o	React.JS: This is the free and open-source front-end JavaScript library for building user interfaces based on UI components. It is maintained by Meta and a community of individual developers and companies.
             
-    o	Axios: Axios is a promise-based HTTP Client for node.js and the browser. It is isomorphic (= it can run in the browser and nodejs with the same                         codebase). On the server-side it uses the native node.js http module, while on the client (browser) it uses XMLHttpRequests.
+    o	Axios: Axios is a promise-based HTTP Client for node.js and the browser. It is isomorphic (= it can run in the browser and nodejs with the same codebase). On the server-side it uses the native node.js http module, while on the client (browser) it uses XMLHttpRequests.
             
-    o	Redux: Redux is a predictable state container for JavaScript apps. It helps you write applications that behave consistently, run in different                           environments (client, server, and native), and are easy to test. On top of that, it provides a great developer experience, such as live code editing                   combined with a time traveling debugger.
+    o	Redux: Redux is a predictable state container for JavaScript apps. It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. On top of that, it provides a great developer experience, such as live code editing combined with a time traveling debugger.
             
-    o	MongoDB: is a document-oriented NoSQL database used for high volume data storage. Instead of using tables and rows as in the traditional relational                     databases, MongoDB makes use of collections and documents. Documents consist of key-value pairs which are the basic unit of data in MongoDB.                           Collections contain sets of documents and function which is the equivalent of relational database tables. MongoDB is a database which came into light                   around the mid-2000s.
+    o	MongoDB: is a document-oriented NoSQL database used for high volume data storage. Instead of using tables and rows as in the traditional relational databases, MongoDB makes use of collections and documents. Documents consist of key-value pairs which are the basic unit of data in MongoDB. Collections contain sets of documents and function which is the equivalent of relational database tables. MongoDB is a database which came into light around the mid-2000s.
             
-    o	Node.JS: Node.JS í an open source server environment, it free, also runs on various platforms (Window, Linux, Unix, Mac OS X, …). Node.JS uses                         JavaScript on the server.
+    o	Node.JS: Node.JS í an open source server environment, it free, also runs on various platforms (Window, Linux, Unix, Mac OS X, …). Node.JS uses JavaScript on the server.
             
     o	Express.JS: Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
             
-    o	Socket.io: is an event-driven JavaScript library for real-time web applications. It enables real-time, bi-directional communication between web clients                 and servers. It has two parts: a client-side library that runs in the browser, and a server-side library for Node.js. Both components have a nearly                     identical API.
+    o	Socket.io: is an event-driven JavaScript library for real-time web applications. It enables real-time, bi-directional communication between web clients and servers. It has two parts: a client-side library that runs in the browser, and a server-side library for Node.js. Both components have a nearly identical API.
         
 
 •	Non-functional Requirements:
             
-    o	AWS: Amazon Web Services, Inc. (AWS) is a subsidiary of Amazon that provides on-demand cloud computing platforms and APIs to individuals, companies,                   and governments, on a metered pay-as-you-go basis. These cloud computing web services provide distributed computing processing capacity and software                   tools via AWS server farms
+    o	AWS: Amazon Web Services, Inc. (AWS) is a subsidiary of Amazon that provides on-demand cloud computing platforms and APIs to individuals, companies, and governments, on a metered pay-as-you-go basis. These cloud computing web services provide distributed computing processing capacity and software tools via AWS server farms
 
-    o	Cloudflare: Cloudflare, Inc. is an American content delivery network and DDoS mitigation company, founded in 2010. It primarily acts as a reverse proxy                 between a website's visitor and the Cloudflare customer's hosting provider. Its headquarters are in San Francisco, California.
+    o	Cloudflare: Cloudflare, Inc. is an American content delivery network and DDoS mitigation company, founded in 2010. It primarily acts as a reverse proxy between a website's visitor and the Cloudflare customer's hosting provider. Its headquarters are in San Francisco, California.
             
-    o	NGINX: an open-source web server that, since its initial success as a web server, is now also used as a reverse proxy, HTTP cache, and load balancer.
+    o	NGINX: An open-source web server that, since its initial success as a web server, is now also used as a reverse proxy, HTTP cache, and load balancer.
         
 •	Requirements Analysis:
 
