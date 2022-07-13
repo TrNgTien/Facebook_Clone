@@ -3,10 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://nguyenle23:B1E24681010@netflix.ebo3xoq.mongodb.net/fb-clone-nestjs', { useNewUrlParser: true }),
+    ConfigModule.forRoot({
+      envFilePath: '.development.env',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
   ],
   controllers: [AppController],
